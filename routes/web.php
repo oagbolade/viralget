@@ -1,0 +1,97 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/about', 'HomeController@about')->name('about');
+Route::get('/marketing', 'HomeController@marketing')->name('marketing');
+Route::get('/contact', 'HomeController@contact')->name('contact');
+Route::get('/pricing', 'HomeController@pricing')->name('pricing');
+Route::get('/what-we-do', 'HomeController@whatwedo')->name('what-we-do');
+Route::get('/team', 'HomeController@team')->name('team');
+Route::get('/faqs', 'HomeController@faqs')->name('faqs');
+Route::get('/terms', 'HomeController@terms')->name('terms');
+Route::get('/privacy-policy', 'HomeController@privacy')->name('privacy');
+Route::get('/search', 'SearchController@search')->name('search');
+
+
+
+Route::middleware('guest')->group(function() {
+
+    Route::get('login', 'AuthController@login')->name('login');
+
+    Route::get('login/twitter', 'AuthController@redirectToProvider')->name('login.twitter');
+    Route::get('login/twitter/callback', 'AuthController@handleProviderCallback');
+
+
+    //Route::get('/profile/{handle}', 'ScrapperController@index')  ;
+});
+
+Route::middleware('auth')->group(function() {
+    Route::get('complete-signup', 'AuthController@signup')->name('login.signup');
+    Route::post('complete-signup', 'AuthController@postSignup')->name('login.signup.post');
+
+
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+
+
+    Route::get('/history/reports', 'DashboardController@reporting')->name('reporting');
+    Route::get('/history/profiles', 'DashboardController@profiling')->name('profiling');
+
+    Route::get('/subscribe/{plan}', 'SubscriptionController@subscribe')->name('subscribe');
+    Route::get('/subscribe/confirm/{reference}', 'SubscriptionController@verifySubscription')->name('subscribe.confirm');
+
+
+    Route::get('/search/profiles', 'SearchController@list')->name('profiles');
+    Route::get('/search/profiles/{category}', 'SearchController@list')->name('profiles.category');
+    Route::get('/search/profile/{handle}', 'SearchController@showProfile')->name('profile.show');
+    Route::get('/hashtag/{q}', 'SearchController@showHashtag')->name('search.show');
+
+    Route::get('/report/hashtag/{id}', 'ReportingController@index')->name('reporting.hashtag');
+    Route::get('/report/profile/{id}', 'ProfilingController@index')->name('reporting.profile');
+
+    Route::get('/logout', 'AuthController@logout')->name('logout');
+});
+
+Route::prefix('admin')->group(function () {
+
+    Route::prefix('auth')->group(function () {
+        Route::get('login', 'Admin\AuthController@login')->name('admin.login');
+        Route::post('login', 'Admin\AuthController@postLogin')->name('admin.login.post');
+
+        Route::get('logout', 'Admin\AuthController@logout')->name('admin.logout');
+    });
+
+    Route::middleware('auth:admin')->group(function() {
+        Route::get('dashboard',  'Admin\AuthController@dashboard')->name('admin.dashboard');
+
+        Route::get('profiles',  'Admin\AccountController@list')->name('admin.profiles');
+        Route::get('profiles/add',  'Admin\AccountController@add')->name('admin.profile.add');
+        Route::post('profile/add',  'Admin\AccountController@store')->name('admin.profile.add.post');
+        Route::get('profile/delete/{id}',  'Admin\AccountController@delete')->name('admin.profile.delete');
+        Route::get('profile/edit/{id}',  'Admin\AccountController@edit')->name('admin.profile.edit');
+        Route::post('profile/edit/{id}',  'Admin\AccountController@update')->name('admin.profile.edit.post');
+
+        Route::get('keywords',  'Admin\KeywordController@list')->name('admin.keywords');
+        Route::get('keywords/add',  'Admin\KeywordController@add')->name('admin.keywords.add');
+        Route::post('keywords/add',  'Admin\KeywordController@store')->name('admin.keywords.add.post');
+
+
+        Route::get('categories',  'Admin\CategoryController@list')->name('admin.categories');
+        Route::get('categories/add',  'Admin\CategoryController@add')->name('admin.categories.add');
+        Route::post('categories/add',  'Admin\CategoryController@store')->name('admin.categories.add.post');
+        Route::get('categories/edit/{id}',  'Admin\CategoryController@edit')->name('admin.categories.edit');
+        Route::post('categories/edit/{id}',  'Admin\CategoryController@update')->name('admin.categories.edit.post');
+
+    });
+
+});

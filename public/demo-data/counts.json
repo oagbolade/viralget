@@ -1,0 +1,2954 @@
+{
+    "results": [
+        {
+            "timePeriod": "201902220000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902220100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902220200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902220300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902220400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902220500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902220600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902220700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902220800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902220900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902221000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902221100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902221200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902221300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902221400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902221500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902221600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902221700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902221800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902221900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902222000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902222100",
+            "count": 1
+        },
+        {
+            "timePeriod": "201902222200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902222300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902230000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902230100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902230200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902230300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902230400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902230500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902230600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902230700",
+            "count": 1
+        },
+        {
+            "timePeriod": "201902230800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902230900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902231000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902231100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902231200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902231300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902231400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902231500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902231600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902231700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902231800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902231900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902232000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902232100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902232200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902232300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902240000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902240100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902240200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902240300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902240400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902240500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902240600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902240700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902240800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902240900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902241000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902241100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902241200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902241300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902241400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902241500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902241600",
+            "count": 1
+        },
+        {
+            "timePeriod": "201902241700",
+            "count": 5
+        },
+        {
+            "timePeriod": "201902241800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902241900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902242000",
+            "count": 1
+        },
+        {
+            "timePeriod": "201902242100",
+            "count": 2
+        },
+        {
+            "timePeriod": "201902242200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902242300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902250000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902250100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902250200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902250300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902250400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902250500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902250600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902250700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902250800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902250900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902251000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902251100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902251200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902251300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902251400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902251500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902251600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902251700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902251800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902251900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902252000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902252100",
+            "count": 2
+        },
+        {
+            "timePeriod": "201902252200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902252300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902260000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902260100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902260200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902260300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902260400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902260500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902260600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902260700",
+            "count": 22
+        },
+        {
+            "timePeriod": "201902260800",
+            "count": 8
+        },
+        {
+            "timePeriod": "201902260900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902261000",
+            "count": 3
+        },
+        {
+            "timePeriod": "201902261100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902261200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902261300",
+            "count": 1
+        },
+        {
+            "timePeriod": "201902261400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902261500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902261600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902261700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902261800",
+            "count": 1
+        },
+        {
+            "timePeriod": "201902261900",
+            "count": 1
+        },
+        {
+            "timePeriod": "201902262000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902262100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902262200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902262300",
+            "count": 1
+        },
+        {
+            "timePeriod": "201902270000",
+            "count": 2
+        },
+        {
+            "timePeriod": "201902270100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902270200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902270300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902270400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902270500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902270600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902270700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902270800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902270900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902271000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902271100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902271200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902271300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902271400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902271500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902271600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902271700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902271800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902271900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902272000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902272100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902272200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902272300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902280000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902280100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902280200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902280300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902280400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902280500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902280600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902280700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902280800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902280900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902281000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902281100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902281200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902281300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902281400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902281500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902281600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902281700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902281800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902281900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902282000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902282100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902282200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201902282300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903010000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903010100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903010200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903010300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903010400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903010500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903010600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903010700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903010800",
+            "count": 3
+        },
+        {
+            "timePeriod": "201903010900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903011000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903011100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903011200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903011300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903011400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903011500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903011600",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903011700",
+            "count": 2
+        },
+        {
+            "timePeriod": "201903011800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903011900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903012000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903012100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903012200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903012300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903020000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903020100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903020200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903020300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903020400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903020500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903020600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903020700",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903020800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903020900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903021000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903021100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903021200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903021300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903021400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903021500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903021600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903021700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903021800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903021900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903022000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903022100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903022200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903022300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903030000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903030100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903030200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903030300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903030400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903030500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903030600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903030700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903030800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903030900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903031000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903031100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903031200",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903031300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903031400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903031500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903031600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903031700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903031800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903031900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903032000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903032100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903032200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903032300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903040000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903040100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903040200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903040300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903040400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903040500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903040600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903040700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903040800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903040900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903041000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903041100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903041200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903041300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903041400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903041500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903041600",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903041700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903041800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903041900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903042000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903042100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903042200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903042300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903050000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903050100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903050200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903050300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903050400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903050500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903050600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903050700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903050800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903050900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903051000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903051100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903051200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903051300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903051400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903051500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903051600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903051700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903051800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903051900",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903052000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903052100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903052200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903052300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903060000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903060100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903060200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903060300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903060400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903060500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903060600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903060700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903060800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903060900",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903061000",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903061100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903061200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903061300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903061400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903061500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903061600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903061700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903061800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903061900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903062000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903062100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903062200",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903062300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903070000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903070100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903070200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903070300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903070400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903070500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903070600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903070700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903070800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903070900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903071000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903071100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903071200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903071300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903071400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903071500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903071600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903071700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903071800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903071900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903072000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903072100",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903072200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903072300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903080000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903080100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903080200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903080300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903080400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903080500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903080600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903080700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903080800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903080900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903081000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903081100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903081200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903081300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903081400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903081500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903081600",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903081700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903081800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903081900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903082000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903082100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903082200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903082300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903090000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903090100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903090200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903090300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903090400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903090500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903090600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903090700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903090800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903090900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903091000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903091100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903091200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903091300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903091400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903091500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903091600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903091700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903091800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903091900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903092000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903092100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903092200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903092300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903100000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903100100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903100200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903100300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903100400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903100500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903100600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903100700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903100800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903100900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903101000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903101100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903101200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903101300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903101400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903101500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903101600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903101700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903101800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903101900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903102000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903102100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903102200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903102300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903110000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903110100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903110200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903110300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903110400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903110500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903110600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903110700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903110800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903110900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903111000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903111100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903111200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903111300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903111400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903111500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903111600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903111700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903111800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903111900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903112000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903112100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903112200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903112300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903120000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903120100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903120200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903120300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903120400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903120500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903120600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903120700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903120800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903120900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903121000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903121100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903121200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903121300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903121400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903121500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903121600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903121700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903121800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903121900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903122000",
+            "count": 2
+        },
+        {
+            "timePeriod": "201903122100",
+            "count": 2
+        },
+        {
+            "timePeriod": "201903122200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903122300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903130000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903130100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903130200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903130300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903130400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903130500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903130600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903130700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903130800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903130900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903131000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903131100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903131200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903131300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903131400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903131500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903131600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903131700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903131800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903131900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903132000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903132100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903132200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903132300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903140000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903140100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903140200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903140300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903140400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903140500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903140600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903140700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903140800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903140900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903141000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903141100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903141200",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903141300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903141400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903141500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903141600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903141700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903141800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903141900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903142000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903142100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903142200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903142300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903150000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903150100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903150200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903150300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903150400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903150500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903150600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903150700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903150800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903150900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903151000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903151100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903151200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903151300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903151400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903151500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903151600",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903151700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903151800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903151900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903152000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903152100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903152200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903152300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903160000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903160100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903160200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903160300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903160400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903160500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903160600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903160700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903160800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903160900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903161000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903161100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903161200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903161300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903161400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903161500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903161600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903161700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903161800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903161900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903162000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903162100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903162200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903162300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903170000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903170100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903170200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903170300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903170400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903170500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903170600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903170700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903170800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903170900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903171000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903171100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903171200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903171300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903171400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903171500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903171600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903171700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903171800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903171900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903172000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903172100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903172200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903172300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903180000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903180100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903180200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903180300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903180400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903180500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903180600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903180700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903180800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903180900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903181000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903181100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903181200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903181300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903181400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903181500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903181600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903181700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903181800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903181900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903182000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903182100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903182200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903182300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903190000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903190100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903190200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903190300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903190400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903190500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903190600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903190700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903190800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903190900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903191000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903191100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903191200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903191300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903191400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903191500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903191600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903191700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903191800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903191900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903192000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903192100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903192200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903192300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903200000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903200100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903200200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903200300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903200400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903200500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903200600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903200700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903200800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903200900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903201000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903201100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903201200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903201300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903201400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903201500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903201600",
+            "count": 2
+        },
+        {
+            "timePeriod": "201903201700",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903201800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903201900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903202000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903202100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903202200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903202300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903210000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903210100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903210200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903210300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903210400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903210500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903210600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903210700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903210800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903210900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903211000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903211100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903211200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903211300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903211400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903211500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903211600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903211700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903211800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903211900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903212000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903212100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903212200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903212300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903220000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903220100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903220200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903220300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903220400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903220500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903220600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903220700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903220800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903220900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903221000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903221100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903221200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903221300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903221400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903221500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903221600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903221700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903221800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903221900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903222000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903222100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903222200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903222300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903230000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903230100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903230200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903230300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903230400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903230500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903230600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903230700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903230800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903230900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903231000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903231100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903231200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903231300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903231400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903231500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903231600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903231700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903231800",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903231900",
+            "count": 1
+        },
+        {
+            "timePeriod": "201903232000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903232100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903232200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903232300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903240000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903240100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903240200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903240300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903240400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903240500",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903240600",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903240700",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903240800",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903240900",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903241000",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903241100",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903241200",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903241300",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903241400",
+            "count": 0
+        },
+        {
+            "timePeriod": "201903241500",
+            "count": 0
+        }
+    ],
+    "totalCount": 78,
+    "requestParameters": {
+        "bucket": "hour",
+        "fromDate": "201902220000",
+        "toDate": "201903241509"
+    }
+}
