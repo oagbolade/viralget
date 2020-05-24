@@ -7,19 +7,6 @@
 
                 <h6 class="sidebar-title">Filter Result</h6>
                 <form action="#" v-on:submit.prevent="filterResults" method="GET">
-
-                    <div class="text-center">
-                      <h5 class="divider" style="margin:  5px 0">By Twitter Handle</h5>
-                    </div>
-                    <div class="form-group">
-                      <input type="text" v-model="form.handle" name="handle" id="" class="form-control" placeholder="@username">
-                    </div>
-                    <div class="text-center">
-                      <h5 class="divider" style="margin:  5px 0">By Keyword</h5>
-                    </div>
-                    <div class="form-group">
-                      <input type="text" v-model="form.keyword" name="keyword" id="" class="form-control" placeholder="Enter keyword">
-                    </div>
                     <div class="text-center">
                       <h5 class="divider" style="margin: 5px 0">Category</h5>
                     </div>
@@ -30,6 +17,7 @@
                           <option  v-for="(category, index) in categories" :key="index" :value="category.slug">{{ category.name }}</option>
                         </select>
                     </div>
+
                     <div class="text-center">
                       <h5 class="divider" style="margin: 5px 0">Sort By Engagement Rate</h5>
                     </div>
@@ -39,6 +27,35 @@
                           <option value="high">Highest to Lowest</option>
                           <option value="low">Lowest to Highest</option>
                         </select>
+                    </div>
+                    
+                    <div class="text-center">
+                      <h5 class="divider" style="margin: 5px 0">Location</h5>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" v-model="form.er" name="er">
+                          <option value="">Select a Location</option>
+                          <option value="Lagos">Lagos</option>
+                          <option value="Abuja">Abuja</option>
+                          <option value="Kaduna">Kaduna</option>
+                          <option value="Ogun">Ogun</option>
+                        </select>
+                    </div>
+
+                    <div class="text-center">
+                      <h5 class="divider" style="margin: 5px 0">Gender</h5>
+                    </div>
+                    <div class="form-group">
+                      <div class="custom-controls-stacked">
+                        <div class="custom-control custom-radio">
+                          <input type="radio" class="custom-control-input" name="radio1">
+                          <label class="custom-control-label">Male</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <input type="radio" class="custom-control-input" name="radio1" checked>
+                          <label class="custom-control-label">Female</label>
+                        </div>
+                      </div>
                     </div>
                     <!-- <div class="text-center">
                       <h5 class="divider" style="margin: 5px 0">Location</h5>
