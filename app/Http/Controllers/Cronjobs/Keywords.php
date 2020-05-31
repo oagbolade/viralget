@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Cronjobs;
 
 // use Illuminate\Http\Request;
@@ -10,31 +11,30 @@ class Keywords
             "category_id" => "008",
             "keywords" => [
                 "science", "computer", "gadget", "websites", "digital technology", "tech",
-                "technology", "camera", "app", "phone", "tech", "youtube", "developer",
-                "programming", "tech news", "information technology", "ICT", "health technology",
-                "code", "app", "software", "IT", "artificial intelligence", "nanotechnology",
-                "encryption", "science and technology", "new technology", "artificial intelligence",
+                "technology", "camera", "tech", "developer", "programming","coding",
+                "tech news", "information technology", "health technology", "software", "artificial intelligence",
+                "nanotechnology", "encryption", "science and technology", "new technology",
                 "computer software engineer", "5g technology", "innovation technology", "mobile developer",
-                "future technology", "latest tech news", "health technology", "edtech", "medical technology",
+                "latest tech news", "health technology", "edtech", "medical technology",
                 "science technology", "face recognition app", "financial technology", "electronic gadgets",
                 "communication technology", "mobile device", "cloud technology", "tablet computers",
                 "ai technology", "best gadgets", "tech zone", "mobile technology", "techtalk",
-                "latest gadgets", "cool tech gadgets", "unboxing", "AI", "tech house", "techie",
+                "latest gadgets", "cool tech gadgets", "unboxing", "tech house", "techie",
                 "techy", "Technical Analysis", "technopreneur", "techlife", "tech startup",
                 "Technology Rocks", "tech geek", "naija tech", "techcrunch", "tech week",
                 "tech addict", "tech trends", "tech blogger", "future technology", "tech fest",
                 "tech life", "fintech", "techouse", "technologies", "techie", "tech world",
                 "tech news", "tech wear", "tech gadgets", "computers", "software", "electronics",
                 "gadgets", "innovation", "device", "apple", "smartphone", "engineering",
-                "computer science", "coding", "design", "android", "samsung", "programmer", "iphone",
-                "code", "python", "mobile", "web developer", "electronic engineer", "java", "javascript",
+                "computer science", "design", "android", "samsung", "programmer",
+                "python", "mobile", "web developer", "electronic engineer", "java", "javascript",
                 "hacker", "linux", "future tech", "internet of things", "techlife", "new technology",
                 "automation", "technology news", "techlover", "information technology", "tech world",
                 "tech blog", "laptops", "tech savvy", "smart technology", "techcrunch", "technology lover",
                 "technology trends", "computer technology", "technology blog", "techaddict", "windows7",
                 "tech updates", "computer world", "consumer electronics", "programmers life", " smart gadget",
                 "tech facts", "tech nerds", "tech lovers", "eletronics", "tech memes", "tech insider",
-                "tech tips", "daily tech", "tech portal", "tech talk", "tech love"
+                "tech tips", "daily tech", "tech portal", "tech talk", "tech love", "hackathon"
             ]
         ],
         "movie" => [
