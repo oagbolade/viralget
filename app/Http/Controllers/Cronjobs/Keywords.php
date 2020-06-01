@@ -10,12 +10,11 @@ class Keywords
         "technology" => [
             "category_id" => "008",
             "keywords" => [
-                "science", "computer", "gadget", "websites", "digital technology", "tech",
-                "technology", "camera", "tech", "developer", "programming","coding",
-                "tech news", "information technology", "health technology", "software", "artificial intelligence",
+                "coding", "tech", "software", "developer", "science", "computer", "programming", "gadget", "websites", 
+                "tech news", "information technology", "health technology", "artificial intelligence", "technology", "camera", 
                 "nanotechnology", "encryption", "science and technology", "new technology",
                 "computer software engineer", "5g technology", "innovation technology", "mobile developer",
-                "latest tech news", "health technology", "edtech", "medical technology",
+                "latest tech news", "health technology", "edtech", "medical technology", "digital technology",
                 "science technology", "face recognition app", "financial technology", "electronic gadgets",
                 "communication technology", "mobile device", "cloud technology", "tablet computers",
                 "ai technology", "best gadgets", "tech zone", "mobile technology", "techtalk",
