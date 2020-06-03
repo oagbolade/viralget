@@ -26,6 +26,11 @@ Vue.component('profile-loading', require('./components/ProfileLoadingComponent.v
 Vue.component('search-result', require('./components/SearchResultComponent.vue').default);
 Vue.component('search-profile', require('./components/SearchProfileComponent.vue').default);
 Vue.component('pagination', require('./components/PaginationComponent.vue').default);
+
+// For search page
+Vue.component('search-page-result', require('./components/search/SearchResultComponent.vue').default);
+Vue.component('search-page-profile', require('./components/search/SearchProfileComponent.vue').default);
+
 // Vue.component('pagination', require('laravel-vue-pagination').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
