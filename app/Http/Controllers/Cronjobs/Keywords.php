@@ -8,7 +8,7 @@ class Keywords
 {
     private $_keywords = [
         "technology" => [
-            "category_id" => "008",
+            "category_id" => "8",
             "keywords" => [
                 "coding", "tech", "software", "developer", "science", "computer", "programming", "gadget", "websites", 
                 "tech news", "information technology", "health technology", "artificial intelligence", "technology", "camera", 
