@@ -35,7 +35,7 @@ class AuthController extends Controller
             // return Socialite::driver('twitter')->userFromTokenAndSecret($oauth_token, $oauth_token_secret);
             return Socialite::driver('twitter')->redirect();
         } catch (\Exception $e) {
-            return redirect(route('login'))->withError('Error authenticating you at the moment. Please try again.'. ' '. $e);
+            return redirect(route('login'))->withError('Error authenticating you at the moment. Please try again.');
         }
     }
 
