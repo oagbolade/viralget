@@ -15,6 +15,13 @@ class CreateInfluencersTable extends Migration
     {
         Schema::create('influencers', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('handle');
+            $table->string('followers');
+            $table->enum('engagement_rate', ['low', 'good', 'high', "very high"]);
+            $table->string('location');
+            $table->string('gender')->nullable();
+            $table->string('platform_id');
+            $table->string('category_id');
             $table->timestamps();
         });
     }
