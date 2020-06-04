@@ -22,11 +22,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
 #    Route::get('/tweets', 'TwitterAPIController@getTweets');
 
+    Route::get('/influencers', 'InfluencerController@getAllInfluencers');
+
     Route::get('/profile', 'TwitterAPIController@getAllProfileData');
     Route::get('/hashtag', 'TwitterAPIController@getHashtagTweets');
 
     Route::get('/trends', 'TwitterAPIController@trending');
     Route::get('/list', 'SearchController@list');
+    Route::get('/list/filter', 'SearchPageController@list');
     Route::get('/list/queryProfile', 'SearchController@profile');
 
     Route::get('/misc/categories', 'SearchController@getCategories');
