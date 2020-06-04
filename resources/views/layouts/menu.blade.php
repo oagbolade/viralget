@@ -21,8 +21,6 @@
             <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
           </div>          
           @endguest
-
-         
         </div>
       </div>
     </section>
@@ -67,6 +65,7 @@
               </ul>
             </li>
             @endforeach
+
             @guest
             <li class="nav-item display-mobile">
               <a class="nav-link" href="{{ route('login') }}">Login</a>
@@ -92,6 +91,13 @@
               </form>
             </li>
           </ul>
+
+          {{-- Only show when authenticated --}}
+          @if(Auth::user())         
+            <div>
+              <a href="{{ route('search-page') }}"><button type="button" class="btn btn-sm btn-warning">Search</button></a>
+            </div>
+          @endif
         </section>
               <form class="@if($isDarkBg) input-glass @endif input-round w-400 hide-mobile" action="{{ route('profiles') }}" style="margin-top: -5px">
                 <div class="input-group">
