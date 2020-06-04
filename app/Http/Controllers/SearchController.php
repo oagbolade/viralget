@@ -30,6 +30,11 @@ class SearchController extends Controller
 
     private $extraTweets = [];
     //
+
+    function index(){
+        return view('search.list');
+    }
+
     function list() {
 
         $states = States::all();
@@ -121,15 +126,15 @@ class SearchController extends Controller
         $handle = request()->handle;
         $user = Auth()->user();
 
+        // adjusted: removed user subscription due to twitter error
+        // if(!$user->subscription) {
+        //     return redirect(route('pricing'))->withError('You do not have an active subscription plan. Please choose a subscription package to continue.');
+        // }
 
-        if(!$user->subscription) {
-            return redirect(route('pricing'))->withError('You do not have an active subscription plan. Please choose a subscription package to continue.');
-        }
 
-
-        if($user->subscription->profiling_balance == 0) {
-            return redirect(route('pricing'))->withError('You have reached your profiling balance limit. Please choose a subscription package to continue.');
-        }
+        // if($user->subscription->profiling_balance == 0) {
+        //     return redirect(route('pricing'))->withError('You have reached your profiling balance limit. Please choose a subscription package to continue.');
+        // }
 
         // Subscription::where('user_id', $user->id)->decrement('profiling_balance', 1);
 
