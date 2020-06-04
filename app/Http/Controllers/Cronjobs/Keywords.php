@@ -10,8 +10,8 @@ class Keywords
         "technology" => [
             "category_id" => "8",
             "keywords" => [
-                "coding", "tech", "software", "developer", "science", "computer", "programming", "gadget", "websites", 
-                "tech news", "information technology", "health technology", "artificial intelligence", "technology", "camera", 
+                "coding", "tech", "software", "developer", "science", "computer", "programming", "gadget", "websites",
+                "tech news", "information technology", "health technology", "artificial intelligence", "technology", "camera",
                 "nanotechnology", "encryption", "science and technology", "new technology",
                 "computer software engineer", "5g technology", "innovation technology", "mobile developer",
                 "latest tech news", "health technology", "edtech", "medical technology", "digital technology",
@@ -53,6 +53,17 @@ class Keywords
                 "MovieStars", "movietheater", "moviescene", "moviemagic", "MOVIEART", "MovieAddict",
                 "moviecollection", "MovieProduction", "moviepremiere", "moviegeek", "movieLif"
             ]
+        ],
+        "locations" => [
+            "Abia", "Umuahia", "Adamawa", "Yola", "Akwa Ibom", "Uyo", "Anambra", "Awka", "Bauchi",
+            "Bayelsa", "Yenagoa", "Benue", "Makurdi", "Borno", "Maiduguri", "Cross River",    "Calabar",
+            "Delta", "Asaba", "Ebonyi", "Abakaliki", "Edo", "Benin", "Ekiti",    "Ado Ekiti",
+            "Enugu", "Gombe", "Imo", "Owerri", "Jigawa", "Dutse", "Kaduna",
+            "Kano",  "Katsina", "Kebbi", "Kogi", "Lokoja", "Kwara", "Ilorin", "Ikeja",
+            "Nasarawa", "Lafia", "Niger", "Minna", "Ogun", "Abeokuta", "Ondo", "Akure", "Osun",    "Oshogbo",
+            "Oyo", "Ibadan", "Plateau", "Jos", "Rivers", "Port Harcourt", "Sokoto",
+            "Taraba", "Jalingo", "Yobe", "Damaturu", "Zamfara", "Gusau", "Lekki", "Ajah",
+            "NG", "Nigeria", "Ikoyi", "Lagos", "Abuja"
         ],
     ];
 
