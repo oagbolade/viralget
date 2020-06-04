@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Http\Controllers\Cronjobs\keywords;
-use App\Account;
+use App\Influencers;
 use Exception;
 
 use function GuzzleHttp\json_encode;
@@ -24,6 +24,10 @@ class TwitterCronHandler extends Controller
     private $prepared_keywords = "";
 
     private $_platform_id = 1;
+
+    private $_location;
+    private $_engagement_rate;
+    private $_followers;
 
     private $_category;
 
@@ -56,31 +60,13 @@ class TwitterCronHandler extends Controller
             env('TWITTER_ACCESS_TOKEN'),
             env('TWITTER_TOKEN_SECRET')
         );
-        $this->_keywords = new Keywords();
-    }
 
-    function getInfluencerLocation($location){
-        $state = explode(",", $location);
-        return $state[0];
+        $this->_keywords = new Keywords();
     }
 
     function index() //Rename to search
     {
-        // $this->_temporary_parameters = [
-        //     "query" => "place_country: NG (tech OR coding OR software OR developer) -discount -promo -cash -sale -game -bet",
-        //     "maxResults" => 10,
-        // ];
-
-        // try {
-        //     $tweets = $this->twitterFetch($this->URLs['premium-30-sandbox'], $this->_temporary_parameters);
-        // } catch (\Exception $e) {
-        //     return $e->getMessage();
-        // }
-        // return json_encode($tweets);
-
-        // return;
-        //////////////////////////////////////////////////////////////
-        // $this->_Parameters["get-influencer-tweets"]["screen_name"] = "unicodeveloper";
+        // $this->_Parameters["get-influencer-tweets"]["screen_name"] = "DonaldNdoro";
 
         // try {
         //     $influencerTweets = $this->twitterFetch($this->URLs['get-tweets'], $this->_Parameters["get-influencer-tweets"]);
@@ -89,56 +75,66 @@ class TwitterCronHandler extends Controller
         // }
         // return json_encode($influencerTweets);
 
-        // return;
-        ///////////////////////////////////////////////////////
-        // $page = 0;
-        // $next = "";
-        // $searching = true;
-
-        // while ($searching) {
-        //     if($page === 0){
-        //         $this->_temporary_parameters = [
-        //             "query" => "place_country: NG place: lagos (tech OR coding OR software OR developer) -discount -promo -cash -sale -game -bet",
-        //             "maxResults" => 100,
-        //         ];
-        //     }else{
-        //         $this->_temporary_parameters = [
-        //             "query" => "place_country: NG place: lagos (tech OR coding OR software OR developer) -discount -promo -cash -sale -game -bet",
-        //             "maxResults" => 100,
-        //             "next" => $next
-        //         ];
-        //     }
-
-        //     $page++;
-
-        //     try {
-        //         $tweets = $this->twitterFetch($this->URLs['premium-30-sandbox'], $this->_temporary_parameters);
-        //     } catch (\Exception $e) {
-        //         return $e->getMessage();
-        //     }
-
-        //     if(isset($tweets->results)){
-        //         foreach ($tweets->results as $status) {
-        //             if ($this->checkFollowers($status->user->followers_count)) {
-        //                 $this->checkTweets($status->user->screen_name);
-        //             }
+        // if (is_array($influencerTweets) > 0) {
+        //     foreach ($influencerTweets as $tweets) {
+        //         if ($this->matchesInfluencerLocation($tweets->user->location)) {
+        //             echo $tweets->user->location . "<br>";
         //         }
         //     }
-
-        //     // For live data
-        //     if(isset($tweets->next)){
-        //         $next = $tweets->next;
-        //     }else{
-        //         $searching = false;
-        //         return json_encode($tweets);
-        //     }
-
-        //     // For testing
-        //     if($page === 5){
-        //         return json_encode($tweets);
-        //     }
-
         // }
+        // return;
+
+        /////////////////////////////////////////////////////////////////////////////////
+        $page = 0;
+        $next = "";
+        $searching = true;
+
+        while ($searching) {
+            if ($page === 0) {
+                $this->_temporary_parameters = [
+                    "query" => "place_country: NG (tech OR coding OR software OR developer) -discount -promo -cash -sale -game -bet",
+                    "maxResults" => 100,
+                ];
+            } else {
+                $this->_temporary_parameters = [
+                    "query" => "place_country: NG (tech OR coding OR software OR developer) -discount -promo -cash -sale -game -bet",
+                    "maxResults" => 100,
+                    "next" => $next
+                ];
+            }
+
+            $page++;
+
+            try {
+                $tweets = $this->twitterFetch($this->URLs['premium-30-sandbox'], $this->_temporary_parameters);
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
+
+            if (isset($tweets->results)) {
+                foreach ($tweets->results as $status) {
+                    if ($this->checkFollowers($status->user->followers_count)) {
+                        $this->setInfluencerFollowers($status->user->followers_count);
+                        $this->getInfluencerLocation($status->user->location);
+                        $this->checkTweets($status->user->screen_name);
+                    }
+                }
+            }
+
+            // For live data
+            if (isset($tweets->next)) {
+                $next = $tweets->next;
+            } else {
+                $searching = false;
+                return json_encode($tweets);
+            }
+
+            // For testing
+            if ($page === 3) {
+                $searching = false;
+                return json_encode($tweets);
+            }
+        }
 
         return;
 
@@ -155,11 +151,6 @@ class TwitterCronHandler extends Controller
         while ($is_searching) {
             $sliced_array = array_slice($keyword_array, $start, $end);
 
-            $standard_search_parameters = [
-                "query" => $this->prepare_keywords($sliced_array),
-                "maxResults" => 100,
-            ];
-
             if ($page === 0) {
                 $this->_temporary_parameters = [
                     "query" => $this->prepare_keywords($sliced_array),
@@ -174,7 +165,7 @@ class TwitterCronHandler extends Controller
             }
 
             try {
-                $tweets = $this->twitterFetch($this->URLs['premium-30-sandbox'], $standard_search_parameters);
+                $tweets = $this->twitterFetch($this->URLs['premium-30-sandbox'], $this->_temporary_parameters);
             } catch (\Exception $e) {
                 return $e->getMessage();
             }
@@ -186,6 +177,8 @@ class TwitterCronHandler extends Controller
             if (isset($tweets->results)) {
                 foreach ($tweets->results as $status) {
                     if ($this->checkFollowers($status->user->followers_count)) {
+                        $this->setInfluencerFollowers($status->user->followers_count);
+                        $this->getInfluencerLocation($status->user->location);
                         $this->checkTweets($status->user->screen_name);
                     }
                 }
@@ -200,7 +193,7 @@ class TwitterCronHandler extends Controller
                 $page = 0;
             }
 
-            if ($page === 5) {
+            if ($page === 40) {
                 $is_searching = false;
                 return json_encode($tweets);
             }
@@ -223,10 +216,10 @@ class TwitterCronHandler extends Controller
         return $remove_ends;
     }
 
-    function engagementRate($allTweets, $likes, $retweets, $followersCount)
+    function calculateEngagementRate($engagement_data)
     {
-        $engagementRatePerPost = $likes + ($retweets * 2) / $followersCount;
-        $engagementRate = $engagementRatePerPost / 200;
+        $engagementRate = ($engagement_data["likes"] / 200 + $engagement_data["retweets"] / 200) / ($engagement_data["followers"] ?? 0);
+        $engagementRate = round($engagementRate, 2);
         return $engagementRate;
     }
 
@@ -256,27 +249,117 @@ class TwitterCronHandler extends Controller
 
         $counter = 0;
 
-        foreach ($influencerTweets as $tweets) {
-            foreach ($this->_keywords->getKeywords($this->_category)['keywords'] as $keyword) {
-                if (isset($tweets->retweeted_status->full_text) && $this->analyseEachInfluencerTweet($tweets->retweeted_status->full_text, $keyword)) {
-                    $counter++;
-                } else if (!isset($tweets->retweeted_status->full_text) && $this->analyseEachInfluencerTweet($tweets->full_text, $keyword)) {
-                    $counter++;
+        $retweets_count = 0;
+        $likes_count = 0;
+        $followers_count = 0;
+
+        if (is_array($influencerTweets) > 0) {
+            foreach ($influencerTweets as $tweets) {
+                $retweets_count += $tweets->retweet_count ?? 0;
+                $likes_count += $tweets->favorite_count ?? 0;
+                $followers_count = $tweets->user->followers_count;
+
+                foreach ($this->_keywords->getKeywords($this->_category)['keywords'] as $keyword) {
+                    if (isset($tweets->retweeted_status->full_text) && $this->analyseEachInfluencerTweet($tweets->retweeted_status->full_text, $keyword) && $this->matchesInfluencerLocation($tweets->user->location)) {
+                        $counter++;
+                    } else if (!isset($tweets->retweeted_status->full_text) && $this->analyseEachInfluencerTweet($tweets->full_text, $keyword) && $this->matchesInfluencerLocation($tweets->user->location)) {
+                        $counter++;
+                    }
                 }
             }
         }
 
+        $engagement_data = [
+            "followers" => $followers_count ?? 0,
+            "retweets" => $retweets_count,
+            "likes" => $likes_count,
+        ];
+
+        $engagement_rate = $this->calculateEngagementRate($engagement_data);
+
         // echo $counter / 2 . '%' . '<br>';
 
         if ($this->areTweetsRelevant($counter)) {
+            $this->setInfluencerEngagementRate($engagement_rate);
+            $this->setInfluencerFollowers($followers_count);
+
             $data = [
                 "handle" => $screen_name,
-                // "platform_id" => $this->_platform_id,
-                "platform_id" => "testing",
+                "followers" => $this->_followers,
+                "engagement_rate" => $this->_engagement_rate,
+                "location" => $this->_location,
+                "platform_id" => $this->_platform_id,
                 "category_id" => $this->_keywords->getKeywords($this->_category)['category_id'], // adjusted for movies
             ];
             $this->handleExists($data);
         }
+    }
+
+    function getInfluencerLocation($location)
+    {
+        $state = explode(",", $location);
+        $this->setInfluencerLocation($state[0]);
+        return $state[0];
+    }
+
+    function matchesInfluencerLocation($location)
+    {
+        $location_keywords = ["Lekki", "Ajah", "NG", "Nigeria", "Ibadan", "Ikoyi", "Lagos", "Abuja"];
+        foreach ($location_keywords as $eachLocation) {
+            if ($eachLocation === "NG" && strpos($location, $eachLocation) !== false) {
+                // return $screen_name . "<br>";
+                return true;
+            }
+
+            if ($eachLocation !== "NG") {
+                return $this->checkNoneCodeLocations($location, $eachLocation);
+            }
+        }
+
+        // function checkNoneCodeLocations($location, $eachLocation)
+        // {
+        //     if ($this->analyseEachInfluencerLocation($location, $eachLocation) || $this->analyseEachInfluencerLocation($location, strtolower($eachLocation))) {
+        //         return true;
+        //     }
+        // }
+
+        return false;
+    }
+
+    function checkNoneCodeLocations($location, $eachLocation)
+    {
+        if ($this->analyseEachInfluencerLocation($location, $eachLocation) || $this->analyseEachInfluencerLocation($location, strtolower($eachLocation))) {
+            return true;
+        }
+    }
+
+    function setInfluencerLocation($location)
+    {
+        $this->_location = $location;
+    }
+
+    function setInfluencerEngagementRate($engagementRate)
+    {
+        if ($engagementRate < 0.02) {
+            return $this->_engagement_rate = "low";
+        }
+
+        if ($engagementRate < 0.09 && $engagementRate > 0.02) {
+            return $this->_engagement_rate = "good";
+        }
+
+        if ($engagementRate < 0.33 && $engagementRate > 0.09) {
+            return $this->_engagement_rate = "high";
+        }
+
+        if ($engagementRate > 0.33) {
+            return $this->_engagement_rate = "very high";
+        }
+    }
+
+    function setInfluencerFollowers($followers)
+    {
+        $this->_followers = $followers;
     }
 
     function analyseEachInfluencerTweet($tweets, $keywords)
@@ -286,17 +369,25 @@ class TwitterCronHandler extends Controller
         }
     }
 
+    function analyseEachInfluencerLocation($location, $keywords)
+    {
+        if (stripos($location, $keywords) !== false) {
+            return true;
+        }
+    }
+
     function areTweetsRelevant($counter)
     {
-        if ($counter > 60) {
+        if ($counter > 60) { // adjusted, should be 60
             return true;
         }
     }
 
     function handleExists($data = [])
     {
-        $user = Account::where('handle', '=', $data['handle'])->first();
+        $user = Influencers::where('handle', '=', $data['handle'])->first();
         if ($user) {
+            // Plan to do an update to user profile 
             return false;
         }
         $this->saveData($data);
@@ -304,10 +395,13 @@ class TwitterCronHandler extends Controller
 
     function saveData($data)
     {
-        $accounts = new Account;
+        $accounts = new Influencers;
         $accounts->handle = $data['handle'];
         $accounts->platform_id = $data['platform_id'];
         $accounts->category_id = $data['category_id'];
+        $accounts->location = $data['location'];
+        $accounts->engagement_rate = $data['engagement_rate'];
+        $accounts->followers = $data['followers'];
 
         try {
             $accounts->save();
