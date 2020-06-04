@@ -23,9 +23,7 @@ Route::get('/terms', 'HomeController@terms')->name('terms');
 Route::get('/privacy-policy', 'HomeController@privacy')->name('privacy');
 Route::get('/search', 'SearchController@search')->name('search');
 
-
-
-Route::middleware('guest')->group(function() {
+Route::middleware('guest')->group(function () {
 
     Route::get('login', 'AuthController@login')->name('login');
 
@@ -36,12 +34,14 @@ Route::middleware('guest')->group(function() {
     //Route::get('/profile/{handle}', 'ScrapperController@index')  ;
 });
 
-Route::middleware('auth')->group(function() {
+Route::middleware('auth')->group(function () {
+    Route::get('/search-page', 'SearchController@index')->name('search-page');
     Route::get('complete-signup', 'AuthController@signup')->name('login.signup');
     Route::post('complete-signup', 'AuthController@postSignup')->name('login.signup.post');
 
 
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+
 
 
     Route::get('/history/reports', 'DashboardController@reporting')->name('reporting');
@@ -71,7 +71,7 @@ Route::prefix('admin')->group(function () {
         Route::get('logout', 'Admin\AuthController@logout')->name('admin.logout');
     });
 
-    Route::middleware('auth:admin')->group(function() {
+    Route::middleware('auth:admin')->group(function () {
         Route::get('dashboard',  'Admin\AuthController@dashboard')->name('admin.dashboard');
 
         Route::get('profiles',  'Admin\AccountController@list')->name('admin.profiles');
@@ -91,7 +91,5 @@ Route::prefix('admin')->group(function () {
         Route::post('categories/add',  'Admin\CategoryController@store')->name('admin.categories.add.post');
         Route::get('categories/edit/{id}',  'Admin\CategoryController@edit')->name('admin.categories.edit');
         Route::post('categories/edit/{id}',  'Admin\CategoryController@update')->name('admin.categories.edit.post');
-
     });
-
 });
