@@ -19,13 +19,27 @@
                     </div>
 
                     <div class="text-center">
-                      <h5 class="divider" style="margin: 5px 0">Sort By Engagement Rate</h5>
+                      <h5 class="divider" style="margin: 5px 0">Followers</h5>
                     </div>
                     <div class="form-group">
                         <select class="form-control" v-model="form.er" name="er">
                           <option value="">Select Option</option>
-                          <option value="high">Highest to Lowest</option>
-                          <option value="low">Lowest to Highest</option>
+                          <option value="low">5000 - 10000</option>
+                          <option value="middle">10000 - 20000</option>
+                          <option value="influencer">Greater than 20000</option>
+                        </select>
+                    </div>
+                    
+                    <div class="text-center">
+                      <h5 class="divider" style="margin: 5px 0">Engagement Rate</h5>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" v-model="form.er" name="er">
+                          <option value="">Select Option</option>
+                          <option value="low">Low</option>
+                          <option value="good">Good</option>
+                          <option value="high">High</option>
+                          <option value="very high">Very High</option>
                         </select>
                     </div>
                     
@@ -35,14 +49,17 @@
                     <div class="form-group">
                         <select class="form-control" v-model="form.er" name="er">
                           <option value="">Select a Location</option>
+                          <option value="Africa">Africa</option>
+                          <option value="Nigeria">Nigeria</option>
                           <option value="Lagos">Lagos</option>
                           <option value="Abuja">Abuja</option>
                           <option value="Kaduna">Kaduna</option>
                           <option value="Ogun">Ogun</option>
+                          <option value="Ibadan">Ibadan</option>
                         </select>
                     </div>
 
-                    <div class="text-center">
+                    <!-- <div class="text-center">
                       <h5 class="divider" style="margin: 5px 0">Gender</h5>
                     </div>
                     <div class="form-group">
@@ -56,7 +73,9 @@
                           <label class="custom-control-label">Female</label>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
+
+
                     <!-- <div class="text-center">
                       <h5 class="divider" style="margin: 5px 0">Location</h5>
                     </div>
