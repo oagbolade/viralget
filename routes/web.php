@@ -42,8 +42,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
-
-
     Route::get('/history/reports', 'DashboardController@reporting')->name('reporting');
     Route::get('/history/profiles', 'DashboardController@profiling')->name('profiling');
 
@@ -58,6 +56,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/report/hashtag/{id}', 'ReportingController@index')->name('reporting.hashtag');
     Route::get('/report/profile/{id}', 'ProfilingController@index')->name('reporting.profile');
+    
+    Route::get('/campaigns', 'CampaignController@index')->name('campaigns.view');
+    Route::get('/create-campaign', 'CampaignController@create')->name('campaigns.create');
 
     Route::get('/logout', 'AuthController@logout')->name('logout');
 });
