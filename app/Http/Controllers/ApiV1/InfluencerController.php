@@ -39,17 +39,16 @@ class InfluencerController extends Controller
 
     function getAllInfluencers()
     {
+        $user = $this->authenticate();
 
-        // $user = $this->authenticate();
-
-        // if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
+        if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         try {
-            $influencers = Influencers::with('category')->get();
+            $influencers = Influencers::with('category')->paginate(15);
             if (count($influencers) > 0) {
                 return response()->json([
                     'message' => "success",
-                    'data' => $influencers
+                    'data' => $influencers,
                 ], 200);
             }
         } catch (Exception $e) {
