@@ -37,10 +37,9 @@ class SearchPageController extends Controller
     }
 
     function list() {
-        // adjusted: having issues with twitter authentication
-        // $user = $this->authenticate();
+        $user = $this->authenticate();
 
-        // if(!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
+        if(!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         
         $q = request()->q;
@@ -89,103 +88,15 @@ class SearchPageController extends Controller
             });
         }
 
-        $influencerProfiles = $filterInfluencers->paginate(15)->appends(request()->query());
+        // $influencerProfiles = $filterInfluencers->paginate(15)->appends(request()->query());
+        $influencerProfiles = $filterInfluencers->paginate(15);
 
         return response()->json([
             'status' => 'success',
             'data' => $influencerProfiles,
         ], 200);
 
-        ///////////////////////////////////////////////////////////////////////////////////////
-        $states = States::all();
-
-        $category = request()->category;
-        $keyword = request()->keyword;
-        $location = request()->location;
-        $er = request()->er;
-        $q = request()->q;
-
-        $filter = (new Account)->with('category')->newQuery();
-
-
-        if($q) {
-            $q = str_replace('@', '', $q);
-            $filter->where('handle', 'like', '%'.$q.'%');
-
-            //check if account exists on twitter and doesn't exist in db. If yes, create record.
-            $account = Account::where('handle', 'like', '%'.$q.'%')->first();
-
-            if(!$account) {
-                    $acc = new Account;
-                    $exists = $acc->checkExists($q);
-                    if(!$filter->count() && $exists !== false) {
-        //                $keyword = \App\Keyword::getKeyword($exists->description);
-                        $_category = ($keyword !== null) ? $keyword->category_id : 6;
-
-                        Account::firstOrCreate(
-                            ['handle' => $q],
-                            [
-                                'platform_id' => 1,
-                                'category_id' => $_category,
-                            ]
-                        );
-
-                        $filter->where('handle', 'like', '%'.$q.'%');
-
-                    }
-            }
-
-        }
-
-        if($category) {
-            $filter->where( function($query) use($category) {
-
-                $cat = Category::where('slug', $category)->first(); //parent
-
-            //    $query->where('id', $cat->id);
-
-                $children = [];
-                if($cat->children()->count() > 0) {
-                    $children = $cat->children()->pluck('id')->toArray(); //and children
-
-                    foreach($cat->children()->get() as $child) {
-                        if($child->children()->count() > 0) {
-                            $_child = $child->children()->pluck('id')->toArray(); //and sub-children
-                            foreach($_child as $c) {
-                                array_push($children, $c);
-                            }
-                        }
-                    }
-                }
-                array_push($children, $cat->id); //add the parent to its children
-
-               $query->whereIn('category_id', $children);
-
-            });
-        }
-
-        if($keyword) {
-            $filter->where( function($query) use($keyword) {
-                 $query->where('keyword', $keyword);
-            });
-        }
-
-        if($location) {
-            $filter->where( function($query) use($location) {
-                 $query->where('location', $location);
-            });
-        }
-
-        if($er) {
-            $filter->orderBy('er', $er == 'high'? 'DESC' : 'ASC');
-        }
-
-//       dd([$filter->toSql(), $filter->getBindings()]);
-        $query = $q;
-        $profiles = $filter->paginate(15)->appends(request()->query());
-
-
-        return response(['data' => $profiles, 'status' => 'success']);
+        
     }
 
 
