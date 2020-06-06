@@ -3,7 +3,8 @@
       <div class="container small-3">
         <nav class="nav">
           <a class="nav-link" href="{{ route('about') }}">About</a>
-          <a class="nav-link" href="{{ route('pricing') }}">Pricing</a>
+          {{-- adjusted. Don't know why --}}
+          {{-- <a class="nav-link" href="{{ route('pricing') }}">Pricing</a> --}} 
           <a class="nav-link" href="{{ route('terms') }}">Terms</a>
           <a class="nav-link" href="{{ route('privacy') }}">Policy</a>
           <a class="nav-link" href="{{ route('faqs') }}">FAQs</a>
