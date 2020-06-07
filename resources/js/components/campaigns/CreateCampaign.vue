@@ -1,5 +1,34 @@
 <template>
   <div class="container">
+    <loading
+      :active.sync="loading"
+      :is-full-page="true"
+      :opacity="0.5"
+      :width="128"
+      :height="128"
+      loader="dots"
+      color="#007bff"
+      backgroundColor="#fff"
+    />
+
+    <div class="row gap-y" v-show="displayError && !loading">
+      <div class="col-md-10 mx-auto text-center">
+        <span class="icon-sad lg-error-icon"></span>
+        <h1>Oops!</h1>
+        <h3>
+          Unfortunately, we're unable to create your campaign at the moment.
+        </h3>
+        <h5>Please try again in few minutes</h5>
+
+        <button
+          class="btn btn-sm btn-warning btn-round"
+          @click="createCampaign"
+        >
+          <span class="icon-refresh"></span> Try again
+        </button>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-md-12">
         <h3 id="block-2">Enter Keyword</h3>
@@ -11,7 +40,7 @@
         style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
       >
         <div>
-          <form class="input-round">
+          <form v-on:submit.prevent class="input-round">
             <div class="form-group">
               <input
                 class="form-control"
@@ -57,7 +86,7 @@ export default {
   components: { Loading },
   data() {
     return {
-      loading: true,
+      loading: false,
       displayError: false,
       form: {
         Keywords: "",
@@ -68,11 +97,8 @@ export default {
   mounted: function() {},
   created: function() {},
   methods: {
-    goToCreateCampaign() {
-      window.location.href = "http://localhost:8000/create-campaign";
-    },
-
     async createCampaign() {
+      this.loading = true;
       const config = {
         headers: {
           Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
@@ -88,7 +114,12 @@ export default {
 
       try {
         let response = await axios.post(URL, data, config);
+        if (response.data.status === 200) {
+          window.location.href = `/campaigns`;
+        }
       } catch (err) {
+        this.loading = false;
+        this.displayError = true;
         console.log(err);
       }
     }
