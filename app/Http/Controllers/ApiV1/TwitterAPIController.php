@@ -86,7 +86,6 @@ class TwitterAPIController extends Controller
             $tweets = $premiumData->getHashtagTweets($package, $query, '', $request);
         } else {
             $tweets_result = $this->guzzleClient('search/tweets', [ 'q' => $query, 'count' => '100'], $user->token, $user->secret);
-            dd($tweets_result);
 
             if(!$tweets_result || isset($tweets_result->error)) {
                 return response(['status' => 'error', 'message' => 'Error fetching data'], 403);
@@ -94,8 +93,6 @@ class TwitterAPIController extends Controller
                 $tweets = $tweets_result->statuses;
             }
         }
-
-
 
         $data = [];
 
