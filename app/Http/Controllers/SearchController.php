@@ -69,8 +69,6 @@ class SearchController extends Controller
                 ->with('states', $states);
     }
 
-
-
     function showHashtag() {
         $q = str_replace('%23', '', strip_tags(request()->q));
 
@@ -126,26 +124,16 @@ class SearchController extends Controller
         $handle = request()->handle;
         $user = Auth()->user();
 
-        // adjusted: removed user subscription due to twitter error
-        // if(!$user->subscription) {
-        //     return redirect(route('pricing'))->withError('You do not have an active subscription plan. Please choose a subscription package to continue.');
-        // }
+        if(!$user->subscription) {
+            return redirect(route('pricing'))->withError('You do not have an active subscription plan. Please choose a subscription package to continue.');
+        }
 
 
-        // if($user->subscription->profiling_balance == 0) {
-        //     return redirect(route('pricing'))->withError('You have reached your profiling balance limit. Please choose a subscription package to continue.');
-        // }
+        if($user->subscription->profiling_balance == 0) {
+            return redirect(route('pricing'))->withError('You have reached your profiling balance limit. Please choose a subscription package to continue.');
+        }
 
-        // Subscription::where('user_id', $user->id)->decrement('profiling_balance', 1);
-
-        // ProfilingHistory::create([
-        //     'user_id' => $user->id,
-        //     'handle' => $handle,
-        // ]);
-        // if($user->subscription->plan == 'Enterprise') {
-        //     if()
-        // }
-
+        Subscription::where('user_id', $user->id)->decrement('profiling_balance', 1);
 
         $profileExists = ProfilingHistory::where('handle', $handle)->oldest()->first();
 
