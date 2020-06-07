@@ -38,5 +38,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
     Route::get('/report/hashtag/{id}', 'ShowDataController@showReportingHistory');
     Route::get('/report/profile/{id}', 'ShowDataController@showProfilingHistory');
 
-
+    Route::post('/campaign/create', 'CampaignController@create');
+    Route::get('/campaign/view', 'CampaignController@view');
+    Route::get('/campaign/delete', 'CampaignController@delete');
 });
