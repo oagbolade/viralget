@@ -24,7 +24,7 @@
         <span class="icon-sad lg-error-icon"></span>
         <h1>Oops!</h1>
         <h3>
-          Unfortunately, we're unable to get your campaigns at the moment.
+          Unfortunately, we're unable to access your campaigns at the moment.
         </h3>
         <h5>Please try again in few minutes</h5>
 
@@ -41,7 +41,7 @@
     <div class="row">
       <div class="col-md-6">
         <h3 id="block-2">Campaigns</h3>
-        <h6 id="block-2">You can create and monitor keywords and #hashtags</h6>
+        <h6 id="block-2">You can create and monitor keywords or #hashtags</h6>
       </div>
 
       <div @click="goToCreateCampaign" class="col-md-6">
@@ -142,11 +142,10 @@ export default {
           this.campaigns = response.data.data;
           this.loading = false;
         }
-        
+
         if (response.data.status === 204) {
           this.loading = false;
         }
-
       } catch (err) {
         this.displayError = true;
         this.loading = false;
@@ -163,8 +162,27 @@ export default {
       const URL = `/api/v1/campaign/delete`;
     },
 
-    deleteCampaign(campaignId) {
-      const URL = `/api/v1/campaign/delete`;
+    async deleteCampaign(campaignId) {
+      this.loading = true;
+      const URL = `/api/v1/campaign/delete/${campaignId}`;
+
+      try {
+        let response = await axios.delete(URL, {
+          headers: {
+            Authorization:
+              "Bearer " + $('meta[name="api-token"]').attr("content")
+          }
+        });
+        const campaignId = response.data.data;
+        this.campaigns = this.campaigns.filter(campaignData => {
+          this.loading = false;
+          return campaignData.id != campaignId;
+        });
+      } catch (err) {
+        this.displayError = true;
+        this.loading = false;
+        console.log(err);
+      }
     },
 
     dateFormatter(date) {

@@ -89,4 +89,25 @@ class CampaignController extends Controller
             "data" => $data
         ], 200);
     }
+
+    function delete()
+    {
+        $campaign_id = request()->campaignId;
+        $campaign = new Campaigns();
+
+        try {
+            $campaign = $campaign->where('id', $campaign_id)->delete();
+            
+            return response([
+                "status" => 200,
+                "message" => "successfull",
+                "data" => $campaign_id
+            ], 200);
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to delete campaign " . $e,
+            ], 500);
+        }
+    }
 }
