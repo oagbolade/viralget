@@ -23,10 +23,15 @@
       <div class="col-md-10 mx-auto text-center">
         <span class="icon-sad lg-error-icon"></span>
         <h1>Oops!</h1>
-        <h3>Unfortunately, we're unable to query your data at the moment.</h3>
+        <h3>
+          Unfortunately, we're unable to get your campaigns at the moment.
+        </h3>
         <h5>Please try again in few minutes</h5>
 
-        <button class="btn btn-sm btn-warning btn-round" @click="getProfile">
+        <button
+          class="btn btn-sm btn-warning btn-round"
+          @click="getUserCampaigns"
+        >
           <span class="icon-refresh"></span> Try again
         </button>
       </div>
@@ -58,57 +63,38 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
+          <tbody v-if="campaigns.length !== 0">
+            <tr v-for="(campaign, index) in campaigns" :key="index">
+              <th scope="row">{{ index + 1 }}</th>
+              <td>{{ campaign.keywords }}</td>
+              <td>{{ dateFormatter(campaign.created_at) }}</td>
               <td>
-                <button type="button" class="btn btn-label btn-success">
+                <button
+                  @click="viewCampaign(campaign.id)"
+                  type="button"
+                  class="btn btn-label btn-success"
+                >
                   <label><i class="fa fa-book"></i></label> View
                 </button>
-                <button type="button" class="btn btn-label btn-primary">
+                <button
+                  @click="editCampaign(campaign.id)"
+                  type="button"
+                  class="btn btn-label btn-primary"
+                >
                   <label><i class="fa fa-pencil"></i></label> Edit
                 </button>
-                <button type="button" class="btn btn-label btn-danger">
+                <button
+                  @click="deleteCampaign(campaign.id)"
+                  type="button"
+                  class="btn btn-label btn-danger"
+                >
                   <label><i class="fa fa-trash"></i></label> Delete
                 </button>
               </td>
             </tr>
-
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>
-                <button type="button" class="btn btn-label btn-success">
-                  <label><i class="fa fa-book"></i></label> View
-                </button>
-                <button type="button" class="btn btn-label btn-primary">
-                  <label><i class="fa fa-pencil"></i></label> Edit
-                </button>
-                <button type="button" class="btn btn-label btn-danger">
-                  <label><i class="fa fa-trash"></i></label> Delete
-                </button>
-              </td>
-            </tr>
-
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>
-                <button type="button" class="btn btn-label btn-success">
-                  <label><i class="fa fa-book"></i></label> View
-                </button>
-                <button type="button" class="btn btn-label btn-primary">
-                  <label><i class="fa fa-pencil"></i></label> Edit
-                </button>
-                <button type="button" class="btn btn-label btn-danger">
-                  <label><i class="fa fa-trash"></i></label> Delete
-                </button>
-              </td>
-            </tr>
+          </tbody>
+          <tbody v-else>
+            <td colspan="4"><h5>You have not created any campaigns</h5></td>
           </tbody>
         </table>
       </section>
@@ -128,141 +114,64 @@ export default {
   components: { Loading },
   data() {
     return {
+      campaigns: [],
       loading: true,
-      avatar: "",
-      tweets: [],
-      retweets: [],
-      followers: 0,
-      following: 0,
-      averageRetweets: 0,
-      averageLikes: 0,
-      totalTweets: 0,
-      er: 0,
-      name: "",
-      about: "",
-      isVerified: false,
-      engagementRate: 0,
-      category: [],
-      media_meta: [],
-      handle: "",
-      location: "",
-      date_from: "",
-      date_to: "",
-      report_type: "",
-      report_type_days: "",
       displayError: false
     };
   },
   mounted: function() {},
   created: function() {
-    this.getProfile();
+    this.getUserCampaigns();
   },
   methods: {
     goToCreateCampaign() {
       window.location.href = "http://localhost:8000/create-campaign";
     },
-    getProfile: function() {
-      this.loading = true;
-      let $this = this;
-      fetch(`/api/v1/report/profile/${this.id}`, {
-        headers: {
-          Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
-        }
-      })
-        .then(res => res.json())
-        .then(res => {
-          if (res.data) {
-            let data = JSON.parse(res.data.data);
+    async getUserCampaigns() {
+      const URL = `/api/v1/campaign/view`;
 
-            this.followers = data.profile.followers_count;
-            this.following = data.profile.friends_count;
-            this.totalTweets = data.profile.statuses_count;
-            this.about = data.profile.description;
-            this.isVerified = data.profile.verified;
-            this.name = data.profile.name;
-            this.avatar = data.profile.profile_image_url;
-            this.loading = false;
-            this.handle = data.profile.screen_name;
-            this.tweets = data.tweets;
-            this.retweets = data.retweets;
-            this.media_meta = data.media_meta_data;
-            this.engagementRate = data.engagement_rate;
-            this.averageRetweets = data.avr_retweets;
-            this.averageLikes = data.avr_likes;
-            this.location = data.profile_location;
-            this.tweets = data.tweets;
-            this.date_from = data.date_from;
-            this.date_to = data.date_to;
-            this.report_type = res.data.report_type;
-            this.report_type_days = res.data.report_type_days;
-
-            this.displayError = false;
-
-            //              console.log('data');
-          } else {
-            this.displayError = true;
-            this.loading = false;
-
-            //                alert('Error retrieving profile data. Please try again');
-            //                this.getProfile();
+      try {
+        let response = await axios.get(URL, {
+          headers: {
+            Authorization:
+              "Bearer " + $('meta[name="api-token"]').attr("content")
           }
-        })
-        .catch(err => {
-          this.displayError = true;
-          this.loading = false;
         });
 
-      // axios.get(`/api/v1/profile?q=${this.q}`)
-      //     .then((res) => {
-      //         let data = res.data.data;
-      //         this.followers = data.profile.followers_count;
-      //         this.following = data.profile.friends_count;
-      //         this.totalTweets = data.profile.statuses_count;
-      //         this.about = data.profile.description;
-      //         this.isVerified = data.profile.verified;
-      //         this.name = data.profile.name;
-      //         this.avatar = data.profile.profile_image_url;
-      //         this.loading = false;
-      //         this.tweets = data.tweets;
-      //         this.media_meta = data.media_meta_data;
-      //         this.engagement_rate = data.engagement_rate;
-      //         this.averageRetweets = data.avr_retweets;
-      //         this.averageLikes = data.avr_likes;
-      //         this.category = {
-      //             color: data.category.color,
-      //             name: data.category.name
-      //         }
-      //     })
-      //     .catch((err) => {
-      //         console.log(err)
-      //         this.loading = false;
-      //     })
-    },
-    numberFormat: function(number) {
-      var format = 0;
-
-      if (number > 999999999) {
-        format = parseInt(number / 1000000000) + "B+";
-      } else if (number > 999999) {
-        format = parseInt(number / 1000000) + "M+";
-      } else if (number > 999) {
-        format = parseInt(number / 1000) + "K+";
-      } else {
-        format = parseInt(number);
+        if (response.data.status === 200) {
+          this.campaigns = response.data.data;
+          this.loading = false;
+        }
+        
+        if (response.data.status === 204) {
+          this.loading = false;
+        }
+        
+      } catch (err) {
+        this.displayError = true;
+        this.loading = false;
+        console.log(err);
       }
-
-      //            console.log([number > 999, format]);
-      return format;
     },
-    getHumanDate: function(date) {
-      return moment(date).format("LLLL");
+
+    viewCampaign(campaignId) {
+      const URL = `/api/v1/campaign/delete`;
+    },
+
+    editCampaign(campaignId) {
+      const URL = `/api/v1/campaign/delete`;
+    },
+
+    deleteCampaign(campaignId) {
+      const URL = `/api/v1/campaign/delete`;
+    },
+
+    dateFormatter(date) {
+      let formatedDate = date.split(" ");
+      return formatedDate[0];
     }
   },
-  computed: {
-    _avatar: function() {
-      return this.avatar.replace("_normal", "");
-    }
-  }
+  computed: {}
 };
 </script>
 
