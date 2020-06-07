@@ -65,7 +65,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         if($user->subscription) {
-           return redirect()->intended(route('dashboard'));
+           return redirect()->intended('campaigns');
         } else {
             return redirect()->intended(route('pricing'));
         }
