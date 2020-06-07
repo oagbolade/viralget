@@ -70,7 +70,7 @@
               <td>{{ dateFormatter(campaign.created_at) }}</td>
               <td>
                 <button
-                  @click="viewCampaign(campaign.id)"
+                  @click="viewCampaign(campaign.keywords)"
                   type="button"
                   class="btn btn-label btn-success"
                 >
@@ -146,7 +146,7 @@ export default {
         if (response.data.status === 204) {
           this.loading = false;
         }
-        
+
       } catch (err) {
         this.displayError = true;
         this.loading = false;
@@ -154,8 +154,9 @@ export default {
       }
     },
 
-    viewCampaign(campaignId) {
-      const URL = `/api/v1/campaign/delete`;
+    viewCampaign(keyword) {
+      const URL = `/search/profiles?q=${keyword}`;
+      window.location.href = URL;
     },
 
     editCampaign(campaignId) {
