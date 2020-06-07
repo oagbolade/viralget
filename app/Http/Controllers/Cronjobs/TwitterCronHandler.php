@@ -66,7 +66,7 @@ class TwitterCronHandler extends Controller
 
     function index() //Rename to search
     {
-        // $this->_Parameters["get-influencer-tweets"]["screen_name"] = "DonaldNdoro";
+        // $this->_Parameters["get-influencer-tweets"]["screen_name"] = "unicodeveloper";
 
         // try {
         //     $influencerTweets = $this->twitterFetch($this->URLs['get-tweets'], $this->_Parameters["get-influencer-tweets"]);
@@ -130,7 +130,7 @@ class TwitterCronHandler extends Controller
             }
 
             // For testing
-            if ($page === 3) {
+            if ($page === 1) {
                 $searching = false;
                 return json_encode($tweets);
             }
@@ -315,14 +315,6 @@ class TwitterCronHandler extends Controller
                 return $this->checkNoneCodeLocations($location, $eachLocation);
             }
         }
-
-        // function checkNoneCodeLocations($location, $eachLocation)
-        // {
-        //     if ($this->analyseEachInfluencerLocation($location, $eachLocation) || $this->analyseEachInfluencerLocation($location, strtolower($eachLocation))) {
-        //         return true;
-        //     }
-        // }
-
         return false;
     }
 
