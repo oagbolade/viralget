@@ -16,7 +16,7 @@ Route::get('/about', 'HomeController@about')->name('about');
 Route::get('/marketing', 'HomeController@marketing')->name('marketing');
 Route::get('/contact', 'HomeController@contact')->name('contact');
 // adjusted. Don't know why
-// Route::get('/pricing', 'HomeController@pricing')->name('pricing');
+Route::get('/pricing', 'HomeController@pricing')->name('pricing');
 Route::get('/what-we-do', 'HomeController@whatwedo')->name('what-we-do');
 Route::get('/team', 'HomeController@team')->name('team');
 Route::get('/faqs', 'HomeController@faqs')->name('faqs');
