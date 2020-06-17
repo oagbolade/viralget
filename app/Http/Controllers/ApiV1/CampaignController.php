@@ -58,14 +58,16 @@ class CampaignController extends Controller
         $user = $this->authenticate();
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-
+        
         $keywords = request()->keywords;
+        $dates = json_encode(request()->dates);
         $description = request()->description;
         $user_id = $user->id;
 
         $campaign = new Campaigns;
 
         $campaign->keywords = $keywords;
+        $campaign->dates = $dates;
         $campaign->description = $description;
         $campaign->user_id = $user_id;
 
