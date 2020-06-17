@@ -81,11 +81,13 @@ class TwitterAPIController extends Controller
         }
 
 
+        $no_of_tweets = 100;
+
         if($package->name == 'Premium' || $package->name == 'Enterprise') {
             $premiumData = new PremiumTwitterAPIController;
-            $tweets = $premiumData->getHashtagTweets($package, $query, '', $request);
+            $tweets = $premiumData->getHashtagTweets($package, $query, $request);
         } else {
-            $tweets_result = $this->guzzleClient('search/tweets', [ 'q' => $query, 'count' => '100'], $user->token, $user->secret);
+            $tweets_result = $this->guzzleClient('search/tweets', [ 'q' => $query, 'count' => $no_of_tweets], $user->token, $user->secret);
 
             if(!$tweets_result || isset($tweets_result->error)) {
                 return response(['status' => 'error', 'message' => 'Error fetching data'], 403);
@@ -96,10 +98,7 @@ class TwitterAPIController extends Controller
 
         $data = [];
 
-
         $data['count'] = count($tweets);
-
-
 
         $contribution = $this->getUniqueContributors($tweets);
         $reach = $this->getHashtagReach($tweets, $contribution);
@@ -118,7 +117,17 @@ class TwitterAPIController extends Controller
         $data['high_impacts'] = $impressions['sorted'];
         $data['contributors'] = $contribution['unique_users'];
         $data['avr_contribution'] = $contribution['avr_contribution'];
-        $data['potential_reach'] = $reach['reach'] * 0.60;
+        
+        // Corrected Calculations
+        $total_engagements = $this->getTotalEngagements($tweets);
+        $data['potential_reach'] = $reach['reach'];
+        $data['impressions'] = $this->getImpressions($reach['reach'], $no_of_tweets);
+        $data['campaign_value'] = ($this->getImpressions($reach['reach'], $no_of_tweets) / 1000) * 80;
+        // $data['campaign_value'] = ($this->getImpressions($reach['reach'], $no_of_tweets) * 80) / 1000;
+        $data['accurate_engagement_rate'] = ($total_engagements / $data['impressions']) * 100;
+        $data['total_engagements'] = $total_engagements;
+
+
         $data['potential_impact'] =  $impressions['sum'] * 0.60; //$reach['impact'];
         $data['media_meta_data'] = $this->getTweetsMedia($tweets, 'hashtag');
         $data['report_type'] = $package->days;
@@ -127,6 +136,9 @@ class TwitterAPIController extends Controller
 
         Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
 
+        // If query exists, update database
+        // - Find Query from reporting history
+        // -If found update, else create
         $report = ReportingHistory::create([
                         'user_id' => $user->id,
                         'query' => $query,
@@ -135,6 +147,11 @@ class TwitterAPIController extends Controller
                     ]);
 
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+    }
+
+    function getImpressions($reach, $no_of_tweets){
+        $impressions = $reach * $no_of_tweets;
+        return $impressions;
     }
 
 
@@ -298,6 +315,30 @@ class TwitterAPIController extends Controller
         $er = round((float)((($likes + $retweets + $replies + $quotes) / ($reach)) * 1000), 2);
 
         return $er;
+    }
+
+    function getTotalEngagements($tweets){
+        $likes = 0;
+        $retweets = 0;
+        $quotes = 0;
+        $replies = 0;
+
+        if (count($tweets) < 1) {
+            return;
+        }
+
+        foreach ($tweets as $tweet) {
+            $retweets += $tweet->retweet_count;
+            $likes += $tweet->favorite_count;
+            $quotes += isset($tweet->quote_count) ? $tweet->quote_count : 0;
+            $replies += isset($tweet->reply_count) ? $tweet->reply_count : 0;
+        }
+
+
+
+        $total_engagements = $likes + $retweets + $replies + $quotes;
+
+        return $total_engagements;
     }
 
 
@@ -479,8 +520,9 @@ class TwitterAPIController extends Controller
         }
 
         $impact = round($total_followers * $percentage);
+        $reach = round($total_followers * 0.3);
 
-        return ['impact' => $impact, 'reach' => $total_followers];
+        return ['impact' => $impact, 'reach' => $reach, 'followers' => $total_followers];
     }
 
     function getTopHashImpactsData($tweets, $user) {
