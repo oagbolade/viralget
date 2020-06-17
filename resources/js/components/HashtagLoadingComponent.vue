@@ -85,8 +85,7 @@ export default {
     },
     methods: {
         getData: function() {
-                      // axios.get(`/api/v1/hashtag?q=${this.q}`)
-              this.loading = true;
+            this.loading = true;
             fetch(`/api/v1/hashtag?q=${this.q}&plan=${this.plan}&fromDate=${this.from}&toDate=${this.to}`, {
                 headers: {
                   Authorization: 'Bearer ' + $('meta[name="api-token"]').attr("content"),
