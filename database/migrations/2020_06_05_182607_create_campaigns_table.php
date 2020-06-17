@@ -17,6 +17,7 @@ class CreateCampaignsTable extends Migration
             $table->increments('id');
             $table->string('user_id');
             $table->string('keywords');
+            $table->string('dates')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
         });
