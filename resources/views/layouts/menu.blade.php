@@ -50,7 +50,34 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ route('about') }}">About</a>
             </li>
-            @foreach(\App\Category::where('is_featured', 1)->take(5)->get() as $category)
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('profiles.category', 'technology') }}">Technology</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('profiles.category', 'sport') }}">Sport</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('profiles.category', 'health') }}">Health</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('profiles.category', 'music') }}">Music</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="#">View All<span class="arrow"></span></a>
+              @foreach(\App\Category::where('is_featured', 1)->take(5)->get() as $category)
+              @php $sub_cats = $category->children(); @endphp
+                <ul class="nav">
+                  @foreach($sub_cats->take(10)->get() as $cat)
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('profiles.category', ['category' => $cat->slug]) }}"> {{ $cat->name }}</a>
+                  </li>
+                  @endforeach
+                </ul>
+              @endforeach
+            </li>
+
+            {{-- @foreach(\App\Category::where('is_featured', 1)->take(5)->get() as $category)
             @php $sub_cats = $category->children(); @endphp
             <li class="nav-item">
               <a class="nav-link" href="#">{{ $category->name }} @if($sub_cats->count() > 0)<span class="arrow"></span>@endif</a>
@@ -65,7 +92,7 @@
                 </li>
               </ul>
             </li>
-            @endforeach
+            @endforeach --}}
 
             @guest
             <li class="nav-item display-mobile">
