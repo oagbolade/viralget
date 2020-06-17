@@ -50,6 +50,17 @@
               />
             </div>
 
+            <div class="form-group text-center">
+              <h6>Filter campaign data by date</h6>
+              <a-range-picker
+                @change="onChange"
+                size="large"
+                format="YYYY-MM-DD"
+                :disabledDate="disabledDate"
+                :showTime="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
+              />
+            </div>
+
             <div class="form-group">
               <textarea
                 class="form-control"
@@ -90,7 +101,11 @@ export default {
       displayError: false,
       form: {
         Keywords: "",
-        description: ""
+        description: "",
+        dates: {
+          from: '',
+          to: ''
+        },
       }
     };
   },
@@ -107,6 +122,10 @@ export default {
 
       const data = {
         keywords: this.form.keywords,
+        dates: {
+          from: this.form.dates.from,
+          to: this.form.dates.to,
+        },
         description: this.form.description
       };
 
@@ -122,6 +141,14 @@ export default {
         this.displayError = true;
         console.log(err);
       }
+    },
+    moment,
+    onChange(date, dateString) {
+      this.form.dates.from = `${date[0].format("YYYY-MM-DD-HH:MM")}`;
+      this.form.dates.to = `${date[1].format("YYYY-MM-DD-HH:MM")}`;
+    },
+    disabledDate(current) {
+      return current && current > moment().endOf("day");
     }
   },
   computed: {}

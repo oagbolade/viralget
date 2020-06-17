@@ -54,7 +54,7 @@
         class="table-section bg-white col-md-12"
         style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
       >
-        <table class="table table-hover">
+        <table class="table table-hover responsive">
           <thead>
             <tr>
               <th>#</th>
@@ -66,11 +66,19 @@
           <tbody v-if="campaigns.length !== 0">
             <tr v-for="(campaign, index) in campaigns" :key="index">
               <th scope="row">{{ index + 1 }}</th>
-              <td>{{ campaign.keywords }}</td>
+              <td>
+                <strong>{{ campaign.keywords }}</strong>
+                <div>
+                <small v-if="formatCampaignDates(campaign.dates).from !== null">
+                  From: {{ formatCampaignDates(campaign.dates).from }}<br>
+                  To: {{ formatCampaignDates(campaign.dates).to }}
+                </small>
+                </div>
+              </td>
               <td>{{ dateFormatter(campaign.created_at) }}</td>
               <td>
                 <button
-                  @click="viewCampaign(campaign.keywords)"
+                  @click="viewCampaign(campaign.keywords, formatCampaignDates(campaign.dates).from, formatCampaignDates(campaign.dates).to)"
                   type="button"
                   class="btn btn-label btn-success"
                 >
@@ -124,6 +132,18 @@ export default {
     this.getUserCampaigns();
   },
   methods: {
+    formatCampaignDates(dates){
+      const jsonData = JSON.parse(dates);
+      return {
+        from: jsonData.from,
+        to: jsonData.to,
+      }
+    },
+    formatCampaignDatesForTwitter(date){
+      const removeHyphen = date.replace(/-/g, "");
+      const formattedDate = removeHyphen.replace(":", "");
+      return formattedDate;
+    },
     goToCreateCampaign() {
       window.location.href = "http://localhost:8000/create-campaign";
     },
@@ -140,6 +160,7 @@ export default {
 
         if (response.data.status === 200) {
           this.campaigns = response.data.data;
+          console.log(this.campaigns)
           this.loading = false;
         }
 
@@ -153,8 +174,10 @@ export default {
       }
     },
 
-    viewCampaign(keyword) {
-      const URL = `/search/profiles?q=${keyword}`;
+    viewCampaign(keyword, fromDate, toDate) {
+      const formattedFromDate = this.formatCampaignDatesForTwitter(fromDate);
+      const formattedToDate = this.formatCampaignDatesForTwitter(toDate);
+      const URL = `/search/profiles?q=${keyword}&fromDate=${formattedFromDate}&toDate=${formattedToDate}`;
       window.location.href = URL;
     },
 
