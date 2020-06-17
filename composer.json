@@ -11,15 +11,19 @@
         "php": "^7.1.3",
         "abraham/twitteroauth": "^1.0",
         "barryvdh/laravel-cors": "^0.11.3",
+        "barryvdh/laravel-snappy": "^0.4.7",
         "bissolli/twitter-php-scraper": "^1.2",
+        "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/oauth-subscriber": "0.3.*",
+        "h4cc/wkhtmltoimage-amd64": "0.12.x",
+        "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "j7mbo/twitter-api-php": "^1.0",
         "laravel/framework": "5.7.*",
         "laravel/socialite": "^4.1",
         "laravel/tinker": "^1.0",
-        "thujohn/twitter": "^2.2",
-        "guzzlehttp/oauth-subscriber": "0.3.*"
+        "thujohn/twitter": "^2.2"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
