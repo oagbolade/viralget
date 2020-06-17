@@ -136,26 +136,24 @@ class PremiumTwitterAPIController extends Controller
         return $tweets;
     }
 
-    function getHashtagTweets($package, $query, $to = '', $request)
+    function getHashtagTweets($package, $query, $request)
     {
 
 
         $count = ($package->name == 'Premium') ? 250 : 500;
+        $fromDate = request()->fromDate;
+        $toDate = request()->toDate;
 
-        // Passing empty, will revert when I pass "from" & "to dates"
-        // $initialQuery = ['query' => $query, 'fromDate' => $request->fromDate, 'toDate' => $request->toDate]; 
-
-        $initialQuery = ['query' => $query];
+        $initialQuery = [
+            'query' => $query,
+            'fromDate' => $fromDate,
+            'toDate' => $toDate,
+        ];
 
         $queryData = env('TWITTER_DEV_ENV') == 'sandbox' ? $initialQuery : array_merge(['maxResults' => $count], $initialQuery);
 
-        // $tweets_result = $this->guzzleClient('tweets/search/30day/dev', ['maxResults' => $count, 'query' => "$query -is:retweet -is:reply"]);
-
-        $type = 'fullarchive'; //30day
-        // $tweets_result = $this->guzzleClient("tweets/search/".env('TWITTER_API_TYPE') . "/" . env('TWITTER__APP_DEVELOPMENT_NAME'), $queryData); //specify from time and to here later
-
         $tweets_result = $this->_connection->get("tweets/search/" . env('TWITTER_API_TYPE') . "/" . env('TWITTER__APP_DEVELOPMENT_NAME'), $queryData);
-
+       
         if (isset($tweets_result->errors)) {
             return response(['status' => 'error', 'message' => 'Error fetching data'], 403);
         } else {
