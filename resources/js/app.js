@@ -1,13 +1,12 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+require("./bootstrap");
 
-window.Vue = require('vue');
+window.Vue = require("vue");
 
 /**
  * The following block of code may be used to automatically register your
@@ -19,13 +18,49 @@ window.Vue = require('vue');
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-Vue.component('hashtag', require('./components/HashtagComponent.vue').default);
-Vue.component('hashtag-loading', require('./components/HashtagLoadingComponent.vue').default);
-Vue.component('profile', require('./components/ProfileComponent.vue').default);
-Vue.component('profile-loading', require('./components/ProfileLoadingComponent.vue').default);
-Vue.component('search-result', require('./components/SearchResultComponent.vue').default);
-Vue.component('search-profile', require('./components/SearchProfileComponent.vue').default);
-Vue.component('pagination', require('./components/PaginationComponent.vue').default);
+Vue.component("hashtag", require("./components/HashtagComponent.vue").default);
+Vue.component(
+    "hashtag-loading",
+    require("./components/HashtagLoadingComponent.vue").default
+);
+Vue.component("profile", require("./components/ProfileComponent.vue").default);
+Vue.component(
+    "profile-loading",
+    require("./components/ProfileLoadingComponent.vue").default
+);
+Vue.component(
+    "search-result",
+    require("./components/SearchResultComponent.vue").default
+);
+Vue.component(
+    "search-profile",
+    require("./components/SearchProfileComponent.vue").default
+);
+Vue.component(
+    "pagination",
+    require("./components/PaginationComponent.vue").default
+);
+
+// For search page
+Vue.component(
+    "search-page-result",
+    require("./components/search/SearchResultComponent.vue").default
+);
+Vue.component(
+    "search-page-profile",
+    require("./components/search/SearchProfileComponent.vue").default
+);
+
+// For campaign pages
+Vue.component(
+    "view-campaign",
+    require("./components/campaigns/ViewCampaign.vue").default
+);
+Vue.component(
+    "create-campaign",
+    require("./components/campaigns/CreateCampaign.vue").default
+);
+
 // Vue.component('pagination', require('laravel-vue-pagination').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -33,13 +68,12 @@ Vue.component('pagination', require('./components/PaginationComponent.vue').defa
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-
-import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
+import Antd from "ant-design-vue";
+import "ant-design-vue/dist/antd.css";
 Vue.config.productionTip = false;
 
 Vue.use(Antd);
 
 const app = new Vue({
-    el: '#app',
+    el: "#app"
 });

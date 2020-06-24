@@ -5,7 +5,8 @@
    <header class="header   text-white bg-info">
       <div class="container">
         <h3>Welcome, {{ ucwords($user->handle) }}</h3>
-        <p>You are currently on the: <strong>{{ $subscription->plan->name}} Plan</strong> subscription. <small>@if($subscription->plan->name !== 'Enterprise') <a href="{{ route('pricing') }}">Upgrade</a> | @endif<a href="{{ route('pricing') }}">View all pricing<i class="ti-arrow-right fs-10 ml-1"></i></a></small></p>
+        {{-- Adjusted to remove pricing --}}
+        {{-- <p>You are currently on the: <strong>{{ $subscription->plan->name}} Plan</strong> subscription. <small>@if($subscription->plan->name !== 'Enterprise') <a href="{{ route('pricing') }}">Upgrade</a> | @endif<a href="{{ route('pricing') }}">View all pricing<i class="ti-arrow-right fs-10 ml-1"></i></a></small></p> --}}
       </div>
     </header><!-- /.header -->
 
