@@ -56,7 +56,6 @@ class ReportPDFController extends Controller
             "engagement_rate" => $engagement_rate,
             "about" => $about,
             "name" => $name,
-           
         ];
 
         return view('report.profilingReport')->with('data', $data);
