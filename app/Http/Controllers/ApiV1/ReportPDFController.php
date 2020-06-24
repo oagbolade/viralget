@@ -6,8 +6,6 @@ ini_set("memory_limit", -1);
 
 set_time_limit(0);
 
-// require __DIR__ . '/vendor/autoload.php';
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -16,7 +14,66 @@ use PDF;
 
 class ReportPDFController extends Controller
 {
-    function downloadPDF()
+    function downloadProfilingReport()
+    {
+        $report_type_days = request()->report_type_days;
+        $handle = request()->handle;
+        $date_from = request()->date_from;
+        $date_to = request()->date_to;
+
+        $impressions = request()->impressions;
+        $reach = request()->reach;
+        $followers = request()->followers;
+        $following = request()->following;
+        $averageRetweets = request()->averageRetweets;
+        $averageLikes = request()->averageLikes;
+        $totalTweets = request()->totalTweets;
+        $total_engagements =  request()->total_engagements;
+        $engagement_rate = request()->engagement_rate;
+        $location = request()->location;
+        $retweets = request()->retweets;
+        $tweets = request()->tweets;
+        $about = request()->about;
+        $name = request()->name;
+
+        $data = [
+            "report_days" => $report_type_days,
+            "handle" => $handle,
+            "date_from" => $date_from,
+            "date_to" => $date_to,
+
+            "impressions" => $impressions,
+            "reach" => $reach,
+            "followers" => $followers,
+            "following" => $following,
+            "averageRetweets" => $averageRetweets,
+            "averageLikes" => $averageLikes,
+            "total_engagements" => $total_engagements,
+            "location" => $location,
+            "retweets" => $retweets,
+            "tweets" => $tweets,
+            "total_tweets" => $totalTweets,
+            "engagement_rate" => $engagement_rate,
+            "about" => $about,
+            "name" => $name,
+           
+        ];
+
+        return view('report.profilingReport')->with('data', $data);
+
+
+        $pdf_name = $handle . ' '. $this->getTimeNow();
+
+        $pdf = PDF::loadView('report.profilingReport', ['data' => $data]);
+        $pdf->setOption('enable-javascript', true);
+        $pdf->setOption('images', true);
+        $pdf->setOption('javascript-delay', 5000);
+        $pdf->setOption('enable-smart-shrinking', true);
+        $pdf->setOption('no-stop-slow-scripts', true);
+        return $pdf->download($pdf_name);
+    }
+    
+    function downloadKeywordReport()
     {
         $report_type_days = request()->report_type_days;
         $handle = request()->handle;
@@ -65,7 +122,7 @@ class ReportPDFController extends Controller
 
         $pdf_name = $handle . ' '. $this->getTimeNow();
 
-        $pdf = PDF::loadView('report.reportPDF', ['data' => $data]);
+        $pdf = PDF::loadView('report.keywordHashtagReport', ['data' => $data]);
         $pdf->setOption('enable-javascript', true);
         $pdf->setOption('images', true);
         $pdf->setOption('javascript-delay', 5000);

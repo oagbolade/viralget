@@ -152,6 +152,7 @@ class SearchController extends Controller
         if(!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         $handle = Account::where('handle', 'like', '%'.request()->handle.'%')->first();
+        // Add option to also check influencers table
 
         if(!$handle) return response(['status' => 'error', 'message' => 'User handle not found']);
 

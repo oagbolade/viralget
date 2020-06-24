@@ -45,6 +45,14 @@ class TwitterCronHandler extends Controller
         "get-influencer-tweets" => [
             "include_rts" => true,
             "count" => 200,
+            "tweet_mode" => "extended",
+            "max_id" => "1269202687398227968",
+        ],
+
+        "standard" => [
+            "q" => "tech",
+            "count" => 100,
+            "result_type" => "mixed",
             "tweet_mode" => "extended"
         ],
     ];
@@ -64,16 +72,62 @@ class TwitterCronHandler extends Controller
         $this->_keywords = new Keywords();
     }
 
+    function getTwitterTimeStamp($twitter_time)
+    {
+        // $timestamp = date("Mon Jul 25 05:51:34 +0000 2011");
+        $date = date_create($twitter_time);
+        $timestamp = date_format($date, "U");
+        return $timestamp;
+    }
+
     function index() //Rename to search
     {
-        // $this->_Parameters["get-influencer-tweets"]["screen_name"] = "unicodeveloper";
+        $is_searching = true;
+        $one_day = date('U', strtotime('-24 hours'));
+        $seven_days = date('U', strtotime('-7 days'));
+        $thirty_days = date('U', strtotime('-30 days'));
+        $tweets_30_days = [];
 
-        // try {
-        //     $influencerTweets = $this->twitterFetch($this->URLs['get-tweets'], $this->_Parameters["get-influencer-tweets"]);
-        // } catch (\Exception $e) {
-        //     return $e->getMessage();
+        // while($is_searching){
+            $this->_Parameters["get-influencer-tweets"]["screen_name"] = "unicodeveloper";
+            // $this->_Parameters["get-influencer-tweets"]["since_id"] = 1269195170261741568;
+    
+            try {
+                $influencerTweets = $this->twitterFetch($this->URLs['get-tweets'], $this->_Parameters["get-influencer-tweets"]);
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
+        return json_encode($influencerTweets);
+            
+            $get_last_item = count($influencerTweets) - 1;
+            $max_id = $influencerTweets[$get_last_item]->id;
+
+            if (count($tweets_30_days) >= 5) {
+                $is_searching = false;
+                return json_encode($tweets_30_days);
+            }
+
+            foreach ($influencerTweets as $tweets) {
+                // Get by 30  days
+                if($this->getTwitterTimeStamp($tweets->created_at) >= $one_day){
+                    $tweets_30_days[] = $tweets;
+                }
+            }
+
+            $this->_Parameters["get-influencer-tweets"]["max_id"] = $max_id - 1;
+            
+            
+            // return;
         // }
-        // return json_encode($influencerTweets);
+        
+        // echo $this->getTwitterTimeStamp($influencerTweets[0]->created_at);
+
+        return json_encode($influencerTweets);
+        print_r($influencerTweets[0]->id);
+        $since_id = '1273523017562361857';
+        return;
+        
+
 
         // if (is_array($influencerTweets) > 0) {
         //     foreach ($influencerTweets as $tweets) {
@@ -82,7 +136,7 @@ class TwitterCronHandler extends Controller
         //         }
         //     }
         // }
-        // return;
+        return;
 
         /////////////////////////////////////////////////////////////////////////////////
         $page = 0;
@@ -110,6 +164,8 @@ class TwitterCronHandler extends Controller
             } catch (\Exception $e) {
                 return $e->getMessage();
             }
+
+            return json_encode($tweets);
 
             if (isset($tweets->results)) {
                 foreach ($tweets->results as $status) {

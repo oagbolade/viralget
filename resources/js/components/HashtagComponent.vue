@@ -291,6 +291,7 @@
                 </div>
               </div>
             </div>
+
             <div class="col-md-4 mt-3">
               <div class="shadow-3 bg-white text-center py-2">
                 <div class="row">
@@ -313,6 +314,7 @@
                 </div>
               </div>
             </div>
+
             <div class="col-md-4 mt-3">
               <div class="shadow-3 bg-white text-center py-2">
                 <div class="row">
@@ -331,6 +333,50 @@
                       Engagement<br />Rate
                     </p>
                     <p><i class="icon-piechart lead-4 mb-0"></i></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mt-3">
+              <div class="shadow-3 bg-white text-center py-2">
+                <div class="row">
+                  <div class="col-3">
+                    <h4
+                      class="lead-7 pl-2 text-right counted"
+                      data-provide="countup"
+                      data-from="0"
+                    >
+                      {{ number(total_engagements) }}
+                    </h4>
+                  </div>
+
+                  <div class="col-8 text-right mr-1">
+                    <p class="small text-uppercase ls-2 mb-2">
+                      Total<br />Engagements
+                    </p>
+                    <p><i class="icon-linechart lead-4 mb-0"></i></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mt-3">
+              <div class="shadow-3 bg-white text-center py-2">
+                <div class="row">
+                  <div class="col-3">
+                    <h4
+                      class="lead-7 pl-2 text-right counted"
+                      data-provide="countup"
+                      data-from="0"
+                    >
+                      {{ ad_recall.toFixed(2) }}%
+                    </h4>
+                  </div>
+
+                  <div class="col-8 text-right mr-1">
+                    <p class="small text-uppercase ls-2 mb-2">Ad<br />Recall</p>
+                    <p><i class="icon-areachart lead-4 mb-0"></i></p>
                   </div>
                 </div>
               </div>
@@ -534,45 +580,198 @@
                 }"
               ></paginate-links>
             </div>
-            <div class="col-md-6">
-              <h3>Highest Retweeted Tweets</h3>
-              <div class="card">
-                <div class="card-body">
-                  <p v-if="high_retweet_tweets.length == 0">No data yet</p>
-                  <div
-                    v-else
-                    v-for="(retweet, index) in high_retweet_tweets.slice(0, 5)"
-                    :key="index"
+
+            <div class="row">
+              <div class="col-md-6">
+                <h3>Original Contributors</h3>
+                <table class="table shadow bg-white table-hover table-striped">
+                  <paginate
+                    name="original_contributors"
+                    :list="original_contributors"
+                    :per="5"
+                    tag="tbody"
                   >
-                    <div class="media mb-3">
-                      <div class="lead-6 line-height-1 text-danger w-50px">
-                        <img
-                          class="avatar avatar-sm"
-                          :src="retweet.user.profile_image_url"
-                          alt=""
-                        />
+                    <tr
+                      v-for="(active, index) in paginated(
+                        'original_contributors'
+                      )"
+                      :key="index"
+                    >
+                      <td width="70%">
+                        <div class="media">
+                          <div class="lead-6 line-height-1 text-danger w-50px">
+                            <img
+                              class="avatar avatar-sm"
+                              :src="active.data.profile_image_url"
+                              alt=""
+                            />
+                          </div>
+                          <div class="media-body">
+                            <strong>@{{ active.data.screen_name }}</strong
+                            ><br /><small>{{ active.data.name }}</small>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <strong>{{ number(active.tweet_count) }}</strong
+                        ><br /><small>Tweets</small>
+                      </td>
+                    </tr>
+                  </paginate>
+                </table>
+                <paginate-links
+                  for="original_contributors"
+                  :classes="{
+                    ul: 'pagination',
+                    'ul.paginate-links > li.number': 'page-item',
+                    'ul.paginate-links > li.number > a': 'page-link'
+                  }"
+                ></paginate-links>
+              </div>
+
+              <div class="col-md-6">
+                <h3>Top Original Contributors</h3>
+                <table class="table shadow bg-white table-hover table-striped">
+                  <paginate
+                    name="top_original_contributors"
+                    :list="top_original_contributors"
+                    :per="5"
+                    tag="tbody"
+                  >
+                    <tr
+                      v-for="(active, index) in paginated(
+                        'top_original_contributors'
+                      )"
+                      :key="index"
+                    >
+                      <td width="70%">
+                        <div class="media">
+                          <div class="lead-6 line-height-1 text-danger w-50px">
+                            <img
+                              class="avatar avatar-sm"
+                              :src="active.data.profile_image_url"
+                              alt=""
+                            />
+                          </div>
+                          <div class="media-body">
+                            <strong>@{{ active.data.screen_name }}</strong
+                            ><br /><small>{{ active.data.name }}</small>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <strong>{{ number(active.impacts) }}</strong
+                        ><br /><small>Impacts</small>
+                      </td>
+                    </tr>
+                  </paginate>
+                </table>
+                <paginate-links
+                  for="top_original_contributors"
+                  :classes="{
+                    ul: 'pagination',
+                    'ul.paginate-links > li.number': 'page-item',
+                    'ul.paginate-links > li.number > a': 'page-link'
+                  }"
+                ></paginate-links>
+              </div>
+
+              <div class="col-md-6">
+                <h3>
+                  Most Recent Tweets
+                </h3>
+                <table class="table shadow bg-white table-hover table-striped">
+                  <paginate
+                    name="most_recent_tweets"
+                    :list="most_recent_tweets"
+                    :per="5"
+                    tag="tbody"
+                  >
+                    <tr
+                      v-for="(active, index) in paginated('most_recent_tweets')"
+                      :key="index"
+                    >
+                      <td width="70%">
+                        <div class="media mb-3">
+                          <div class="lead-6 line-height-1 text-danger w-50px">
+                            <img
+                              class="avatar avatar-sm"
+                              :src="active.tweet_data.user.profile_image_url"
+                              alt=""
+                            />
+                          </div>
+                          <div class="media-body">
+                            <strong>@{{ active.tweet_data.user.screen_name }}</strong
+                            ><br /><small>{{ active.tweet_data.user.name }}</small>
+                          </div>
+                        </div>
+                        <p>{{ active.tweet_data.text }}</p>
+                        <p>
+                          <small>
+                            <strong
+                              >Posted on
+                              {{ getHumanDate(active.tweet_data.created_at ) }}
+                            </strong>
+                          </small
+                          >
+                        </p>
+                      </td>
+                    </tr>
+                  </paginate>
+                </table>
+                <paginate-links
+                  for="most_recent_tweets"
+                  :classes="{
+                    ul: 'pagination',
+                    'ul.paginate-links > li.number': 'page-item',
+                    'ul.paginate-links > li.number > a': 'page-link'
+                  }"
+                ></paginate-links>
+              </div>
+
+              <div class="col-md-6">
+                <h3>Highest Retweeted Tweets</h3>
+                <div class="card">
+                  <div class="card-body">
+                    <p v-if="high_retweet_tweets.length == 0">No data yet</p>
+                    <div
+                      v-else
+                      v-for="(retweet, index) in high_retweet_tweets.slice(
+                        0,
+                        5
+                      )"
+                      :key="index"
+                    >
+                      <div class="media mb-3">
+                        <div class="lead-6 line-height-1 text-danger w-50px">
+                          <img
+                            class="avatar avatar-sm"
+                            :src="retweet.user.profile_image_url"
+                            alt=""
+                          />
+                        </div>
+                        <div class="media-body">
+                          <strong>@{{ retweet.user.screen_name }}</strong
+                          ><br /><small>{{ retweet.user.name }}</small>
+                        </div>
                       </div>
-                      <div class="media-body">
-                        <strong>@{{ retweet.user.screen_name }}</strong
-                        ><br /><small>{{ retweet.user.name }}</small>
-                      </div>
+                      <p>{{ retweet.text }}</p>
+                      <p>
+                        <small
+                          ><strong
+                            >Posted on
+                            {{ getHumanDate(retweet.created_at) }}</strong
+                          ></small
+                        >
+                      </p>
+                      <p>
+                        <i class="fa fa-retweet text-primary"></i>
+                        {{ retweet.retweet_count }} &nbsp;&nbsp;
+                        <i class="fa fa-heart text-danger"></i>
+                        {{ retweet.favorite_count }}
+                      </p>
+                      <hr class="my-7" />
                     </div>
-                    <p>{{ retweet.text }}</p>
-                    <p>
-                      <small
-                        ><strong
-                          >Posted on
-                          {{ getHumanDate(retweet.created_at) }}</strong
-                        ></small
-                      >
-                    </p>
-                    <p>
-                      <i class="fa fa-retweet text-primary"></i>
-                      {{ retweet.retweet_count }} &nbsp;&nbsp;
-                      <i class="fa fa-heart text-danger"></i>
-                      {{ retweet.favorite_count }}
-                    </p>
-                    <hr class="my-7" />
                   </div>
                 </div>
               </div>
@@ -676,7 +875,15 @@ export default {
       handle: "",
       date_from: "",
       date_to: "",
-      paginate: ["most_active", "high_retweets", "high_impacts", "popular"],
+      paginate: [
+        "most_active",
+        "high_retweets",
+        "high_impacts",
+        "popular",
+        "original_contributors",
+        "top_original_contributors",
+        "most_recent_tweets"
+      ],
       displayError: false,
       selected_date_from: "",
       selected_date_to: "",
@@ -685,13 +892,15 @@ export default {
       accurate_campaign_value: 0,
       accurate_reach: 0,
       accurate_impressions: 0,
+      original_contributors: [],
+      top_original_contributors: [],
+      most_recent_tweets: [],
       total_engagements: 0,
+      ad_recall: 0,
       selectedDays: ""
     };
   },
-  mounted: function() {
-    console.log(moment(Date.now()).format("YYYYMMDDhmm"));
-  },
+  mounted: function() {},
   created: function() {
     this.getData();
   },
@@ -742,7 +951,7 @@ export default {
     async downloadReport() {
       console.log("average ", this.most_active);
 
-      const URL = `/api/v1/report/download`;
+      const URL = `/api/v1/report/keyword/download`;
 
       const config = {
         headers: {
@@ -800,21 +1009,26 @@ export default {
         .then(res => res.json())
         .then(res => {
           if (res.status == "success") {
-            // console.log(res, res.status);
-
             let data = JSON.parse(res.data.data);
+            console.log("response", data.most_recent_tweets);
 
+            const total_engagements = data.total_engagements;
+            const potential_reach = data.potential_reach;
             this.accurate_campaign_value = data.campaign_value;
             this.accurate_engagement_rate = data.accurate_engagement_rate;
             this.accurate_impressions = data.impressions;
-            this.total_engagements = data.total_engagements;
+            this.total_engagements = total_engagements;
+            this.ad_recall = total_engagements / potential_reach / 100;
+            this.original_contributors = data.original_contributors;
+            this.top_original_contributors = data.top_original_contributors;
+            this.most_recent_tweets = data.most_recent_tweets;
 
             this.totalTweets = data.count;
             this.loading = false;
             this.media_meta = data.media_meta_data;
             this.contributors = data.contributors;
             this.avr_contribution = data.avr_contribution;
-            this.potential_reach = data.potential_reach;
+            this.potential_reach = potential_reach;
             this.potential_impact = data.potential_impact;
             this.most_active = data.most_active.data;
             this.popular = data.popular;

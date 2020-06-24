@@ -35,17 +35,8 @@ class PremiumTwitterAPIController extends Controller
 
     function getAllProfileData($handle, $user)
     {
-
-
         $userTweets = $this->getUserTweets($handle, $user);
-        $tweetsData = json_decode(json_encode($userTweets));
-        $tweets = $tweetsData->results;
-        //If data not found by default via premium, use basic data
-        if (!$tweets) {
-            $tweets = json_decode(json_encode($this->getUserTimelineTweets($handle)));
-        }
-
-        return $tweets;
+        return $userTweets;
     }
 
     function getProfileHighestRetweets($tweets)
@@ -120,20 +111,59 @@ class PremiumTwitterAPIController extends Controller
 
         $count = ($user->subscription->plan->name == 'Premium') ? 250 : 500;
 
-        $initialQuery = env('TWITTER_DEV_ENV') == 'sandbox' ? ['query' => "from:$handle"] : ['query' => "from:$handle -is:retweet -is:reply"];
+        $is_searching = true;
+        $one_day = date('U', strtotime('-24 hours'));
+        $seven_days = date('U', strtotime('-7 days'));
+        $thirty_days = date('U', strtotime('-30 days'));
+        $tweets_30_days = [];
 
-        $queryData = env('TWITTER_DEV_ENV') == 'sandbox' ? $initialQuery : array_merge(['maxResults' => $count], $initialQuery);
+        $initialQuery = [
+            'screen_name' => $handle,
+            'count' => 100,
+            'include_rts' => false,
+            'exclude_replies' => true,
+        ];
 
-        $tweets = $this->guzzleClient('tweets/search/' . env('TWITTER_API_TYPE') . '/dev', $queryData);
+        $max_id = 0;
 
-        //        $tweets = $this->guzzleClient('statuses/user_timeline', ['screen_name' => $handle, 'count' => 100,  'exclude_replies' => true, 'include_rts' => false]);
+        while ($is_searching) {
+            try {
+                $influencerTweets = $this->_connection->get('statuses/user_timeline', $initialQuery);
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
 
-        // $tweets = $this->connection->get("statuses/user_timeline", ['screen_name' => $handle, 'count' => 100, 'exclude_replies'=> true]);
-        if (isset($tweets->errors)) {
-            return;
+            if (isset($influencerTweets->errors)) {
+                return;
+            }
+
+            if (count($influencerTweets) > 0) {
+                $get_last_item = count($influencerTweets) - 1;
+                $max_id = $influencerTweets[$get_last_item]->id;
+
+                foreach ($influencerTweets as $tweets) {
+                    // Get by 30  days
+                    if ($this->getTwitterTimeStamp($tweets->created_at) >= $thirty_days) {
+                        $tweets_30_days[] = $tweets;
+                    }
+                }
+            }
+
+            if (count($tweets_30_days) >= $count || count($influencerTweets) === 0) {
+                $is_searching = false;
+            }
+
+            $initialQuery["max_id"] = $max_id - 1;
         }
 
-        return $tweets;
+        return $tweets_30_days;
+    }
+
+    function getTwitterTimeStamp($twitter_time)
+    {
+        $date = date_create($twitter_time);
+        $timestamp = date_format($date, "U");
+        return $timestamp;
     }
 
     function getHashtagTweets($package, $query, $request)
@@ -153,13 +183,13 @@ class PremiumTwitterAPIController extends Controller
         $queryData = env('TWITTER_DEV_ENV') == 'sandbox' ? $initialQuery : array_merge(['maxResults' => $count], $initialQuery);
 
         $tweets_result = $this->_connection->get("tweets/search/" . env('TWITTER_API_TYPE') . "/" . env('TWITTER__APP_DEVELOPMENT_NAME'), $queryData);
-       
+
         if (isset($tweets_result->errors)) {
             return response(['status' => 'error', 'message' => 'Error fetching data'], 403);
         } else {
             if (isset($tweets_result->results)) {
                 $tweets = $tweets_result->results;
-                
+
                 // $next = isset($tweets_result->next) ? $tweets_result->next : '';
                 // $loop_count = 0;
 

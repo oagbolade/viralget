@@ -145,7 +145,7 @@ export default {
       return formattedDate;
     },
     goToCreateCampaign() {
-      window.location.href = "http://localhost:8000/create-campaign";
+      window.location.href = "/create-campaign";
     },
     async getUserCampaigns() {
       const URL = `/api/v1/campaign/view`;
