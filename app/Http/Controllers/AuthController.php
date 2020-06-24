@@ -75,7 +75,7 @@ class AuthController extends Controller
 
     public function signup() {
         if(Auth()->user()->details) {
-            return redirect(route('dashboard'));
+            return redirect(route('campaigns.view'));
         }
         return view('auth.signup');
     }

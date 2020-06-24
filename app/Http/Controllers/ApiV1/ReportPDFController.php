@@ -58,8 +58,7 @@ class ReportPDFController extends Controller
             "name" => $name,
         ];
 
-        return view('report.profilingReport')->with('data', $data);
-
+        // return view('report.profilingReport')->with('data', $data);
 
         $pdf_name = $handle . ' '. $this->getTimeNow();
 

@@ -18,7 +18,7 @@
           
           <span class="dropdown-toggle" data-toggle="dropdown">My Account</span>
           <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a>
+            <a class="dropdown-item" href="{{ route('campaigns.view') }}">View Reports</a>
             <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
           </div>          
           @endguest
@@ -100,7 +100,7 @@
             </li>
             @else
             <li class="nav-item display-mobile">
-              <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+              <a class="nav-link" href="{{ route('campaigns.view') }}">View Reports</a>
               <ul class="nav">
                 <li class="nav-item">
                   <a class="nav-link" href="{{ route('logout') }}">Logout</a>

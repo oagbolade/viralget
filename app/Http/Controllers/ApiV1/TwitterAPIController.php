@@ -303,7 +303,7 @@ class TwitterAPIController extends Controller
 
         $data['engagement_rate'] = $engagement->er ?? 0;
 
-        $data['impression'] = $engagement->impressions ?? 0;
+        $data['impressions'] = $engagement->impressions ?? 0;
 
         $data['reach'] = $engagement->reach ?? 0;
 

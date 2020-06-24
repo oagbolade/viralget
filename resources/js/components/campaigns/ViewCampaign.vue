@@ -40,16 +40,15 @@
     <!-- <div class="row" v-show="!loading && !displayError"> -->
     <div class="row">
       <div class="col-md-6">
-        <h3 id="block-2">Campaigns</h3>
-        <h6 id="block-2">You can create and monitor keywords or #hashtags</h6>
+        <h3 id="block-2">Reports</h3>
+        <h6 id="block-2">Monitor hastag campaigns, generate reports and listen to what people online are saying about your brand</h6>
       </div>
 
       <div @click="goToCreateCampaign" class="col-md-6">
         <button type="button" class="pull-right btn btn-round btn-warning">
-          <label><i class="fa fa-plus"></i></label> New Campaign
+          <label><i class="fa fa-plus"></i></label> New Report
         </button>
       </div>
-
       <section
         class="table-section bg-white col-md-12"
         style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
@@ -58,7 +57,7 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Campaign Name</th>
+              <th>Name</th>
               <th>Created</th>
               <th>Actions</th>
             </tr>
@@ -85,13 +84,6 @@
                   <label><i class="fa fa-book"></i></label> View
                 </button>
                 <button
-                  @click="editCampaign(campaign.id)"
-                  type="button"
-                  class="btn btn-label btn-primary"
-                >
-                  <label><i class="fa fa-pencil"></i></label> Edit
-                </button>
-                <button
                   @click="deleteCampaign(campaign.id)"
                   type="button"
                   class="btn btn-label btn-danger"
@@ -102,10 +94,11 @@
             </tr>
           </tbody>
           <tbody v-else>
-            <td colspan="4"><h5>You have not created any campaigns</h5></td>
+            <td colspan="4"><h5>You have not created any reports</h5></td>
           </tbody>
         </table>
       </section>
+    <reporting-history></reporting-history>
     </div>
   </div>
 </template>

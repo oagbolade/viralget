@@ -44,4 +44,6 @@ Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
 
     Route::post('/report/keyword/download', 'ReportPDFController@downloadKeywordReport');
     Route::post('/report/profiling/download', 'ReportPDFController@downloadProfilingReport');
+
+    Route::get('/history', 'ReportingHistoryController@getReportingHistory');
 });

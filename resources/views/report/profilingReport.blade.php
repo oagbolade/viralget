@@ -24258,11 +24258,11 @@
               <br>               
               <h6 id="block-2" class="block-number">
                 {{ $data['report_days'] }} profiling report for:
-                <strong>@dayo_daveed</strong>
+                <strong>@ {{ $data['handle'] }}</strong>
               </h6>
               <p>
                 <small>
-                  <span class="icon-calendar"></span> &nbsp; "date_from" - "date_to"
+                  <span class="icon-calendar"></span> &nbsp; <b>From: </b>{{ $data['date_from'] }} - <b>To: </b>{{ $data['date_to'] }}
                 </small>
               </p>
             </td>
@@ -24307,7 +24307,7 @@
                             :data-to="parseInt(numberFormat(impressions))"
                             class="counted"
                           >
-                            11111111111111111111111
+                            {{ $data['impressions'] }}
                           </h2>
                         </>
                       </div>
@@ -24453,27 +24453,29 @@
                   Most Retweeted Tweets In The Last 30 Days
                 </h5>
                 <table class="table shadow bg-white table-hover table-striped">
+                  @foreach($data["retweets"] as $retweetData)
                   <tr>
                     <td width="70%">
-                      <div eet text</p>
+                      <p>{{ $retweetData['text'] }}</p>
                         <p>
                           <small
                             ><strong
                               >Posted on
-                              2002-20-20</strong
+                              {{ $retweetData['created_at'] }}</strong
                             ></small
                           >
                         </p>
                         <p>
                           <i class="fa fa-retweet text-primary"></i>
-                          retweet_count &nbsp;&nbsp;
+                          {{ $retweetData['retweet_count'] }} &nbsp;&nbsp;
                           <i class="fa fa-heart text-danger"></i>
-                          favorite_count
+                          {{ $retweetData['favorite_count'] }}
                         </p>
                         <hr class="my-7" />
-                      </div>
+                      </p>
                     </td>
                   </tr>
+                  @endforeach
                 </table>
               </div>
             </td>
@@ -24484,28 +24486,30 @@
                   Most Retweeted Tweets
                 </h5>
                 <table class="table shadow bg-white table-hover table-striped">
+                  @foreach($data["tweets"] as $tweetData)
                   <tr>
                     <td width="70%">
                       <div>
-                        <p>retweet text</p>
+                        <p>{{ $retweetData['text'] }}</p>
                         <p>
                           <small
                             ><strong
                               >Posted on
-                              2002-20-20</strong
+                              {{ $retweetData['created_at'] }}</strong
                             ></small
                           >
                         </p>
                         <p>
                           <i class="fa fa-retweet text-primary"></i>
-                          retweet_count &nbsp;&nbsp;
+                          {{ $retweetData['retweet_count'] }} &nbsp;&nbsp;
                           <i class="fa fa-heart text-danger"></i>
-                          favorite_count
+                          {{ $retweetData['favorite_count'] }}
                         </p>
                         <hr class="my-7" />
                       </div>
                     </td>
                   </tr>
+                  @endforeach
                 </table>
               </div>
             </td>
