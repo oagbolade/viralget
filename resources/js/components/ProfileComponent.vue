@@ -87,7 +87,7 @@
                       :data-to="parseInt(numberFormat(impressions))"
                       class="counted"
                     >
-                      {{ numberFormat(totalTweets) }}
+                      {{ numberFormat(impressions) }}
                     </h2>
                   </div>
 
@@ -364,8 +364,7 @@ export default {
           Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
         }
       };
-    console.log("impressions ", this.impressions);
-    return;
+ 
       const data = {
         report_type_days: this.report_type_days,
         date_from: this.date_from,
@@ -408,7 +407,6 @@ export default {
         .then(res => {
           if (res.data) {
             let data = JSON.parse(res.data.data);
-            
             this.total_engagements = data.total_engagements;
             this.impressions = data.impressions;
             this.reach = data.reach;
