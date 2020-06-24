@@ -29,7 +29,8 @@ class SubscriptionController extends Controller
                 'profiling_balance' => $plan->profiling_limit,
             ]);            
 
-            return redirect(route('dashboard'))->withSuccess("Congratulations! Your $plan->name subscription is active");
+            return redirect(route('campaigns.view'))->withSuccess("Congratulations! Your $plan->name subscription is active");
+            // return redirect(route('dashboard'))->withSuccess("Congratulations! Your $plan->name subscription is active");
         }
 
         if(!$user->details) {
