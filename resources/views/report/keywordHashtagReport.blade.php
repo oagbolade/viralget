@@ -24716,7 +24716,7 @@
                   :per="5"
                   tag="tbody"
                 >
-                @foreach($data["highest_retweeted_tweets"] as $tweetData)
+                @foreach($data["highest_retweeted_tweets"] as $tweetData){{ $data['reach'] }}{{ $data['reach'] }}
                   <tr
                     v-for="(active, index) in paginated('high_impacts')"
                     :key="index"
