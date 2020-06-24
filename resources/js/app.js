@@ -61,6 +61,12 @@ Vue.component(
     require("./components/campaigns/CreateCampaign.vue").default
 );
 
+
+Vue.component(
+    "reporting-history",
+    require("./components/profiling/ReportingHistory.vue").default
+);
+
 // Vue.component('pagination', require('laravel-vue-pagination').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
