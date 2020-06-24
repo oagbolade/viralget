@@ -168,8 +168,6 @@ class PremiumTwitterAPIController extends Controller
 
     function getHashtagTweets($package, $query, $request)
     {
-
-
         $count = ($package->name == 'Premium') ? 250 : 500;
         $fromDate = request()->fromDate;
         $toDate = request()->toDate;
