@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/viradhga/repositories/viralgetGit
+    - /bin/cp -R * $DEPLOYPATH
