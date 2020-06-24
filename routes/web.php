@@ -45,7 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::post('complete-signup', 'AuthController@postSignup')->name('login.signup.post');
 
 
-    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    // Removed dashboard because we want to make the user experience better
+    // Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
     Route::get('/history/reports', 'DashboardController@reporting')->name('reporting');
     Route::get('/history/profiles', 'DashboardController@profiling')->name('profiling');
