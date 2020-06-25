@@ -19,6 +19,7 @@ use App\ProfilingHistory;
 use App\Account;
 
 use App\Http\Controllers\ApiV1\PremiumTwitterAPIController;
+use Exception;
 
 class TwitterAPIController extends Controller
 {
@@ -85,7 +86,7 @@ class TwitterAPIController extends Controller
 
         $no_of_tweets = 100;
 
-        if ($package->name == 'Premium' && $package->name == 'Enterprise') { // adjusted use || instead
+        if ($package->name == 'Premium' || $package->name == 'Enterprise') {
             $premiumData = new PremiumTwitterAPIController;
             $tweets = $premiumData->getHashtagTweets($package, $query, $request);
         } else {
@@ -104,7 +105,6 @@ class TwitterAPIController extends Controller
 
         $contribution = $this->getUniqueContributors($tweets);
         $reach = $this->getHashtagReach($tweets, $contribution);
-
         $data['date_to'] = $request->has('toDate') ? \Carbon\Carbon::parse($request->toDate)->toDayDateTimeString() : \Carbon\Carbon::now()->toDayDateTimeString();
         $data['date_from'] = $request->has('fromDate') ? \Carbon\Carbon::parse($request->fromDate)->toDayDateTimeString() :  \Carbon\Carbon::now()->subDays($package->days)->toDayDateTimeString();
         $data['retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
@@ -114,42 +114,46 @@ class TwitterAPIController extends Controller
         $data['popular'] = $this->getHashtagPopularUsers($tweets, $user);
         $data['high_retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
         $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets);
-
+        
         $impressions = $this->getTopHashImpactsData($tweets, $user);
         $data['high_impacts'] = $impressions['sorted'];
         $data['contributors'] = $contribution['unique_users'];
         $data['avr_contribution'] = $contribution['avr_contribution'];
-
+        
         // Corrected Calculations
         $total_engagements = $this->getTotalEngagements($tweets);
         $data['potential_reach'] = $reach['reach'];
-        $data['impressions'] = $this->getImpressions($reach['reach'], $no_of_tweets);
-        $data['campaign_value'] = ($this->getImpressions($reach['reach'], $no_of_tweets) / 1000) * 80;
-        // $data['campaign_value'] = ($this->getImpressions($reach['reach'], $no_of_tweets) * 80) / 1000;
+        $data['impressions'] = $impressions['sum'];
+        $data['campaign_value'] = ($impressions['sum'] / 1000) * 80;
         $data['accurate_engagement_rate'] = ($total_engagements / $data['impressions']) * 100;
         $data['total_engagements'] = $total_engagements;
         $data['original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
         $data['top_original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
         $data['most_recent_tweets'] = $this->getMostRecentTweets($tweets, $user);
 
-
+        
         $data['potential_impact'] =  $impressions['sum'] * 0.60; //$reach['impact'];
         $data['media_meta_data'] = $this->getTweetsMedia($tweets, 'hashtag');
         $data['report_type'] = $package->days;
         $data['report_type_name'] = $package->name;
         $data['engagement_rate'] = $this->getHashtagEngagementData($tweets, $reach['reach']);
-
+        
         Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
-
+        
         // If query exists, update database
         // - Find Query from reporting history
         // -If found update, else create
-        $report = ReportingHistory::create([
-            'user_id' => $user->id,
-            'query' => $query,
-            'report_data' => json_encode($data),
-            'package' => $package->id
-        ]);
+        try{
+            $report = ReportingHistory::create([
+                'user_id' => $user->id,
+                'query' => $query,
+                'report_data' => json_encode($data),
+                'package' => $package->id
+            ]);
+        }catch(Exception $e){
+            //return response
+            return 'emcountered error ' . $e->getMessage();
+        }
 
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
     }
@@ -273,16 +277,6 @@ class TwitterAPIController extends Controller
         $userTweets = $this->getUserTweets($handle);
 
         if ($package->name == 'Premium' || $package->name == 'Enterprise') {
-            // if(count($userTweets) > 0) {
-            //     $lastTimeLineTweet = new \DateTime($userTweets[0]->created_at);
-            //     $from = $lastTimeLineTweet->format('Ymd').'0000';
-
-            //     $toTimeStamp = $lastTimeLineTweet->getTimestamp() + 2592000; //30 days from now
-            //     $to = gmdate('Ymd', $toTimeStamp).'1159';
-            // } else {
-            //     $from = gmdate('Ymd').'00';
-            //     $to = gmdate('Ymd', time() + 2592000).'1159';
-            // }
             $premiumData = new PremiumTwitterAPIController;
             $userTweets = $premiumData->getAllProfileData($handle, $user);
         }
@@ -293,6 +287,7 @@ class TwitterAPIController extends Controller
 
 
         $data['date_to'] = \Carbon\Carbon::now()->toDayDateTimeString();
+
         $data['date_from'] = \Carbon\Carbon::now()->subDays(30)->toDayDateTimeString();
 
         $data['profile_location'] = $profileData->location ?? 'Not specified';
@@ -308,6 +303,8 @@ class TwitterAPIController extends Controller
         $data['reach'] = $engagement->reach ?? 0;
 
         $data['total_engagements'] = $engagement->total_engagements ?? 0;
+
+        $data['total_posts'] = count($userTweets);
 
         $data['avr_likes'] = $engagement->avrLikes ?? 0;
 
@@ -333,13 +330,21 @@ class TwitterAPIController extends Controller
 
     function getProfileHighestRetweets($tweets)
     {
+        $unique_array_tracker = [];
+        $temp_store_tweets = [];
 
-        usort($tweets, function ($a, $b) {
-            return $a->retweet_count <=> $b->retweet_count;
+        foreach($tweets as $tweet){
+            if(!in_array($tweet->user->screen_name, $unique_array_tracker)){
+                $unique_array_tracker[] = $tweet->user->screen_name;
+                $temp_store_tweets[] = $tweet;
+            }
+        }
+        
+        usort($temp_store_tweets, function ($a, $b) {
+            return $b->retweet_count - $a->retweet_count;
         });
 
-        $topRetweets = array_slice(array_reverse($tweets), 0, 6);
-
+        $topRetweets = array_slice($temp_store_tweets, 0, 6);
         return $topRetweets;
     }
 
