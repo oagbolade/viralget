@@ -82,82 +82,39 @@ class TwitterCronHandler extends Controller
 
     function index() //Rename to search
     {
-        $is_searching = true;
-        $one_day = date('U', strtotime('-24 hours'));
-        $seven_days = date('U', strtotime('-7 days'));
-        $thirty_days = date('U', strtotime('-30 days'));
-        $tweets_30_days = [];
-
-        // while($is_searching){
-            $this->_Parameters["get-influencer-tweets"]["screen_name"] = "unicodeveloper";
-            // $this->_Parameters["get-influencer-tweets"]["since_id"] = 1269195170261741568;
-    
-            try {
-                $influencerTweets = $this->twitterFetch($this->URLs['get-tweets'], $this->_Parameters["get-influencer-tweets"]);
-            } catch (\Exception $e) {
-                return $e->getMessage();
-            }
-        return json_encode($influencerTweets);
-            
-            $get_last_item = count($influencerTweets) - 1;
-            $max_id = $influencerTweets[$get_last_item]->id;
-
-            if (count($tweets_30_days) >= 5) {
-                $is_searching = false;
-                return json_encode($tweets_30_days);
-            }
-
-            foreach ($influencerTweets as $tweets) {
-                // Get by 30  days
-                if($this->getTwitterTimeStamp($tweets->created_at) >= $one_day){
-                    $tweets_30_days[] = $tweets;
-                }
-            }
-
-            $this->_Parameters["get-influencer-tweets"]["max_id"] = $max_id - 1;
-            
-            
-            // return;
-        // }
-        
-        // echo $this->getTwitterTimeStamp($influencerTweets[0]->created_at);
-
-        return json_encode($influencerTweets);
-        print_r($influencerTweets[0]->id);
-        $since_id = '1273523017562361857';
-        return;
-        
-
-
-        // if (is_array($influencerTweets) > 0) {
-        //     foreach ($influencerTweets as $tweets) {
-        //         if ($this->matchesInfluencerLocation($tweets->user->location)) {
-        //             echo $tweets->user->location . "<br>";
-        //         }
-        //     }
-        // }
-        return;
-
-        /////////////////////////////////////////////////////////////////////////////////
         $page = 0;
         $next = "";
         $searching = true;
+        $tweets_array = [];
+        $tweet_cap = 30;
 
         while ($searching) {
             if ($page === 0) {
                 $this->_temporary_parameters = [
                     "query" => "place_country: NG (tech OR coding OR software OR developer) -discount -promo -cash -sale -game -bet",
-                    "maxResults" => 100,
+                    "maxResults" => 10,
                 ];
             } else {
                 $this->_temporary_parameters = [
                     "query" => "place_country: NG (tech OR coding OR software OR developer) -discount -promo -cash -sale -game -bet",
-                    "maxResults" => 100,
+                    "maxResults" => 10,
                     "next" => $next
                 ];
             }
 
+            // For testing // End by pages
+            // if ($page === 2) {
+            //     $searching = false;
+            //     return json_encode($tweets_array);
+            // }
+
             $page++;
+
+            // For testing // End by tweetcap
+            if (count($tweets_array) >= $tweet_cap) {
+                $searching = false;
+                return json_encode($tweets_array);
+            }
 
             try {
                 $tweets = $this->twitterFetch($this->URLs['premium-30-sandbox'], $this->_temporary_parameters);
@@ -165,15 +122,11 @@ class TwitterCronHandler extends Controller
                 return $e->getMessage();
             }
 
-            return json_encode($tweets);
+            // return json_encode($tweets);
 
             if (isset($tweets->results)) {
                 foreach ($tweets->results as $status) {
-                    if ($this->checkFollowers($status->user->followers_count)) {
-                        $this->setInfluencerFollowers($status->user->followers_count);
-                        $this->getInfluencerLocation($status->user->location);
-                        $this->checkTweets($status->user->screen_name);
-                    }
+                    $tweets_array[] = $status;
                 }
             }
 
@@ -184,14 +137,55 @@ class TwitterCronHandler extends Controller
                 $searching = false;
                 return json_encode($tweets);
             }
-
-            // For testing
-            if ($page === 1) {
-                $searching = false;
-                return json_encode($tweets);
-            }
         }
 
+        return;
+
+        // $is_searching = true;
+        // $one_day = date('U', strtotime('-24 hours'));
+        // $seven_days = date('U', strtotime('-7 days'));
+        // $thirty_days = date('U', strtotime('-30 days'));
+        // $tweets_30_days = [];
+
+        // // while($is_searching){
+        //     $this->_Parameters["get-influencer-tweets"]["screen_name"] = "unicodeveloper";
+        //     // $this->_Parameters["get-influencer-tweets"]["since_id"] = 1269195170261741568;
+    
+        //     try {
+        //         $influencerTweets = $this->twitterFetch($this->URLs['get-tweets'], $this->_Parameters["get-influencer-tweets"]);
+        //     } catch (\Exception $e) {
+        //         return $e->getMessage();
+        //     }
+        // return json_encode($influencerTweets);
+            
+        //     $get_last_item = count($influencerTweets) - 1;
+        //     $max_id = $influencerTweets[$get_last_item]->id;
+
+        //     if (count($tweets_30_days) >= 5) {
+        //         $is_searching = false;
+        //         return json_encode($tweets_30_days);
+        //     }
+
+        //     foreach ($influencerTweets as $tweets) {
+        //         // Get by 30  days
+        //         if($this->getTwitterTimeStamp($tweets->created_at) >= $one_day){
+        //             $tweets_30_days[] = $tweets;
+        //         }
+        //     }
+
+        //     $this->_Parameters["get-influencer-tweets"]["max_id"] = $max_id - 1;
+            
+            
+        //     // return;
+        // // }
+        
+        // // echo $this->getTwitterTimeStamp($influencerTweets[0]->created_at);
+
+        // return json_encode($influencerTweets);
+        // print_r($influencerTweets[0]->id);
+        // $since_id = '1273523017562361857';
+        // return;
+        
         return;
 
         ///////////////////////////////////////////////////////////////////
