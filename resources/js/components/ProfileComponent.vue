@@ -412,7 +412,6 @@ export default {
             this.reach = data.reach;
             this.followers = data.profile.followers_count;
             this.following = data.profile.friends_count;
-            // this.totalTweets = data.profile.statuses_count;
             this.totalTweets = data.total_posts;
             this.about = data.profile.description;
             this.isVerified = data.profile.verified;
