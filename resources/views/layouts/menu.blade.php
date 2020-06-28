@@ -50,23 +50,11 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ route('about') }}">About</a>
             </li>
+            
+            @foreach(\App\Category::where('is_featured', 1)->take(5)->get() as $category)
+            @php $sub_cats = $category->children(); @endphp
             <li class="nav-item">
-              <a class="nav-link" href="{{ route('profiles.category', 'technology') }}">Technology</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('profiles.category', 'sport') }}">Sport</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('profiles.category', 'health') }}">Health</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('profiles.category', 'music') }}">Music</a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="#">View All<span class="arrow"></span></a>
-              @foreach(\App\Category::where('is_featured', 1)->take(5)->get() as $category)
-              @php $sub_cats = $category->children(); @endphp
+              <a class="nav-link" href="#">{{ $category->name }}<span class="arrow"></span></a>
                 <ul class="nav">
                   @foreach($sub_cats->take(10)->get() as $cat)
                   <li class="nav-item">
@@ -123,7 +111,13 @@
           {{-- Only show when authenticated --}}
           @if(Auth::user())         
             <div>
-              <a href="{{ route('search-page') }}"><button type="button" class="btn btn-sm btn-warning">Search</button></a>
+              <a href="{{ route('search-page') }}"><button type="button" class="btn btn-sm btn-round btn-warning">Search</button></a>
+            </div>
+          @endif
+          
+          @if(Auth::user())         
+            <div>
+              <a href="{{ route('campaigns.view') }}"><button type="button" class="btn btn-round btn-sm btn-warning">Reports</button></a>
             </div>
           @endif
         </section>
@@ -167,3 +161,8 @@
             </div>
           </div>
     
+          <style>
+            .btn-round{
+              margin-right: 10px;
+            }
+          </style>
