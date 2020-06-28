@@ -23,6 +23,8 @@ class PremiumTwitterAPIController extends Controller
 
     private $_connection;
 
+    private $_temporary_parameters;
+
     function __construct()
     {
         $this->_connection = new TwitterOAuth(
@@ -168,90 +170,74 @@ class PremiumTwitterAPIController extends Controller
 
     function getHashtagTweets($package, $query, $request)
     {
+        $now = date("YmdH00");
+        $one_day = date("YmdHi", strtotime('-24 hours'));
+        $seven_days = date("YmdHi", strtotime('-7 days'));
+        $thirty_days = date('YmdHi', strtotime('-30 days'));
+        
         $count = ($package->name == 'Premium') ? 250 : 500;
-        $fromDate = request()->fromDate;
-        $toDate = request()->toDate;
+        $tweet_cap = ($package->name == 'Premium') ? 2000 : 3000;
 
-        $initialQuery = [
-            'query' => $query,
-            'fromDate' => $fromDate,
-            'toDate' => $toDate,
-        ];
+        // $fromDate = request()->fromDate;
+        // $toDate = request()->toDate;
+        $fromDate = $thirty_days;
+        $toDate = $now;
 
-        $queryData = env('TWITTER_DEV_ENV') == 'sandbox' ? $initialQuery : array_merge(['maxResults' => $count], $initialQuery);
+        $page = 0;
+        $next = "";
+        $searching = true;
+        $tweets_array = [];
 
-        $tweets_result = $this->_connection->get("tweets/search/" . env('TWITTER_API_TYPE') . "/" . env('TWITTER__APP_DEVELOPMENT_NAME'), $queryData);
+        // Temporary
+        $tweet_cap = 500;
+        $count = 100;
 
-        if (isset($tweets_result->errors)) {
-            return response(['status' => 'error', 'message' => 'Error fetching data'], 403);
-        } else {
+        while ($searching) {
+            if ($page === 0) {
+                $this->_temporary_parameters = [
+                    "query" => $query,
+                    "maxResults" => $count,
+                    'fromDate' => $fromDate,
+                    'toDate' => $toDate,
+                ];
+            } else {
+                $this->_temporary_parameters = [
+                    "query" => $query,
+                    "maxResults" => $count,
+                    'fromDate' => $fromDate,
+                    'toDate' => $toDate,
+                    "next" => $next
+                ];
+            }
+
+            if (count($tweets_array) >= $tweet_cap) {
+                $searching = false;
+// dd($tweets_array);
+
+                return $tweets_array;
+            }
+
+            try {
+                $tweets_result = $this->_connection->get("tweets/search/" . env('TWITTER_API_TYPE') . "/" . env('TWITTER__APP_DEVELOPMENT_NAME'), $this->_temporary_parameters);
+            } catch (\Exception $e) {
+                // return error response
+                return $e->getMessage();
+            }
+
             if (isset($tweets_result->results)) {
-                $tweets = $tweets_result->results;
+                foreach ($tweets_result->results as $status) {
+                    $tweets_array[] = $status;
+                }
+            }
 
-                // $next = isset($tweets_result->next) ? $tweets_result->next : '';
-                // $loop_count = 0;
-
-                // while($next != '' && $loop_count <= 1) {
-                // if ($next) {
-                //     $tweets_result = $this->guzzleClient("tweets/search/" . env('TWITTER_API_TYPE') . "/" . env('TWITTER__APP_DEVELOPMENT_NAME'), array_merge($queryData, ['next' => $tweets_result->next]));
-                //     $tweets = array_merge($tweets, $tweets_result->results);
-                // }
-                //     if(isset($tweets_result->next)) {
-                //         $next = $tweets_result->next;
-                //     } else {
-                //         $next = '';
-                //     }
-
-                //     $loop_count++;
-                // }
-
-                return $tweets;
+            if (isset($tweets_result->next)) {
+                $next = $tweets_result->next;
+            } else {
+                $searching = false;
+                return $tweets_array;
             }
         }
-        //       return $tweets_result;
-
-
-        //         if(!$tweets_result || isset($tweets_result->errors)) {
-        //             return response(['status' => 'error', 'message' => 'Error fetching data'], 403);
-        //         }
-
-
-        //         $data = [];
-
-        // //        $data['count'] = $tweets_count->totalCount;
-        //         $tweets = $tweets_result->results;
-
-        //         return $tweets;
-
-        //         $data['count'] = count($tweets);
-
-        //         $contribution = $this->getUniqueContributors($tweets);
-        //         $reach = $this->getHashtagReach($tweets, $contribution);
-
-        //         $data['retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets');
-        //         $data['replies'] =  $this->getHashtagTweetsData($tweets, $user, 'replies');;
-
-        //         $data['most_active'] = $this->getHashtagTweetsData($tweets, $user, '', true);
-        //         $data['popular'] = $this->getHashtagPopularUsers($tweets, $user);
-        //         $data['high_retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
-        //         $data['high_impacts'] = $this->getHashtagHighImpactUsers($tweets, $user);
-        //         $data['contributors'] = $contribution['unique_users'];
-        //         $data['avr_contribution'] = $contribution['avr_contribution'];
-        //         $data['potential_reach'] = $reach['reach'];
-        //         $data['potential_impact'] = $reach['impact'];
-        //         $data['media_meta_data'] = $this->getTweetsMedia($tweets, 'hashtag');
-        //         $data['report_type'] = $user->subscription->plan->days;
-
-
-        //         Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
-
-        //         $report = ReportingHistory::create([
-        //                         'user_id' => $user->id,
-        //                         'query' => $query,
-        //                         'report_data' => json_encode($data)
-        //                     ]);
-
-        //         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+        // return $tweets_array;
     }
 
 

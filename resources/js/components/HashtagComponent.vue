@@ -478,7 +478,7 @@
                     </td>
                     <td class="text-center">
                       <strong>{{ number(active.count) }}</strong
-                      ><br /><small>Tweets</small>
+                      ><br /><small>Contributions</small>
                     </td>
                   </tr>
                 </paginate>
@@ -701,8 +701,11 @@
                             />
                           </div>
                           <div class="media-body">
-                            <strong>@{{ active.tweet_data.user.screen_name }}</strong
-                            ><br /><small>{{ active.tweet_data.user.name }}</small>
+                            <strong
+                              >@{{ active.tweet_data.user.screen_name }}</strong
+                            ><br /><small>{{
+                              active.tweet_data.user.name
+                            }}</small>
                           </div>
                         </div>
                         <p>{{ active.tweet_data.text }}</p>
@@ -710,11 +713,17 @@
                           <small>
                             <strong
                               >Posted on
-                              {{ getHumanDate(active.tweet_data.created_at ) }}
+                              {{ getHumanDate(active.tweet_data.created_at) }}
                             </strong>
-                          </small
-                          >
+                          </small>
                         </p>
+                        <p>
+                          <i class="fa fa-retweet text-primary"></i>
+                          {{ active.tweet_data.retweet_count }} &nbsp;&nbsp;
+                          <i class="fa fa-heart text-danger"></i>
+                          {{ active.tweet_data.favorite_count }}
+                        </p>
+                        <!-- <hr class="my-7" /> -->
                       </td>
                     </tr>
                   </paginate>
@@ -735,6 +744,7 @@
                   <div class="card-body">
                     <p v-if="high_retweet_tweets.length == 0">No data yet</p>
                     <div
+                    class="high-retweet-seperator"
                       v-else
                       v-for="(retweet, index) in high_retweet_tweets.slice(
                         0,
@@ -770,51 +780,12 @@
                         <i class="fa fa-heart text-danger"></i>
                         {{ retweet.favorite_count }}
                       </p>
-                      <hr class="my-7" />
+                      <!-- <hr class="my-7" /> -->
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <!-- <div class="col-md-4">
-                       <table class="table table-hover table-striped">
-                          <thead class="bg-primary">
-                            <tr>
-                              <th class="text-white">Most Popular</th>
-                              <th class="text-white"><small>Followers</small></th>
-                            </tr>
-                          </thead>
-                          <paginate
-                            name="popular"
-                            :list="popular"
-                            :per="5"
-                            tag="tbody"
-                          >
-                            <tr v-for="(active, index) in paginated('popular')" :key="index">
-                              <td width="70%">
-                                <div class="media">
-                                  <div class="lead-6 line-height-1 text-danger w-50px">
-                                    <img class="avatar avatar-sm" :src="active.user.profile_image_url" alt="">
-                                  </div>
-                                  <div class="media-body">
-                                    <strong>@{{ active.user.screen_name }}</strong><br/><small>{{ active.user.name }}</small>
-                                  </div>
-                                </div>
-                              </td>
-                              <td class="text-center"><strong>{{ number(active.count) }}</strong></td>
-                            </tr>
-                          </paginate>
-                        </table>
-                        <paginate-links
-                              for="popular"
-                              :classes="{
-                                'ul': 'pagination',
-                                'ul.paginate-links > li.number' : 'page-item',
-                                'ul.paginate-links > li.number > a' : 'page-link',
-                              }"
-                        ></paginate-links>
-                    </div> -->
           </div>
         </section>
       </div>
@@ -1010,7 +981,7 @@ export default {
         .then(res => {
           if (res.status == "success") {
             let data = JSON.parse(res.data.data);
-            console.log("response", data.most_recent_tweets);
+            console.log("response", data);
 
             const total_engagements = data.total_engagements;
             const potential_reach = data.potential_reach;
@@ -1018,7 +989,7 @@ export default {
             this.accurate_engagement_rate = data.accurate_engagement_rate;
             this.accurate_impressions = data.impressions;
             this.total_engagements = total_engagements;
-            this.ad_recall = total_engagements / potential_reach / 100;
+            this.ad_recall = total_engagements / potential_reach;
             this.original_contributors = data.original_contributors;
             this.top_original_contributors = data.top_original_contributors;
             this.most_recent_tweets = data.most_recent_tweets;
@@ -1127,5 +1098,9 @@ export default {
 
 .download-section {
   margin: 10px 0;
+}
+
+.high-retweet-seperator{
+  padding: 8px;
 }
 </style>

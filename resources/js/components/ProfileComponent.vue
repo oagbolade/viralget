@@ -412,7 +412,7 @@ export default {
             this.reach = data.reach;
             this.followers = data.profile.followers_count;
             this.following = data.profile.friends_count;
-            this.totalTweets = data.profile.statuses_count;
+            this.totalTweets = data.total_posts;
             this.about = data.profile.description;
             this.isVerified = data.profile.verified;
             this.name = data.profile.name;
@@ -447,32 +447,6 @@ export default {
           this.displayError = true;
           this.loading = false;
         });
-
-      // axios.get(`/api/v1/profile?q=${this.q}`)
-      //     .then((res) => {
-      //         let data = res.data.data;
-      //         this.followers = data.profile.followers_count;
-      //         this.following = data.profile.friends_count;
-      //         this.totalTweets = data.profile.statuses_count;
-      //         this.about = data.profile.description;
-      //         this.isVerified = data.profile.verified;
-      //         this.name = data.profile.name;
-      //         this.avatar = data.profile.profile_image_url;
-      //         this.loading = false;
-      //         this.tweets = data.tweets;
-      //         this.media_meta = data.media_meta_data;
-      //         this.engagement_rate = data.engagement_rate;
-      //         this.averageRetweets = data.avr_retweets;
-      //         this.averageLikes = data.avr_likes;
-      //         this.category = {
-      //             color: data.category.color,
-      //             name: data.category.name
-      //         }
-      //     })
-      //     .catch((err) => {
-      //         console.log(err)
-      //         this.loading = false;
-      //     })
     },
     numberFormat: function(number) {
       var format = 0;
