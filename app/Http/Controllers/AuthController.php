@@ -35,7 +35,7 @@ class AuthController extends Controller
             // return Socialite::driver('twitter')->userFromTokenAndSecret($oauth_token, $oauth_token_secret);
             return Socialite::driver('twitter')->redirect();
         } catch (\Exception $e) {
-            return redirect(route('login'))->withError('Error authenticating you at the moment. Please try again.'. ' '. $e);
+            return redirect(route('login'))->withError('Error authenticating you at the moment. Please try again.');
         }
     }
 
@@ -65,7 +65,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         if($user->subscription) {
-           return redirect()->intended(route('dashboard'));
+           return redirect()->intended('campaigns');
         } else {
             return redirect()->intended(route('pricing'));
         }
@@ -75,7 +75,7 @@ class AuthController extends Controller
 
     public function signup() {
         if(Auth()->user()->details) {
-            return redirect(route('dashboard'));
+            return redirect(route('campaigns.view'));
         }
         return view('auth.signup');
     }

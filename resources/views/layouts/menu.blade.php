@@ -3,7 +3,8 @@
       <div class="container small-3">
         <nav class="nav">
           <a class="nav-link" href="{{ route('about') }}">About</a>
-          <a class="nav-link" href="{{ route('pricing') }}">Pricing</a>
+          {{-- adjusted. Don't know why --}}
+          {{-- <a class="nav-link" href="{{ route('pricing') }}">Pricing</a> --}} 
           <a class="nav-link" href="{{ route('terms') }}">Terms</a>
           <a class="nav-link" href="{{ route('privacy') }}">Policy</a>
           <a class="nav-link" href="{{ route('faqs') }}">FAQs</a>
@@ -17,12 +18,10 @@
           
           <span class="dropdown-toggle" data-toggle="dropdown">My Account</span>
           <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a>
+            <a class="dropdown-item" href="{{ route('campaigns.view') }}">View Reports</a>
             <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
           </div>          
           @endguest
-
-         
         </div>
       </div>
     </section>
@@ -51,7 +50,34 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ route('about') }}">About</a>
             </li>
-            @foreach(\App\Category::where('is_featured', 1)->take(5)->get() as $category)
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('profiles.category', 'technology') }}">Technology</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('profiles.category', 'sport') }}">Sport</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('profiles.category', 'health') }}">Health</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('profiles.category', 'music') }}">Music</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="#">View All<span class="arrow"></span></a>
+              @foreach(\App\Category::where('is_featured', 1)->take(5)->get() as $category)
+              @php $sub_cats = $category->children(); @endphp
+                <ul class="nav">
+                  @foreach($sub_cats->take(10)->get() as $cat)
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('profiles.category', ['category' => $cat->slug]) }}"> {{ $cat->name }}</a>
+                  </li>
+                  @endforeach
+                </ul>
+              @endforeach
+            </li>
+
+            {{-- @foreach(\App\Category::where('is_featured', 1)->take(5)->get() as $category)
             @php $sub_cats = $category->children(); @endphp
             <li class="nav-item">
               <a class="nav-link" href="#">{{ $category->name }} @if($sub_cats->count() > 0)<span class="arrow"></span>@endif</a>
@@ -66,14 +92,15 @@
                 </li>
               </ul>
             </li>
-            @endforeach
+            @endforeach --}}
+
             @guest
             <li class="nav-item display-mobile">
               <a class="nav-link" href="{{ route('login') }}">Login</a>
             </li>
             @else
             <li class="nav-item display-mobile">
-              <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+              <a class="nav-link" href="{{ route('campaigns.view') }}">View Reports</a>
               <ul class="nav">
                 <li class="nav-item">
                   <a class="nav-link" href="{{ route('logout') }}">Logout</a>
@@ -92,6 +119,13 @@
               </form>
             </li>
           </ul>
+
+          {{-- Only show when authenticated --}}
+          @if(Auth::user())         
+            <div>
+              <a href="{{ route('search-page') }}"><button type="button" class="btn btn-sm btn-warning">Search</button></a>
+            </div>
+          @endif
         </section>
               <form class="@if($isDarkBg) input-glass @endif input-round w-400 hide-mobile" action="{{ route('profiles') }}" style="margin-top: -5px">
                 <div class="input-group">

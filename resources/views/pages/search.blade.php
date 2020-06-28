@@ -10,7 +10,7 @@
    <header class="header text-center text-white bg-info">
       <div class="container">
       <h2 class="text-white">Track and Analyze your Hashtag</h2>
-      <p>See how many impressions your hashtag has generated, and how many people have being reached</p>
+      <p>See how many impressions your hashtag has generated, and how many people have been reached</p>
         <div class="col-md-8 offset-md-2">
                   <form class="rounded p-5 mt-7" action="{{ route('profiles') }}" style="background-color: rgba(64, 60, 53, 0.2);">
                         <div class="col">
