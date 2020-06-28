@@ -46,7 +46,7 @@ class TwitterCronHandler extends Controller
             "include_rts" => true,
             "count" => 200,
             "tweet_mode" => "extended",
-            "max_id" => "1269202687398227968",
+            // "max_id" => "1269202687398227968",
         ],
 
         "standard" => [
@@ -74,7 +74,6 @@ class TwitterCronHandler extends Controller
 
     function getTwitterTimeStamp($twitter_time)
     {
-        // $timestamp = date("Mon Jul 25 05:51:34 +0000 2011");
         $date = date_create($twitter_time);
         $timestamp = date_format($date, "U");
         return $timestamp;
@@ -85,50 +84,59 @@ class TwitterCronHandler extends Controller
         $page = 0;
         $next = "";
         $searching = true;
-        $tweets_array = [];
-        $tweet_cap = 30;
+
+        $northen_influencers = [];
 
         while ($searching) {
             if ($page === 0) {
                 $this->_temporary_parameters = [
-                    "query" => "place_country: NG (tech OR coding OR software OR developer) -discount -promo -cash -sale -game -bet",
-                    "maxResults" => 10,
+                    "query" => "place_country: NG (tech OR coding OR software OR developer OR computer OR programming OR technology OR data science OR artificial intelligence OR software engineer) -discount -promo -cash -sale -game -bet",
+                    // "query" => "place_country: NG profile_region: kaduna",
+                    "maxResults" => 500,
                 ];
             } else {
                 $this->_temporary_parameters = [
-                    "query" => "place_country: NG (tech OR coding OR software OR developer) -discount -promo -cash -sale -game -bet",
-                    "maxResults" => 10,
+                    "query" => "place_country: NG (tech OR coding OR software OR developer OR computer OR programming OR technology OR data science OR artificial intelligence OR software engineer) -discount -promo -cash -sale -game -bet",
+                    // "query" => "place_country: NG profile_region: kaduna",
+                    "maxResults" => 500,
                     "next" => $next
                 ];
             }
 
             // For testing // End by pages
-            // if ($page === 2) {
-            //     $searching = false;
-            //     return json_encode($tweets_array);
-            // }
+            if ($page === 2) {
+                $searching = false;
+                return json_encode('done');
+            }
 
             $page++;
 
-            // For testing // End by tweetcap
-            if (count($tweets_array) >= $tweet_cap) {
-                $searching = false;
-                return json_encode($tweets_array);
-            }
-
             try {
-                $tweets = $this->twitterFetch($this->URLs['premium-30-sandbox'], $this->_temporary_parameters);
+                $tweets = $this->twitterFetch($this->URLs['premium-30-paid'], $this->_temporary_parameters);
             } catch (\Exception $e) {
                 return $e->getMessage();
             }
 
-            // return json_encode($tweets);
+            // Get northern Influencers
+            // if (isset($tweets->results)) {
+            //     foreach ($tweets->results as $status) {
+            //         if ($this->checkFollowers($status->user->followers_count)) {
+            //             $northen_influencers[] = $status->user->screen_name;
+            //         }
+            //     }
+            // }
 
             if (isset($tweets->results)) {
                 foreach ($tweets->results as $status) {
-                    $tweets_array[] = $status;
+                    if ($this->checkFollowers($status->user->followers_count)) {
+                        $this->setInfluencerFollowers($status->user->followers_count);
+                        $this->getInfluencerLocation($status->user->location);
+                        $this->checkTweets($status->user->screen_name);
+                    }
                 }
             }
+
+            // return json_encode($tweets);
 
             // For live data
             if (isset($tweets->next)) {
@@ -140,54 +148,6 @@ class TwitterCronHandler extends Controller
         }
 
         return;
-
-        // $is_searching = true;
-        // $one_day = date('U', strtotime('-24 hours'));
-        // $seven_days = date('U', strtotime('-7 days'));
-        // $thirty_days = date('U', strtotime('-30 days'));
-        // $tweets_30_days = [];
-
-        // // while($is_searching){
-        //     $this->_Parameters["get-influencer-tweets"]["screen_name"] = "unicodeveloper";
-        //     // $this->_Parameters["get-influencer-tweets"]["since_id"] = 1269195170261741568;
-    
-        //     try {
-        //         $influencerTweets = $this->twitterFetch($this->URLs['get-tweets'], $this->_Parameters["get-influencer-tweets"]);
-        //     } catch (\Exception $e) {
-        //         return $e->getMessage();
-        //     }
-        // return json_encode($influencerTweets);
-            
-        //     $get_last_item = count($influencerTweets) - 1;
-        //     $max_id = $influencerTweets[$get_last_item]->id;
-
-        //     if (count($tweets_30_days) >= 5) {
-        //         $is_searching = false;
-        //         return json_encode($tweets_30_days);
-        //     }
-
-        //     foreach ($influencerTweets as $tweets) {
-        //         // Get by 30  days
-        //         if($this->getTwitterTimeStamp($tweets->created_at) >= $one_day){
-        //             $tweets_30_days[] = $tweets;
-        //         }
-        //     }
-
-        //     $this->_Parameters["get-influencer-tweets"]["max_id"] = $max_id - 1;
-            
-            
-        //     // return;
-        // // }
-        
-        // // echo $this->getTwitterTimeStamp($influencerTweets[0]->created_at);
-
-        // return json_encode($influencerTweets);
-        // print_r($influencerTweets[0]->id);
-        // $since_id = '1273523017562361857';
-        // return;
-        
-        return;
-
         ///////////////////////////////////////////////////////////////////
         $start = 0;
         $end = 10;
@@ -248,7 +208,7 @@ class TwitterCronHandler extends Controller
                 return json_encode($tweets);
             }
 
-            //Stop searching for keywords
+            //Stop searching for keywords after keyword array has been exhausted
             if (!isset($tweets->next) && $start + $end  >= $array_count) {
                 $is_searching = false;
                 return json_encode($tweets);
@@ -268,17 +228,16 @@ class TwitterCronHandler extends Controller
 
     function calculateEngagementRate($engagement_data)
     {
-        $engagementRate = ($engagement_data["likes"] / 200 + $engagement_data["retweets"] / 200) / ($engagement_data["followers"] ?? 0);
+        $engagementRate = ($engagement_data["followers"] === 0) ? 0 : ($engagement_data["likes"] / 200 + $engagement_data["retweets"] / 200) / ($engagement_data["followers"] ?? 0);
         $engagementRate = round($engagementRate, 2);
         return $engagementRate;
     }
 
     function checkFollowers($followersCount)
     {
-        if ($followersCount < 5000) {
-            return false;
+        if ($followersCount > 5000) { // adjusted should be 5000
+            return true;
         }
-        return true;
     }
 
     function setNextToken($next_token)
@@ -302,6 +261,7 @@ class TwitterCronHandler extends Controller
         $retweets_count = 0;
         $likes_count = 0;
         $followers_count = 0;
+        $profile_data = [];
 
         if (is_array($influencerTweets) > 0) {
             foreach ($influencerTweets as $tweets) {
@@ -310,11 +270,15 @@ class TwitterCronHandler extends Controller
                 $followers_count = $tweets->user->followers_count;
 
                 foreach ($this->_keywords->getKeywords($this->_category)['keywords'] as $keyword) {
-                    if (isset($tweets->retweeted_status->full_text) && $this->analyseEachInfluencerTweet($tweets->retweeted_status->full_text, $keyword) && $this->matchesInfluencerLocation($tweets->user->location)) {
+                    // if (isset($tweets->retweeted_status->full_text) && $this->analyseEachInfluencerTweet($tweets->retweeted_status->full_text, $keyword) && $this->matchesInfluencerLocation($tweets->user->location)) {
+                    if (isset($tweets->retweeted_status->full_text) && $this->analyseEachInfluencerTweet($tweets->retweeted_status->full_text, $keyword)) {
                         $counter++;
-                    } else if (!isset($tweets->retweeted_status->full_text) && $this->analyseEachInfluencerTweet($tweets->full_text, $keyword) && $this->matchesInfluencerLocation($tweets->user->location)) {
+                    // } else if (!isset($tweets->retweeted_status->full_text) && $this->analyseEachInfluencerTweet($tweets->full_text, $keyword) && $this->matchesInfluencerLocation($tweets->user->location)) {
+                    } else if (!isset($tweets->retweeted_status->full_text) && $this->analyseEachInfluencerTweet($tweets->full_text, $keyword)) {
                         $counter++;
                     }
+                    
+                    $profile_data[] = $tweets->user;
                 }
             }
         }
@@ -337,6 +301,7 @@ class TwitterCronHandler extends Controller
                 "handle" => $screen_name,
                 "followers" => $this->_followers,
                 "engagement_rate" => $this->_engagement_rate,
+                "profile_data" => $profile_data,
                 "location" => $this->_location,
                 "platform_id" => $this->_platform_id,
                 "category_id" => $this->_keywords->getKeywords($this->_category)['category_id'], // adjusted for movies
@@ -354,20 +319,23 @@ class TwitterCronHandler extends Controller
 
     function matchesInfluencerLocation($location)
     {
-        $location_keywords = ["Lekki", "Ajah", "NG", "Nigeria", "Ibadan", "Ikoyi", "Lagos", "Abuja"];
-        foreach ($location_keywords as $eachLocation) {
-            if ($eachLocation === "NG" && strpos($location, $eachLocation) !== false) {
-                // return $screen_name . "<br>";
+        // $location_keywords = ["Lekki", "Ajah", "Nigeria", "Ibadan", "Ikoyi", "Lagos", "Abuja"];
+        
+        if (strpos($location, "NG") !== false) {
+            return true;
+        }
+
+        foreach ($this->_keywords->getLocations() as $eachLocation) {
+            if (stripos($location, $eachLocation) !== false) {
                 return true;
             }
-
-            if ($eachLocation !== "NG") {
-                return $this->checkNoneCodeLocations($location, $eachLocation);
-            }
+            // return $this->checkNoneCodeLocations($location, $eachLocation);
         }
+
         return false;
     }
 
+    // I dont see the use for this function, may delete soon
     function checkNoneCodeLocations($location, $eachLocation)
     {
         if ($this->analyseEachInfluencerLocation($location, $eachLocation) || $this->analyseEachInfluencerLocation($location, strtolower($eachLocation))) {
@@ -420,7 +388,7 @@ class TwitterCronHandler extends Controller
 
     function areTweetsRelevant($counter)
     {
-        if ($counter > 60) { // adjusted, should be 60
+        if ($counter > 10) { // adjusted, should be 60
             return true;
         }
     }
