@@ -7,7 +7,8 @@ namespace App\Http\Controllers\ApiV1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\Campaigns;
+use App\HashtagCampaigns;
+use App\ProfilingCampaigns;
 use Exception;
 
 class CampaignController extends Controller
@@ -23,10 +24,15 @@ class CampaignController extends Controller
 
     function view()
     {
+        $campaigns = new HashtagCampaigns;
+
+        if(isset(request()->handle)){
+            $campaigns = new ProfilingCampaigns;
+        }
+
         $user = $this->authenticate();
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-        $campaigns = new Campaigns;
 
         try {
             // Add pagination
@@ -53,7 +59,15 @@ class CampaignController extends Controller
         }
     }
 
-    function create()
+    function create(){
+        if(isset(request()->handle)){
+            return $this->createProfiling();
+        }else{
+            return $this->createKeyword();
+        }
+    }
+
+    function createKeyword()
     {
         $user = $this->authenticate();
 
@@ -64,7 +78,7 @@ class CampaignController extends Controller
         $description = request()->description;
         $user_id = $user->id;
 
-        $campaign = new Campaigns;
+        $campaign = new HashtagCampaigns;
 
         $campaign->keywords = $keywords;
         $campaign->dates = $dates;
@@ -82,6 +96,45 @@ class CampaignController extends Controller
 
         $data = [
             'keyword' => $keywords,
+            'description' => $description,
+        ];
+
+        return response([
+            "status" => 200,
+            "message" => "successfull",
+            "data" => $data
+        ], 200);
+    }
+    
+    function createProfiling()
+    {
+        $user = $this->authenticate();
+
+        if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
+        
+        $handle = request()->handle;
+        $dates = json_encode(request()->dates);
+        $description = request()->description;
+        $user_id = $user->id;
+
+        $campaign = new ProfilingCampaigns;
+
+        $campaign->handle = $handle;
+        $campaign->dates = $dates;
+        $campaign->description = $description;
+        $campaign->user_id = $user_id;
+
+        try {
+            $campaign->save();
+        } catch (Exception $e) {
+            return response([
+                "message" => "faileld to create new profiling campaign" . $e,
+                "status" => 400
+            ], 500);
+        }
+
+        $data = [
+            'handle' => $handle,
             'description' => $description,
         ];
 

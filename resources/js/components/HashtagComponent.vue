@@ -33,7 +33,7 @@
 
     <div class="row" v-show="!loading && !displayError">
       <h6 id="block-2" class="block-number">
-        {{ report_type_days }} Days report for:
+        {{ report_type_days }} report for:
         <strong>{{ decodeURIComponent(handle) }}</strong>
         <span v-show="report_type_days !== '30'">
           <a href="/pricing"> | Upgrade Plan</a></span
@@ -129,38 +129,39 @@
                 <p class="lead-8 lh-1 fw-700 counted" data-prefix="%">
                   {{ number(parseInt(accurate_campaign_value)) }}
                 </p>
-                <!-- <p class="lead-8 lh-1 fw-700 counted" data-provide="countup" data-from="0" data-to="100" data-prefix="%">{{number(parseInt((potential_impact * 80)/1000) * engagement_rate)}}</p> -->
               </div>
             </div>
           </div>
         </section>
 
+        <!-- Removed this feature -->
+        <!-- <div class="col-md-4">
+          <form class="input-round">
+            <div class="form-group">
+              <select
+                @change="getDays"
+                v-model="selectedDays"
+                class="form-control"
+                placeholder="Select input"
+              >
+                <option value="">Select Days</option>
+                <option value="1">24hrs</option>
+                <option selected value="7">1 Week (7days)</option>
+                <option value="30">30 days</option>
+              </select>
+            </div>
+          </form>
+        </div> -->
+
         <section class="download-section">
           <div class="row">
-            <div class="col-md-4">
-              <form class="input-round">
-                <div class="form-group">
-                  <select
-                    @change="getDays"
-                    v-model="selectedDays"
-                    class="form-control"
-                    placeholder="Select input"
-                  >
-                    <option value="">Select Days</option>
-                    <option value="1">24hrs</option>
-                    <option selected value="7">1 Week (7days)</option>
-                    <option value="30">30 days</option>
-                  </select>
-                </div>
-              </form>
-            </div>
-
-            <div class="offset-md-2 col-md-6">
-              <div class="pull-right">
-                <button class="btn btn-warning" @click="downloadReport">
-                  Download Report
-                </button>
-              </div>
+            <div class="offset-md-6 col-md-6">
+              <button
+                class="btn btn-warning float-right"
+                @click="downloadReport"
+              >
+                Download Report
+              </button>
             </div>
           </div>
         </section>
@@ -324,7 +325,7 @@
                       data-provide="countup"
                       data-from="0"
                     >
-                      {{ `${accurate_engagement_rate.toFixed(3)}%` }}
+                      {{ `${accurate_engagement_rate.toFixed(2)}%` }}
                     </h4>
                   </div>
 
@@ -744,7 +745,7 @@
                   <div class="card-body">
                     <p v-if="high_retweet_tweets.length == 0">No data yet</p>
                     <div
-                    class="high-retweet-seperator"
+                      class="high-retweet-seperator"
                       v-else
                       v-for="(retweet, index) in high_retweet_tweets.slice(
                         0,
@@ -986,10 +987,11 @@ export default {
             const total_engagements = data.total_engagements;
             const potential_reach = data.potential_reach;
             this.accurate_campaign_value = data.campaign_value;
-            this.accurate_engagement_rate = data.accurate_engagement_rate;
+            this.accurate_engagement_rate =
+              (total_engagements / data.impressions) * 100;
             this.accurate_impressions = data.impressions;
             this.total_engagements = total_engagements;
-            this.ad_recall = total_engagements / potential_reach;
+            this.ad_recall = (total_engagements / potential_reach) * 100;
             this.original_contributors = data.original_contributors;
             this.top_original_contributors = data.top_original_contributors;
             this.most_recent_tweets = data.most_recent_tweets;
@@ -1018,11 +1020,16 @@ export default {
             this.text_percentage = `width: ${data.media_meta_data.text.percentage}%`;
             this.media_percentage = `width: ${data.media_meta_data.media.percentage}%`;
             this.report_type = res.data.report_type;
-            this.report_type_days = res.data.report_type_days;
+            // this.report_type_days = res.data.report_type_days;
             this.handle = res.data.handle;
             this.displayError = false;
+
             this.date_from = data.date_from;
             this.date_to = data.date_to;
+
+            let start = moment(data.date_from);
+            let end = moment(data.date_to);
+            this.report_type_days = end.from(start, true);
 
             this.fillData();
           } else {
@@ -1100,7 +1107,7 @@ export default {
   margin: 10px 0;
 }
 
-.high-retweet-seperator{
+.high-retweet-seperator {
   padding: 8px;
 }
 </style>

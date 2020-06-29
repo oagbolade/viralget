@@ -71,4 +71,9 @@ class Keywords
     {
         return $this->_keywords[$category];
     }
+    
+    public function getLocations()
+    {
+        return $this->_keywords['locations'];
+    }
 }

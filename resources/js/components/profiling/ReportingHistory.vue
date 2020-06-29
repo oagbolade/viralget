@@ -19,106 +19,146 @@
       </div>
     </div>
 
-    <div class="row gap-y">
     <!-- <div class="row gap-y" v-show="displayError && !loading"> -->
+    <div class="row gap-y">
       <main class="main-content">
-      <section class="section">
-        <div class="container">
-          <div class="row gap-y">
-            <div class="col-md-6 mx-auto">
-              <div class="card card-body shadow-3 hover-shadow-6 text-default" href="#">
-                <div class="media align-items-center">
-                  <div class="mr-5">
-                    <span class="iconbox iconbox-xxl bg-pale-primary">
-                      <i class="icon-profile-male text-primary"></i>
-                    </span>
+        <section class="section">
+          <div class="container">
+            <div class="row gap-y">
+              <div class="col-md-6 mx-auto">
+                <div
+                  class="card card-body shadow-3 hover-shadow-6 text-default"
+                  href="#"
+                >
+                  <div class="media align-items-center">
+                    <div class="mr-5">
+                      <span class="iconbox iconbox-xxl bg-pale-primary">
+                        <i class="icon-profile-male text-primary"></i>
+                      </span>
+                    </div>
+                    <div class="media-body">
+                      <h5>Profiling Usage</h5>
+                      <h3 class="mb-4">
+                        {{
+                          subscription.plan.profiling_limit -
+                            subscription.profiling_balance
+                        }}
+                        / {{ subscription.plan.profiling_limit }}
+                      </h3>
+                      <a
+                        class="btn btn-warning btn-sm"
+                        :href="'/search/profiles'"
+                        >Search Profiles</a
+                      >
+                    </div>
                   </div>
-                  <div class="media-body">
-                    <h5>Profiling Usage</h5>
-                    <h3 class="mb-4">{{ subscription.plan.profiling_limit - subscription.profiling_balance }} / {{ subscription.plan.profiling_limit }}</h3>
-                    <a class="btn btn-warning btn-sm" :href="'/search/profiles'">Search Profiles</a>
+                </div>
+              </div>
+
+              <div class="col-md-6 mx-auto">
+                <div
+                  class="card card-body shadow-3 hover-shadow-6 text-default"
+                  href="#"
+                >
+                  <div class="media align-items-center">
+                    <div class="mr-5">
+                      <span class="iconbox iconbox-xxl bg-pale-info">
+                        <i class="icon-genius text-info"></i>
+                      </span>
+                    </div>
+                    <div class="media-body">
+                      <h5>Reporting Usage</h5>
+                      <h3 class="mb-4">
+                        {{
+                          subscription.plan.reporting_limit -
+                            subscription.reporting_balance
+                        }}
+                        / {{ subscription.plan.reporting_limit }}
+                      </h3>
+                      <a class="btn btn-danger btn-sm" :href="'/search'"
+                        >Search Hashtags</a
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="col-md-6 mx-auto">
-              <div class="card card-body shadow-3 hover-shadow-6 text-default" href="#">
-                <div class="media align-items-center">
-                  <div class="mr-5">
-                    <span class="iconbox iconbox-xxl bg-pale-info">
-                      <i class="icon-genius text-info"></i>
-                    </span>
-                  </div>
-                  <div class="media-body">
-                    <h5>Reporting Usage</h5>
-                    <h3 class="mb-4">{{ subscription.plan.reporting_limit - subscription.reporting_balance}} / {{ subscription.plan.reporting_limit }}</h3>
-                    <a class="btn btn-danger btn-sm" :href="'/search'">Search Hashtags</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-12">
-              <h5>Profiling History <small>[<a :href="'/history/profiles'">See all]</a></small></h5>
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>User handle</th>
-                    <th>Package</th>
-                    <th>Report Date</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-if="profiling.length === 0">
-                    <th colspan="4">No data recorded yet</th>
-                  </tr>
-                  <tr v-else v-for="(profile, index) in profiling" :key="index">
-                    <th scope="row">{{ index + 1 }}</th>
-                    <td><a target="_blank" :href="`/report/profile/${profile.id}`">{{ `@${profile.handle}` }}</a></td>
-                    <td><strong>{{ (profile.plan.name) ? profile.plan.name : '-' }}</strong></td>
-                    <!-- <td>{{ $profile->created_at->diffInHours() > 24 ? $profile->created_at->toDayDateTimeString() : $profile->created_at->diffForHumans() }}</td> -->
-                    <td><a target="_blank" :href="`/report/profile/${profile.id}`" class="btn btn-sm btn-warning">View Report</a></td>
-                  </tr>
-                </tbody>
-              </table>                    
-            </div>
-
-            <div class="col-md-12">
-              <h5>Reports History <small><a href="`/history/reports`">See all]</a></small></h5>
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Keyword</th>
-                    <th>Package</th>
-                    <th>Report Date</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-if="reporting.length === 0">
-                    <th colspan="4">No data recorded yet</th>
-                  </tr>
-                  <tr v-else v-for="(report, index) in reporting" :key="index">
-                    <th scope="row">{{ index + 1 }}</th>
-                    <td><a target="_blank" :href="`/report/hashtag/${report.id}`">{{ report.query }}</a> </td>
-                    <td><strong>{{ (report.plan.name) ? report.plan.name : '-' }}</strong></td>
-                    <!-- <td>{{ $report->created_at->diffInHours() > 24 ? $report->created_at->toDayDateTimeString() : $report->created_at->diffForHumans() }}</td> -->
-                    <td><a target="_blank" :href="`/report/hashtag/${report.id}`" class="btn btn-sm btn-warning">View Report</a></td>
-                  </tr>
-                </tbody>
-              </table>                    
-            </div>
-          </div>        
-        </div>
-
-      </section>
-    </main>
+          </div>
+        </section>
+      </main>
     </div>
-      
+
+    <div class="profiling row">
+      <div class="col-md-6">
+        <h3 id="block-2">Profiling</h3>
+        <h6 id="block-2">
+          Monitor user profile campaigns, generate reports and listen to how
+          people engage with influencers...
+        </h6>
+      </div>
+      <div @click="goToCreateCampaign" class="col-md-6">
+        <button type="button" class="pull-right btn btn-round btn-warning">
+          <label><i class="fa fa-plus"></i></label> New Profiling
+        </button>
+      </div>
+      <section
+        class="table-section bg-white col-md-12"
+        style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
+      >
+        <table class="table table-hover responsive">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody v-if="campaigns.length !== 0">
+            <tr v-for="(campaign, index) in campaigns" :key="index">
+              <th scope="row">{{ index + 1 }}</th>
+              <td>
+                <strong>{{ campaign.handle }}</strong>
+                <div>
+                  <small
+                    v-if="formatCampaignDates(campaign.dates).from !== null"
+                  >
+                    From: {{ formatCampaignDates(campaign.dates).from }}<br />
+                    To: {{ formatCampaignDates(campaign.dates).to }}
+                  </small>
+                </div>
+              </td>
+              <td>{{ dateFormatter(campaign.created_at) }}</td>
+              <td>
+                <button
+                  @click="
+                    viewCampaign(
+                      campaign.handle,
+                      formatCampaignDates(campaign.dates).from,
+                      formatCampaignDates(campaign.dates).to
+                    )
+                  "
+                  type="button"
+                  class="btn btn-label btn-success"
+                >
+                  <label><i class="fa fa-book"></i></label> View
+                </button>
+                <button
+                  @click="deleteCampaign(campaign.id)"
+                  type="button"
+                  class="btn btn-label btn-danger"
+                >
+                  <label><i class="fa fa-trash"></i></label> Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <td colspan="4"><h5>You have not created any reports</h5></td>
+          </tbody>
+        </table>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -135,19 +175,55 @@ export default {
     return {
       loading: true,
       displayError: false,
+      campaigns: [],
       user: {},
       profiling: [],
       reporting: [],
-      subscription: {},
+      subscription: {}
     };
   },
   mounted: function() {
-    this.getReportingHistory();
+    this.getSubscriptionUsage();
+    this.getUserCampaigns();
   },
-  created: function() {
-  },
+  created: function() {},
   methods: {
-    async getReportingHistory() {
+    goToCreateCampaign() {
+      window.location.href = "/create-campaign?handle=true";
+    },
+    getTimeDifference(created_at) {
+      return moment(created_at).fromNow();
+    },
+    async getUserCampaigns() {
+      const URL = `/api/v1/campaign/view`;
+
+      try {
+        let response = await axios.get(URL, {
+          params: {
+            handle: true
+          },
+          headers: {
+            Authorization:
+              "Bearer " + $('meta[name="api-token"]').attr("content")
+          }
+        });
+
+        if (response.data.status === 200) {
+          this.campaigns = response.data.data;
+          console.log(this.campaigns);
+          this.loading = false;
+        }
+
+        if (response.data.status === 204) {
+          this.loading = false;
+        }
+      } catch (err) {
+        this.displayError = true;
+        this.loading = false;
+        console.log(err);
+      }
+    },
+    async getSubscriptionUsage() {
       const URL = `/api/v1/history`;
 
       try {
@@ -170,26 +246,53 @@ export default {
         if (response.data.status === 204) {
           this.loading = false;
         }
-        
+
         if (response.data.status === 403) {
-          window.location.href = '/pricing';
+          window.location.href = "/pricing";
           this.loading = false;
         }
-
       } catch (err) {
         this.displayError = true;
         this.loading = false;
         console.log(err);
       }
     },
+    formatCampaignDates(dates) {
+      const jsonData = JSON.parse(dates);
+      return {
+        from: jsonData.from,
+        to: jsonData.to
+      };
+    },
+    dateFormatter(date) {
+      let formatedDate = date.split(" ");
+      return formatedDate[0];
+    },
+    viewCampaign(query, fromDate, toDate) {
+      const URL = `/search/profiles?q=${query}`;
+      window.location.href = URL;
+    },
   },
-  computed: {
-
-  }
+  computed: {}
 };
 </script>
 
 <style scoped>
+  .table-section {
+    padding: 20px;
+  }
 
+  th,
+  td {
+    text-align: center;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  .profiling{
+    margin-bottom: 60px;
+  }
 </style>
 
