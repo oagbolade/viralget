@@ -19,8 +19,8 @@
       </div>
     </div>
 
+    <!-- <div class="row gap-y" v-show="displayError && !loading"> -->
     <div class="row gap-y">
-      <!-- <div class="row gap-y" v-show="displayError && !loading"> -->
       <main class="main-content">
         <section class="section">
           <div class="container">
@@ -82,116 +82,82 @@
                   </div>
                 </div>
               </div>
-
-              <div class="col-md-12">
-                <h5>
-                  Profiling History
-                  <small>[<a :href="'/history/profiles'">See all]</a></small>
-                </h5>
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>User handle</th>
-                      <th>Package</th>
-                      <th>Report Date</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-if="profiling.length === 0">
-                      <th colspan="4">No data recorded yet</th>
-                    </tr>
-                    <tr
-                      v-else
-                      v-for="(profile, index) in profiling"
-                      :key="index"
-                    >
-                      <th scope="row">{{ index + 1 }}</th>
-                      <td>
-                        <a
-                          target="_blank"
-                          :href="`/report/profile/${profile.id}`"
-                          >{{ `@${profile.handle}` }}</a
-                        >
-                      </td>
-                      <td>
-                        <strong>{{
-                          profile.plan.name ? profile.plan.name : "-"
-                        }}</strong>
-                      </td>
-                      <td>
-                        {{ getTimeDifference(profile.created_at) }}
-                      </td>
-                      <td>
-                        <a
-                          target="_blank"
-                          :href="`/report/profile/${profile.id}`"
-                          class="btn btn-sm btn-warning"
-                          >View Report</a
-                        >
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="col-md-12">
-                <h5>
-                  Reports History
-                  <small><a href="`/history/reports`">See all]</a></small>
-                </h5>
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Keyword</th>
-                      <th>Package</th>
-                      <th>Report Date</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-if="reporting.length === 0">
-                      <th colspan="4">No data recorded yet</th>
-                    </tr>
-                    <tr
-                      v-else
-                      v-for="(report, index) in reporting"
-                      :key="index"
-                    >
-                      <th scope="row">{{ index + 1 }}</th>
-                      <td>
-                        <a
-                          target="_blank"
-                          :href="`/report/hashtag/${report.id}`"
-                          >{{ report.query }}</a
-                        >
-                      </td>
-                      <td>
-                        <strong>{{
-                          report.plan.name ? report.plan.name : "-"
-                        }}</strong>
-                      </td>
-                      <td>
-                        {{ getTimeDifference(report.created_at) }}
-                      </td>
-                      <td>
-                        <a
-                          target="_blank"
-                          :href="`/report/hashtag/${report.id}`"
-                          class="btn btn-sm btn-warning"
-                          >View Report</a
-                        >
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
             </div>
           </div>
         </section>
       </main>
+    </div>
+
+    <div class="profiling row">
+      <div class="col-md-6">
+        <h3 id="block-2">Profiling</h3>
+        <h6 id="block-2">
+          Monitor user profile campaigns, generate reports and listen to how
+          people engage with influencers...
+        </h6>
+      </div>
+      <div @click="goToCreateCampaign" class="col-md-6">
+        <button type="button" class="pull-right btn btn-round btn-warning">
+          <label><i class="fa fa-plus"></i></label> New Profiling
+        </button>
+      </div>
+      <section
+        class="table-section bg-white col-md-12"
+        style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
+      >
+        <table class="table table-hover responsive">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody v-if="campaigns.length !== 0">
+            <tr v-for="(campaign, index) in campaigns" :key="index">
+              <th scope="row">{{ index + 1 }}</th>
+              <td>
+                <strong>{{ campaign.handle }}</strong>
+                <div>
+                  <small
+                    v-if="formatCampaignDates(campaign.dates).from !== null"
+                  >
+                    From: {{ formatCampaignDates(campaign.dates).from }}<br />
+                    To: {{ formatCampaignDates(campaign.dates).to }}
+                  </small>
+                </div>
+              </td>
+              <td>{{ dateFormatter(campaign.created_at) }}</td>
+              <td>
+                <button
+                  @click="
+                    viewCampaign(
+                      campaign.handle,
+                      formatCampaignDates(campaign.dates).from,
+                      formatCampaignDates(campaign.dates).to
+                    )
+                  "
+                  type="button"
+                  class="btn btn-label btn-success"
+                >
+                  <label><i class="fa fa-book"></i></label> View
+                </button>
+                <button
+                  @click="deleteCampaign(campaign.id)"
+                  type="button"
+                  class="btn btn-label btn-danger"
+                >
+                  <label><i class="fa fa-trash"></i></label> Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <td colspan="4"><h5>You have not created any reports</h5></td>
+          </tbody>
+        </table>
+      </section>
     </div>
   </div>
 </template>
@@ -209,6 +175,7 @@ export default {
     return {
       loading: true,
       displayError: false,
+      campaigns: [],
       user: {},
       profiling: [],
       reporting: [],
@@ -216,15 +183,47 @@ export default {
     };
   },
   mounted: function() {
-    this.getReportingHistory();
-    this.getTimeDifference();
+    this.getSubscriptionUsage();
+    this.getUserCampaigns();
   },
   created: function() {},
   methods: {
+    goToCreateCampaign() {
+      window.location.href = "/create-campaign?handle=true";
+    },
     getTimeDifference(created_at) {
       return moment(created_at).fromNow();
     },
-    async getReportingHistory() {
+    async getUserCampaigns() {
+      const URL = `/api/v1/campaign/view`;
+
+      try {
+        let response = await axios.get(URL, {
+          params: {
+            handle: true
+          },
+          headers: {
+            Authorization:
+              "Bearer " + $('meta[name="api-token"]').attr("content")
+          }
+        });
+
+        if (response.data.status === 200) {
+          this.campaigns = response.data.data;
+          console.log(this.campaigns);
+          this.loading = false;
+        }
+
+        if (response.data.status === 204) {
+          this.loading = false;
+        }
+      } catch (err) {
+        this.displayError = true;
+        this.loading = false;
+        console.log(err);
+      }
+    },
+    async getSubscriptionUsage() {
       const URL = `/api/v1/history`;
 
       try {
@@ -257,12 +256,43 @@ export default {
         this.loading = false;
         console.log(err);
       }
-    }
+    },
+    formatCampaignDates(dates) {
+      const jsonData = JSON.parse(dates);
+      return {
+        from: jsonData.from,
+        to: jsonData.to
+      };
+    },
+    dateFormatter(date) {
+      let formatedDate = date.split(" ");
+      return formatedDate[0];
+    },
+    viewCampaign(query, fromDate, toDate) {
+      const URL = `/search/profiles?q=${query}`;
+      window.location.href = URL;
+    },
   },
   computed: {}
 };
 </script>
 
 <style scoped>
+  .table-section {
+    padding: 20px;
+  }
+
+  th,
+  td {
+    text-align: center;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  .profiling{
+    margin-bottom: 60px;
+  }
 </style>
 

@@ -31,7 +31,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <h3 id="block-2">Enter Keyword</h3>
+        <h3 id="block-2">Enter {{ (isHandle === true) ? 'User Handle' : 'Keyword'}}</h3>
         <h6 id="block-2">Enter brand, competitor or #hashtag to monitor</h6>
       </div>
 
@@ -41,7 +41,16 @@
       >
         <div>
           <form v-on:submit.prevent class="input-round">
-            <div class="form-group">
+            <div v-if="isHandle" class="form-group">
+              <input
+                class="form-control"
+                type="text"
+                v-model="form.handle"
+                placeholder="e.g viralget, viral get, #viralget"
+              />
+            </div>
+            
+            <div v-else class="form-group">
               <input
                 class="form-control"
                 type="text"
@@ -50,7 +59,7 @@
               />
             </div>
 
-            <div class="form-group text-center">
+            <div v-if="!isHandle" class="form-group text-center">
               <h6>Filter campaign data by date</h6>
               <a-range-picker
                 @change="onChange"
@@ -99,20 +108,43 @@ export default {
     return {
       loading: false,
       displayError: false,
+      isHandle: false,
       form: {
         Keywords: "",
+        handle: "",
         description: "",
         dates: {
-          from: '',
-          to: ''
-        },
+          from: "",
+          to: ""
+        }
       }
     };
   },
   mounted: function() {},
-  created: function() {},
+  created: function() {
+    this.checkCampaignType();
+  },
   methods: {
-    async createCampaign() {
+    createCampaign(){
+      if (this.isHandle === true) {
+        this.createProfilingCampaign();
+      } else {
+        this.createHashtagCampaign();
+
+      }
+    },
+
+    checkCampaignType() {
+      const url_string = window.location.href;
+      const url = new URL(url_string);
+      const handle = url.searchParams.get("handle");
+
+      if (handle !== null) {
+        this.isHandle = true;
+      }
+    },
+
+    async createHashtagCampaign() {
       this.loading = true;
       const config = {
         headers: {
@@ -124,7 +156,38 @@ export default {
         keywords: this.form.keywords,
         dates: {
           from: this.form.dates.from,
-          to: this.form.dates.to,
+          to: this.form.dates.to
+        },
+        description: this.form.description
+      };
+
+      const URL = `/api/v1/campaign/create`;
+
+      try {
+        let response = await axios.post(URL, data, config);
+        if (response.data.status === 200) {
+          window.location.href = `/campaigns`;
+        }
+      } catch (err) {
+        this.loading = false;
+        this.displayError = true;
+        console.log(err);
+      }
+    },
+
+    async createProfilingCampaign() {
+      this.loading = true;
+      const config = {
+        headers: {
+          Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
+        }
+      };
+
+      const data = {
+        handle: this.form.handle,
+        dates: {
+          from: this.form.dates.from,
+          to: this.form.dates.to
         },
         description: this.form.description
       };
