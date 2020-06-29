@@ -37,13 +37,19 @@
       </div>
     </div>
 
+    <div class="row">
+      <reporting-history></reporting-history>
+    </div>
+    
     <!-- <div class="row" v-show="!loading && !displayError"> -->
     <div class="row">
       <div class="col-md-6">
         <h3 id="block-2">Reports</h3>
-        <h6 id="block-2">Monitor hastag campaigns, generate reports and listen to what people online are saying about your brand</h6>
+        <h6 id="block-2">
+          Monitor hastag campaigns, generate reports and listen to what people
+          online are saying about your brand
+        </h6>
       </div>
-
       <div @click="goToCreateCampaign" class="col-md-6">
         <button type="button" class="pull-right btn btn-round btn-warning">
           <label><i class="fa fa-plus"></i></label> New Report
@@ -68,16 +74,24 @@
               <td>
                 <strong>{{ campaign.keywords }}</strong>
                 <div>
-                <small v-if="formatCampaignDates(campaign.dates).from !== null">
-                  From: {{ formatCampaignDates(campaign.dates).from }}<br>
-                  To: {{ formatCampaignDates(campaign.dates).to }}
-                </small>
+                  <small
+                    v-if="formatCampaignDates(campaign.dates).from !== null"
+                  >
+                    From: {{ formatCampaignDates(campaign.dates).from }}<br />
+                    To: {{ formatCampaignDates(campaign.dates).to }}
+                  </small>
                 </div>
               </td>
               <td>{{ dateFormatter(campaign.created_at) }}</td>
               <td>
                 <button
-                  @click="viewCampaign(campaign.keywords, formatCampaignDates(campaign.dates).from, formatCampaignDates(campaign.dates).to)"
+                  @click="
+                    viewCampaign(
+                      campaign.keywords,
+                      formatCampaignDates(campaign.dates).from,
+                      formatCampaignDates(campaign.dates).to
+                    )
+                  "
                   type="button"
                   class="btn btn-label btn-success"
                 >
@@ -98,7 +112,6 @@
           </tbody>
         </table>
       </section>
-    <reporting-history></reporting-history>
     </div>
   </div>
 </template>
@@ -125,14 +138,14 @@ export default {
     this.getUserCampaigns();
   },
   methods: {
-    formatCampaignDates(dates){
+    formatCampaignDates(dates) {
       const jsonData = JSON.parse(dates);
       return {
         from: jsonData.from,
-        to: jsonData.to,
-      }
+        to: jsonData.to
+      };
     },
-    formatCampaignDatesForTwitter(date){
+    formatCampaignDatesForTwitter(date) {
       const removeHyphen = date.replace(/-/g, "");
       const formattedDate = removeHyphen.replace(":", "");
       return formattedDate;
@@ -153,7 +166,7 @@ export default {
 
         if (response.data.status === 200) {
           this.campaigns = response.data.data;
-          console.log(this.campaigns)
+          console.log(this.campaigns);
           this.loading = false;
         }
 
