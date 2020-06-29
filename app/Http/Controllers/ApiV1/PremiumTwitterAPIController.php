@@ -175,7 +175,6 @@ class PremiumTwitterAPIController extends Controller
         $seven_days = date("YmdHi", strtotime('-7 days'));
         $thirty_days = date('YmdHi', strtotime('-30 days'));
         
-        $count = ($package->name == 'Premium') ? 250 : 500;
         $tweet_cap = ($package->name == 'Premium') ? 2000 : 3000;
 
         // $fromDate = request()->fromDate;
@@ -189,8 +188,8 @@ class PremiumTwitterAPIController extends Controller
         $tweets_array = [];
 
         // Temporary
-        $tweet_cap = 500;
-        $count = 100;
+        $tweet_cap = 3000;
+        $count = 500;
 
         while ($searching) {
             if ($page === 0) {
@@ -212,8 +211,6 @@ class PremiumTwitterAPIController extends Controller
 
             if (count($tweets_array) >= $tweet_cap) {
                 $searching = false;
-// dd($tweets_array);
-
                 return $tweets_array;
             }
 
