@@ -88,7 +88,7 @@
             </li>
             @else
             <li class="nav-item display-mobile">
-              <a class="nav-link" href="{{ route('campaigns.view') }}">View Reports</a>
+              <a class="nav-link" href="{{ route('campaigns.view') }}">Dashboard</a>
               <ul class="nav">
                 <li class="nav-item">
                   <a class="nav-link" href="{{ route('logout') }}">Logout</a>
@@ -117,7 +117,7 @@
           
           @if(Auth::user())         
             <div>
-              <a href="{{ route('campaigns.view') }}"><button type="button" class="btn btn-round btn-sm btn-warning">Reports</button></a>
+              <a href="{{ route('campaigns.view') }}"><button type="button" class="btn btn-round btn-sm btn-warning">Dashboard</button></a>
             </div>
           @endif
         </section>
