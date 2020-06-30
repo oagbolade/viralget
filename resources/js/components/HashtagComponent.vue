@@ -738,53 +738,67 @@
                   }"
                 ></paginate-links>
               </div>
-
+             
               <div class="col-md-6">
-                <h3>Highest Retweeted Tweets</h3>
-                <div class="card">
-                  <div class="card-body">
-                    <p v-if="high_retweet_tweets.length == 0">No data yet</p>
-                    <div
-                      class="high-retweet-seperator"
-                      v-else
-                      v-for="(retweet, index) in high_retweet_tweets.slice(
-                        0,
-                        5
-                      )"
+                <h3>
+                  Highest Retweeted Tweets
+                </h3>
+                <table class="table shadow bg-white table-hover table-striped">
+                  <paginate
+                    name="high_retweet_tweets"
+                    :list="high_retweet_tweets"
+                    :per="5"
+                    tag="tbody"
+                  >
+                    <tr
+                      v-for="(retweet, index) in paginated('high_retweet_tweets')"
                       :key="index"
                     >
-                      <div class="media mb-3">
-                        <div class="lead-6 line-height-1 text-danger w-50px">
-                          <img
-                            class="avatar avatar-sm"
-                            :src="retweet.user.profile_image_url"
-                            alt=""
-                          />
+                      <td width="70%">
+                        <div class="media mb-3">
+                          <div class="lead-6 line-height-1 text-danger w-50px">
+                            <img
+                              class="avatar avatar-sm"
+                              :src="retweet.user.profile_image_url"
+                              alt=""
+                            />
+                          </div>
+                          <div class="media-body">
+                            <strong
+                              >@{{ retweet.user.screen_name }}</strong
+                            ><br /><small>{{
+                              retweet.user.name
+                            }}</small>
+                          </div>
                         </div>
-                        <div class="media-body">
-                          <strong>@{{ retweet.user.screen_name }}</strong
-                          ><br /><small>{{ retweet.user.name }}</small>
-                        </div>
-                      </div>
-                      <p>{{ retweet.text }}</p>
-                      <p>
-                        <small
-                          ><strong
-                            >Posted on
-                            {{ getHumanDate(retweet.created_at) }}</strong
-                          ></small
-                        >
-                      </p>
-                      <p>
-                        <i class="fa fa-retweet text-primary"></i>
-                        {{ retweet.retweet_count }} &nbsp;&nbsp;
-                        <i class="fa fa-heart text-danger"></i>
-                        {{ retweet.favorite_count }}
-                      </p>
-                      <!-- <hr class="my-7" /> -->
-                    </div>
-                  </div>
-                </div>
+                        <p>{{ retweet.text }}</p>
+                        <p>
+                          <small>
+                            <strong
+                              >Posted on
+                              {{ getHumanDate(retweet.created_at) }}
+                            </strong>
+                          </small>
+                        </p>
+                        <p>
+                          <i class="fa fa-retweet text-primary"></i>
+                          {{ retweet.retweet_count }} &nbsp;&nbsp;
+                          <i class="fa fa-heart text-danger"></i>
+                          {{ retweet.favorite_count }}
+                        </p>
+                        <!-- <hr class="my-7" /> -->
+                      </td>
+                    </tr>
+                  </paginate>
+                </table>
+                <paginate-links
+                  for="high_retweet_tweets"
+                  :classes="{
+                    ul: 'pagination',
+                    'ul.paginate-links > li.number': 'page-item',
+                    'ul.paginate-links > li.number > a': 'page-link'
+                  }"
+                ></paginate-links>
               </div>
             </div>
           </div>
@@ -850,6 +864,7 @@ export default {
       paginate: [
         "most_active",
         "high_retweets",
+        "high_retweet_tweets",
         "high_impacts",
         "popular",
         "original_contributors",

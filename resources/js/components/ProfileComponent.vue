@@ -198,9 +198,12 @@
         <section class="download-section">
           <div class="row">
             <div class="offset-md-6 col-md-6">
-                <button class="btn btn-warning float-right" @click="downloadReport">
-                  Download Report
-                </button>
+              <button
+                class="btn btn-warning float-right"
+                @click="downloadReport"
+              >
+                Download Report
+              </button>
             </div>
           </div>
         </section>
@@ -208,59 +211,120 @@
         <section class="section bg-gray" style="width: 100%">
           <div class="container">
             <div class="row gap-y">
-              <!--
-                      <div class="col-md-6">
-                          <p><i class="fa fa-comments lead-7 text-primary"></i></p>
-                          <h5 class="fw-500 my-4">Most Recent Tweets</h5>
-                          <p>No data yet</p>
-                      </div> -->
+              <div class="col-md-6">
+                <h3>
+                  Most Retweeted Tweets
+                </h3>
+                <table class="table shadow bg-white table-hover table-striped">
+                  <paginate
+                    name="retweets"
+                    :list="retweets"
+                    :per="5"
+                    tag="tbody"
+                  >
+                    <tr
+                      v-for="(retweet, index) in paginated('retweets')"
+                      :key="index"
+                    >
+                      <td width="70%">
+                        <div class="media mb-3">
+                          <div class="lead-6 line-height-1 text-danger w-50px">
+                            <img
+                              class="avatar avatar-sm"
+                              :src="retweet.user.profile_image_url"
+                              alt=""
+                            />
+                          </div>
+                          <div class="media-body">
+                            <strong>@{{ retweet.user.screen_name }}</strong
+                            ><br /><small>{{ retweet.user.name }}</small>
+                          </div>
+                        </div>
+                        <p>{{ retweet.text }}</p>
+                        <p>
+                          <small>
+                            <strong
+                              >Posted on
+                              {{ getHumanDate(retweet.created_at) }}
+                            </strong>
+                          </small>
+                        </p>
+                        <p>
+                          <i class="fa fa-retweet text-primary"></i>
+                          {{ retweet.retweet_count }} &nbsp;&nbsp;
+                          <i class="fa fa-heart text-danger"></i>
+                          {{ retweet.favorite_count }}
+                        </p>
+                      </td>
+                    </tr>
+                  </paginate>
+                </table>
+                <paginate-links
+                  for="recent_tweets"
+                  :classes="{
+                    ul: 'pagination',
+                    'ul.paginate-links > li.number': 'page-item',
+                    'ul.paginate-links > li.number > a': 'page-link'
+                  }"
+                ></paginate-links>
+              </div>
 
               <div class="col-md-6">
-                <h5 class="fw-500 my-4">
-                  Most Retweeted Tweets In The Last 30 Days
-                </h5>
-                <hr class="my-7" />
-                <p v-if="retweets.length == 0">No data yet</p>
-                <div v-else v-for="(retweet, index) in retweets" :key="index">
-                  <p>{{ retweet.text }}</p>
-                  <p>
-                    <small
-                      ><strong
-                        >Posted on
-                        {{ getHumanDate(retweet.created_at) }}</strong
-                      ></small
+                <h3>
+                  Most Recent Tweets
+                </h3>
+                <table class="table shadow bg-white table-hover table-striped">
+                  <paginate
+                    name="recent_tweets"
+                    :list="recent_tweets"
+                    :per="5"
+                    tag="tbody"
+                  >
+                    <tr
+                      v-for="(tweet, index) in paginated('recent_tweets')"
+                      :key="index"
                     >
-                  </p>
-                  <p>
-                    <i class="fa fa-retweet text-primary"></i>
-                    {{ retweet.retweet_count }} &nbsp;&nbsp;
-                    <i class="fa fa-heart text-danger"></i>
-                    {{ retweet.favorite_count }}
-                  </p>
-                  <hr class="my-7" />
-                </div>
-              </div>
-              <div class="col-md-6">
-                <h5 class="fw-500 my-4">Most Recent Tweets</h5>
-                <hr class="my-7" />
-                <p v-if="tweets.length == 0">No data yet</p>
-                <div v-else v-for="(tweet, index) in tweets" :key="index">
-                  <p>{{ tweet.text }}</p>
-                  <p>
-                    <small
-                      ><strong
-                        >Posted on {{ getHumanDate(tweet.created_at) }}</strong
-                      ></small
-                    >
-                  </p>
-                  <p>
-                    <i class="fa fa-retweet text-primary"></i>
-                    {{ tweet.retweet_count }} &nbsp;&nbsp;
-                    <i class="fa fa-heart text-danger"></i>
-                    {{ tweet.favorite_count }}
-                  </p>
-                  <hr class="my-7" />
-                </div>
+                      <td width="70%">
+                        <div class="media mb-3">
+                          <div class="lead-6 line-height-1 text-danger w-50px">
+                            <img
+                              class="avatar avatar-sm"
+                              :src="tweet.user.profile_image_url"
+                              alt=""
+                            />
+                          </div>
+                          <div class="media-body">
+                            <strong>@{{ tweet.user.screen_name }}</strong
+                            ><br /><small>{{ tweet.user.name }}</small>
+                          </div>
+                        </div>
+                        <p>{{ tweet.text }}</p>
+                        <p>
+                          <small>
+                            <strong
+                              >Posted on
+                              {{ getHumanDate(tweet.created_at) }}
+                            </strong>
+                          </small>
+                        </p>
+                        <p>
+                          <i class="fa fa-retweet text-primary"></i>
+                          {{ tweet.retweet_count }} &nbsp;&nbsp;
+                          <i class="fa fa-heart text-danger"></i>
+                          {{ tweet.favorite_count }}
+                        </p>
+                      </td>
+                    </tr>
+                  </paginate>
+                </table>
+                <paginate-links
+                  for="recent_tweets"
+                  :classes="{
+                    ul: 'pagination',
+                    'ul.paginate-links > li.number': 'page-item',
+                    'ul.paginate-links > li.number > a': 'page-link'
+                  }"
+                ></paginate-links>
               </div>
             </div>
 
@@ -314,6 +378,7 @@
 <script>
 import axios from "axios";
 import Loading from "vue-loading-overlay";
+import VuePaginate from "vue-paginate";
 import "vue-loading-overlay/dist/vue-loading.css";
 
 import moment from "moment";
@@ -324,8 +389,9 @@ export default {
   data() {
     return {
       loading: true,
+      paginate: ["recent_tweets", "retweets"],
       avatar: "",
-      tweets: [],
+      recent_tweets: [],
       retweets: [],
       followers: 0,
       following: 0,
@@ -364,13 +430,13 @@ export default {
           Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
         }
       };
- 
+
       const data = {
         report_type_days: this.report_type_days,
         date_from: this.date_from,
         date_to: this.date_to,
         handle: this.handle,
-        
+
         impressions: this.numberFormat(this.impressions),
         reach: this.numberFormat(this.reach),
         followers: this.numberFormat(this.followers),
@@ -382,9 +448,10 @@ export default {
         engagement_rate: this.engagementRate,
         location: this.location,
         retweets: this.retweets,
-        tweets: this.tweets,
+        // changed tweets to recent tweets, adjust in pdf
+        tweets: this.recent_tweets,
         about: this.about,
-        name: this.name,
+        name: this.name
       };
 
       // Add all necessary formaters
@@ -419,14 +486,13 @@ export default {
             this.avatar = data.profile.profile_image_url;
             this.loading = false;
             this.handle = data.profile.screen_name;
-            this.tweets = data.tweets;
+            this.recent_tweets = data.recent_tweets;
             this.retweets = data.retweets;
             this.media_meta = data.media_meta_data;
             this.engagementRate = data.engagement_rate;
             this.averageRetweets = data.avr_retweets;
             this.averageLikes = data.avr_likes;
             this.location = data.profile_location;
-            this.tweets = data.tweets;
             this.date_from = data.date_from;
             this.date_to = data.date_to;
             this.report_type = res.data.report_type;
