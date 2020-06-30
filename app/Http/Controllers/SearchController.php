@@ -36,7 +36,6 @@ class SearchController extends Controller
     }
 
     function list() {
-
         $states = States::all();
         $category = request()->category;
         $keyword = request()->keyword;
