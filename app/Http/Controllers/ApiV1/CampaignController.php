@@ -147,8 +147,12 @@ class CampaignController extends Controller
 
     function delete()
     {
+        $campaign = new HashtagCampaigns;
+
+        if(isset(request()->handle)){
+            $campaign = new ProfilingCampaigns;
+        }
         $campaign_id = request()->campaignId;
-        $campaign = new Campaigns();
 
         try {
             $campaign = $campaign->where('id', $campaign_id)->delete();

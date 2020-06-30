@@ -40,7 +40,7 @@
     <div class="row">
       <reporting-history></reporting-history>
     </div>
-    
+
     <!-- <div class="row" v-show="!loading && !displayError"> -->
     <div class="row">
       <div class="col-md-6">
@@ -183,7 +183,7 @@ export default {
     viewCampaign(keyword, fromDate, toDate) {
       const formattedFromDate = this.formatCampaignDatesForTwitter(fromDate);
       const formattedToDate = this.formatCampaignDatesForTwitter(toDate);
-      const URL = `/search/profiles?q=${keyword}&fromDate=${formattedFromDate}&toDate=${formattedToDate}`;
+      const URL = `/search/profiles?q=${encodeURIComponent(keyword)}&fromDate=${formattedFromDate}&toDate=${formattedToDate}`;
       window.location.href = URL;
     },
 
@@ -205,6 +205,7 @@ export default {
         const campaignId = response.data.data;
         this.campaigns = this.campaigns.filter(campaignData => {
           this.loading = false;
+          this.displayError = false;
           return campaignData.id != campaignId;
         });
       } catch (err) {

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class HashtagCampaigns extends Model
 {
     protected $fillable = ['keywords', 'user_id'];
-    protected $table = 'campaigns';
+    protected $table = 'hashtag_campaigns';
 
     public function user()
     {

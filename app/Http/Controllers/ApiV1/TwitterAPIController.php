@@ -120,7 +120,6 @@ class TwitterAPIController extends Controller
         $data['contributors'] = $contribution['unique_users'];
         $data['avr_contribution'] = $contribution['avr_contribution'];
         
-        // Corrected Calculations
         $total_engagements = $this->getTotalEngagements($tweets);
         $data['potential_reach'] = $reach['reach'];
         $data['impressions'] = $impressions['sum'];
@@ -164,7 +163,7 @@ class TwitterAPIController extends Controller
         $temp_recent_tweets = [];
 
         foreach ($tweets as $tweet) {
-            if (!array_key_exists($tweet->user->screen_name, $recent_tweets)) {
+            if (!array_key_exists($tweet->user->screen_name, $recent_tweets) && (!isset($tweet->retweeted_status))) {
                 $temp_recent_tweets[$tweet->user->screen_name] = ["tweet_data" => $tweet];
             }
         }
@@ -251,7 +250,7 @@ class TwitterAPIController extends Controller
         $handle = request()->q;
 
         if (request()->has('plan')) {
-            $package = Subscription::where('name', $request()->plan)->first();
+            $package = Subscription::where('name', request()->plan)->first();
         } else {
             $package = $user->subscription->plan;
         }
@@ -282,7 +281,7 @@ class TwitterAPIController extends Controller
         }
 
         if ($userTweets) {
-            $data['tweets'] = array_slice($userTweets, 0, 6);
+            $data['recent_tweets'] = array_slice($userTweets, 0, 30);
         }
 
 
@@ -344,7 +343,7 @@ class TwitterAPIController extends Controller
             return $b->retweet_count - $a->retweet_count;
         });
 
-        $topRetweets = array_slice($temp_store_tweets, 0, 6);
+        $topRetweets = array_slice($temp_store_tweets, 0, 30);
         return $topRetweets;
     }
 

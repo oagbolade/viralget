@@ -174,13 +174,16 @@ class PremiumTwitterAPIController extends Controller
         $one_day = date("YmdHi", strtotime('-24 hours'));
         $seven_days = date("YmdHi", strtotime('-7 days'));
         $thirty_days = date('YmdHi', strtotime('-30 days'));
-        
+
         $tweet_cap = ($package->name == 'Premium') ? 2000 : 3000;
 
-        // $fromDate = request()->fromDate;
-        // $toDate = request()->toDate;
         $fromDate = $thirty_days;
         $toDate = $now;
+
+        if (request()->fromDate !== null && request()->toDate !== null) {
+            $fromDate = request()->fromDate;
+            $toDate = request()->toDate;
+        }
 
         $page = 0;
         $next = "";

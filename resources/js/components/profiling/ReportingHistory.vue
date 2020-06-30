@@ -257,6 +257,32 @@ export default {
         console.log(err);
       }
     },
+    async deleteCampaign(campaignId) {
+      this.loading = true;
+      const URL = `/api/v1/campaign/delete/${campaignId}`;
+
+      try {
+        let response = await axios.delete(URL, {
+          params: {
+            handle: true
+          },
+          headers: {
+            Authorization:
+              "Bearer " + $('meta[name="api-token"]').attr("content")
+          }
+        });
+        const campaignId = response.data.data;
+        this.campaigns = this.campaigns.filter(campaignData => {
+          this.loading = false;
+          this.displayError = false;
+          return campaignData.id != campaignId;
+        });
+      } catch (err) {
+        this.displayError = true;
+        this.loading = false;
+        console.log(err);
+      }
+    },
     formatCampaignDates(dates) {
       const jsonData = JSON.parse(dates);
       return {
@@ -271,28 +297,28 @@ export default {
     viewCampaign(query, fromDate, toDate) {
       const URL = `/search/profiles?q=${query}`;
       window.location.href = URL;
-    },
+    }
   },
   computed: {}
 };
 </script>
 
 <style scoped>
-  .table-section {
-    padding: 20px;
-  }
+.table-section {
+  padding: 20px;
+}
 
-  th,
-  td {
-    text-align: center;
-  }
+th,
+td {
+  text-align: center;
+}
 
-  th {
-    font-weight: bold;
-  }
+th {
+  font-weight: bold;
+}
 
-  .profiling{
-    margin-bottom: 60px;
-  }
+.profiling {
+  margin-bottom: 60px;
+}
 </style>
 
