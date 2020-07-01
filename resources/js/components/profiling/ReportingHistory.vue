@@ -45,11 +45,7 @@
                         }}
                         / {{ subscription.plan.profiling_limit }}
                       </h3>
-                      <a
-                        class="btn btn-warning btn-sm"
-                        :href="'/search/profiles'"
-                        >Search Profiles</a
-                      >
+                      <button class="btn btn-warning btn-sm">Searched Profiles</button>
                     </div>
                   </div>
                 </div>
@@ -75,9 +71,7 @@
                         }}
                         / {{ subscription.plan.reporting_limit }}
                       </h3>
-                      <a class="btn btn-danger btn-sm" :href="'/search'"
-                        >Search Hashtags</a
-                      >
+                      <button class="btn btn-danger btn-sm">Searched Hashtags</button>
                     </div>
                   </div>
                 </div>
@@ -92,8 +86,7 @@
       <div class="col-md-6">
         <h3 id="block-2">Profiling</h3>
         <h6 id="block-2">
-          Monitor user profile campaigns, generate reports and listen to how
-          people engage with influencers...
+          Check influencers engagement level, profile their influence and discover their audience interest
         </h6>
       </div>
       <div @click="goToCreateCampaign" class="col-md-6">
@@ -166,6 +159,7 @@
 import axios from "axios";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
+import Swal from "sweetalert2";
 
 import moment from "moment";
 
@@ -195,6 +189,7 @@ export default {
       return moment(created_at).fromNow();
     },
     async getUserCampaigns() {
+      this.loading = true;
       const URL = `/api/v1/campaign/view`;
 
       try {
@@ -224,6 +219,8 @@ export default {
       }
     },
     async getSubscriptionUsage() {
+      this.loading = true;
+
       const URL = `/api/v1/history`;
 
       try {
@@ -258,6 +255,63 @@ export default {
       }
     },
     async deleteCampaign(campaignId) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        onOpen: toast => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        }
+      });
+
+      Toast.fire({
+        icon: "success",
+        title: "Signed in successfully"
+      });
+      return;
+
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(result => {
+        if (result.value) {
+          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        }
+      });
+
+      return;
+
+      let options = {
+        okText: "Yes",
+        cancelText: "No",
+        delete: false
+      };
+
+      this.$dialog
+        .confirm("Are you sure you want to delete?", options)
+        .then(function(dialog) {
+          console.log("here");
+          options.delete = true;
+          this.loading = true;
+        })
+        .catch(function(err) {
+          console.log("Canceled", err);
+          // return;
+        });
+      console.log(options.delete);
+
+      if (options.delete === false) {
+        return;
+      }
+      console.log("options", options.delete);
       this.loading = true;
       const URL = `/api/v1/campaign/delete/${campaignId}`;
 
