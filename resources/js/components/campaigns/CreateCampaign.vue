@@ -34,7 +34,8 @@
         <h3 id="block-2">
           Enter {{ isHandle === true ? "User Handle" : "Keyword" }}
         </h3>
-        <h6 id="block-2">Enter brand, competitor or #hashtag to monitor</h6>
+        <h6 v-if="isHandle" id="block-2">Enter a profile to monitor</h6>
+        <h6 v-else id="block-2">Enter brand, competitor or #hashtag to monitor</h6>
       </div>
 
       <section
@@ -249,7 +250,7 @@ export default {
     moment,
     onChange(date, dateString) {
       this.form.dates.from = `${date[0].format("YYYY-MM-DD-HH:MM")}`;
-      this.form.dates.to = `${date[1].format("YYYY-MM-DD-HH:MM")}`;
+      this.form.dates.to = `${date[1].subtract(1, 'hours').format("YYYY-MM-DD-HH:MM")}`;
     },
     disabledDate(current) {
       return current && current > moment().endOf("day");
