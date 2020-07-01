@@ -1,9 +1,6 @@
 <template>
   <div class="row">
     <div class="col-md-4 col-xl-3">
-      <div @click="goToCampaigns">
-        <button class="btn btn-primary btn-block">Campaigns</button>
-      </div>
       <div class="sidebar px-4 py-md-0">
         <h6 class="sidebar-title">Filter Result</h6>
         <form action="#" v-on:submit.prevent="filterResults" method="GET">
