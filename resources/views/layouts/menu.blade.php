@@ -96,7 +96,8 @@
               </ul>
             </li>
             @endguest
-            <li>
+            {{-- Removed this feature --}}
+            {{-- <li>
             <form class="form-inline mt-5 display-mobile" action="{{ route('profiles') }}">
                 <div class="input-group">
                   <input type="text" name="q" class="form-control form-control-sm" value="{{ isset($q) ? urldecode($q) : '' }}" placeholder="@username or keyword or #hashtag">
@@ -105,7 +106,7 @@
                   </div>
                 </div>     
               </form>
-            </li>
+            </li> --}}
           </ul>
 
           {{-- Only show when authenticated --}}
@@ -121,14 +122,15 @@
             </div>
           @endif
         </section>
-              <form class="@if($isDarkBg) input-glass @endif input-round w-400 hide-mobile" action="{{ route('profiles') }}" style="margin-top: -5px">
-                <div class="input-group">
-                  <input type="text" name="q" class="form-control form-control-sm" value="{{ isset($q) ? urldecode($q) : '' }}" placeholder="@username or keyword or #hashtag">
-                  <div class="input-group-append">
-                    <button class="btn btn-warning" type="submit">Go!</button>
-                  </div>
-                </div>     
-              </form>
+        {{-- Removed this feature --}}
+        {{-- <form class="@if($isDarkBg) input-glass @endif input-round w-400 hide-mobile" action="{{ route('profiles') }}" style="margin-top: -5px">
+          <div class="input-group">
+            <input type="text" name="q" class="form-control form-control-sm" value="{{ isset($q) ? urldecode($q) : '' }}" placeholder="@username or keyword or #hashtag">
+            <div class="input-group-append">
+              <button class="btn btn-warning" type="submit">Go!</button>
+            </div>
+          </div>     
+        </form> --}}
         </div>
         
     </nav><!-- /.navbar -->
