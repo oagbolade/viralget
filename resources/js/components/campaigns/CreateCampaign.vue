@@ -31,7 +31,9 @@
 
     <div class="row">
       <div class="col-md-12">
-        <h3 id="block-2">Enter {{ (isHandle === true) ? 'User Handle' : 'Keyword'}}</h3>
+        <h3 id="block-2">
+          Enter {{ isHandle === true ? "User Handle" : "Keyword" }}
+        </h3>
         <h6 id="block-2">Enter brand, competitor or #hashtag to monitor</h6>
       </div>
 
@@ -49,7 +51,7 @@
                 placeholder="e.g viralget, viral get, #viralget"
               />
             </div>
-            
+
             <div v-else class="form-group">
               <input
                 class="form-control"
@@ -97,6 +99,7 @@
 <script>
 import axios from "axios";
 import Loading from "vue-loading-overlay";
+import Swal from "sweetalert2";
 import "vue-loading-overlay/dist/vue-loading.css";
 
 import moment from "moment";
@@ -110,7 +113,7 @@ export default {
       displayError: false,
       isHandle: false,
       form: {
-        Keywords: "",
+        keywords: "",
         handle: "",
         description: "",
         dates: {
@@ -125,12 +128,11 @@ export default {
     this.checkCampaignType();
   },
   methods: {
-    createCampaign(){
+    createCampaign() {
       if (this.isHandle === true) {
         this.createProfilingCampaign();
       } else {
         this.createHashtagCampaign();
-
       }
     },
 
@@ -145,6 +147,26 @@ export default {
     },
 
     async createHashtagCampaign() {
+      if (this.form.keywords.trim() === "") {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          onOpen: toast => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          }
+        });
+
+        Toast.fire({
+          icon: "error",
+          title: "Please enter a keyword or hashtag"
+        });
+        return;
+      }
+
       this.loading = true;
       const config = {
         headers: {
@@ -176,6 +198,25 @@ export default {
     },
 
     async createProfilingCampaign() {
+      if (this.form.handle.trim() === "") {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          onOpen: toast => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          }
+        });
+
+        Toast.fire({
+          icon: "error",
+          title: "Please enter a user handle"
+        });
+        return;
+      }
       this.loading = true;
       const config = {
         headers: {
