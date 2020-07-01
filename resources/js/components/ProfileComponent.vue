@@ -80,14 +80,15 @@
               <div class="col-md-6 mx-md-auto">
                 <div class="row gap-y text-center">
                   <div class="col-6 col-lg-4">
-                    <p>Impressions</p>
+                    <p>Engagement Rate</p>
                     <h2
                       data-provide="countup"
                       data-from="0"
-                      :data-to="parseInt(numberFormat(impressions))"
+                      :data-to="engagementRate"
+                      data-suffix="%"
                       class="counted"
                     >
-                      {{ numberFormat(impressions) }}
+                      {{ engagementRate }}%
                     </h2>
                   </div>
 
@@ -174,19 +175,6 @@
                       class="counted"
                     >
                       {{ numberFormat(following) }}
-                    </h2>
-                  </div>
-
-                  <div class="col-6 col-lg-4">
-                    <p>Engagement Rate</p>
-                    <h2
-                      data-provide="countup"
-                      data-from="0"
-                      :data-to="engagementRate"
-                      data-suffix="%"
-                      class="counted"
-                    >
-                      {{ engagementRate }}%
                     </h2>
                   </div>
                 </div>
