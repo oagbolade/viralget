@@ -178,11 +178,11 @@ class PremiumTwitterAPIController extends Controller
         $tweet_cap = ($package->name == 'Premium') ? 2000 : 3000;
 
         $fromDate = $thirty_days;
-        $toDate = $now;
+        $toDate = $now - 1;
 
         if (request()->fromDate !== null && request()->toDate !== null) {
             $fromDate = request()->fromDate;
-            $toDate = request()->toDate;
+            $toDate = request()->toDate - 1;
         }
 
         $page = 0;
@@ -223,7 +223,7 @@ class PremiumTwitterAPIController extends Controller
                 // return error response
                 return $e->getMessage();
             }
-
+            
             if (isset($tweets_result->results)) {
                 foreach ($tweets_result->results as $status) {
                     $tweets_array[] = $status;
