@@ -42,7 +42,6 @@ class TwitterAPIController extends Controller
 
     function getHashtagTweets(Request $request)
     {
-
         $user = $this->authenticate();
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
@@ -77,7 +76,8 @@ class TwitterAPIController extends Controller
             $package = $user->subscription->plan;
         }
 
-        $query = request()->q;
+        $decode_query = urldecode(request()->q);
+        $query = $decode_query;
 
         if (!$query) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
