@@ -16,6 +16,8 @@ Route::get('/about', 'HomeController@about')->name('about');
 Route::get('/marketing', 'HomeController@marketing')->name('marketing');
 Route::get('/contact', 'HomeController@contact')->name('contact');
 Route::get('/pricing', 'HomeController@pricing')->name('pricing');
+Route::get('/pricing/trends', 'HomeController@trends')->name('pricing.trends');
+Route::get('/pricing/management', 'HomeController@management')->name('pricing.management');
 Route::get('/what-we-do', 'HomeController@whatwedo')->name('what-we-do');
 Route::get('/team', 'HomeController@team')->name('team');
 Route::get('/faqs', 'HomeController@faqs')->name('faqs');

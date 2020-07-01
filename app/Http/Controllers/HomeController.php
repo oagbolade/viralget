@@ -59,6 +59,16 @@ class HomeController extends Controller
         $user = Auth()->user();
         return view('pages.pricing')->withUser($user);
     }
+    
+    function management() {
+        $user = Auth()->user();
+        return view('pricing.influencerManagement')->withUser($user);
+    }
+    
+    function trends() {
+        $user = Auth()->user();
+        return view('pricing.trends')->withUser($user);
+    }
 
 
 }

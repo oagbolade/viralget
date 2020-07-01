@@ -3,12 +3,14 @@
       <div class="container small-3">
         <nav class="nav">
           <a class="nav-link" href="{{ route('about') }}">About</a>
-          {{-- adjusted. Don't know why --}}
+          {{-- adjusted. Don't know why. Update: makes scense now --}}
           {{-- <a class="nav-link" href="{{ route('pricing') }}">Pricing</a> --}} 
           <a class="nav-link" href="{{ route('terms') }}">Terms</a>
           <a class="nav-link" href="{{ route('privacy') }}">Policy</a>
           <a class="nav-link" href="{{ route('faqs') }}">FAQs</a>
           <a class="nav-link" href="{{ route('contact') }}">Contact</a>
+          <a class="nav-link" href="{{ route('pricing.trends') }}">Twitter Trends</a>
+          <a class="nav-link" href="{{ route('pricing.management') }}">Influencer Management</a>
         </nav>
 
         <div class="dropdown mr-4  open-on-hover">        
@@ -109,12 +111,13 @@
             </li> --}}
           </ul>
 
-          {{-- Only show when authenticated --}}
-          @if(Auth::user())         
+
+          {{-- Only show when authenticated: Update suspended feature --}}
+          {{-- @if(Auth::user())         
             <div>
               <a href="{{ route('search-page') }}"><button type="button" class="btn btn-sm btn-round btn-warning">Search</button></a>
             </div>
-          @endif
+          @endif --}}
           
           @if(Auth::user())         
             <div>
