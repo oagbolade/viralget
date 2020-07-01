@@ -119,6 +119,7 @@ ViralGet is an easy-to-use platform that matches you with the right influencers 
                 <div class="col-md-6">
                   <p><i class="fa fa-caret-right text-lightest mr-2"></i> Celebrity Influencers</p>
                   <p><i class="fa fa-caret-right text-lightest mr-2"></i> Management</p>
+                  <p><i class="fa fa-caret-right text-lightest mr-2"></i> Twitter Trends</p>
                 </div>
               </div>
 

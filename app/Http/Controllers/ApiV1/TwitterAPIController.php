@@ -333,10 +333,7 @@ class TwitterAPIController extends Controller
         $temp_store_tweets = [];
 
         foreach($tweets as $tweet){
-            if(!in_array($tweet->user->screen_name, $unique_array_tracker)){
-                $unique_array_tracker[] = $tweet->user->screen_name;
-                $temp_store_tweets[] = $tweet;
-            }
+            $temp_store_tweets[] = $tweet;
         }
         
         usort($temp_store_tweets, function ($a, $b) {
@@ -383,7 +380,7 @@ class TwitterAPIController extends Controller
         $total_engagements = $likes + $retweets + $quotes + $replies;
 
         // $er = round((float) (($likes + $retweets + $replies + $quotes) / ($profile->followers_count)), 2);
-        $accurate_engagement_rate = round((float) (($likes + $retweets + $replies + $quotes) / $impressions) * 100, 2);
+        $accurate_engagement_rate = round((float) (($likes + $retweets + $replies + $quotes) / $impressions) * 1000, 2);
 
         $obj->er = $accurate_engagement_rate;
         $obj->impressions = $impressions;
