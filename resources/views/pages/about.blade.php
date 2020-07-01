@@ -136,6 +136,13 @@
                       <h6 class="mb-0">Management</h6>
                     </a>
                   </div>
+                  
+                  <div class="col-md-6 col-lg-4">
+                    <a class="card card-body border hover-shadow-6 text-center py-6" href="#">
+                      <p><i class="fa fa-line-chart lead-6 text-muted"></i></p>
+                      <h6 class="mb-0">Twitter Trends</h6>
+                    </a>
+                  </div>
 
 
                 </div>
