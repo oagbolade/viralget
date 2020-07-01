@@ -47,14 +47,14 @@
         <!-- <nav class="nav nav-navbar nav-text-normal mr-auto">
             <a class="nav-link" href="{{ route('about') }}">About</a>           -->
         <ul class="nav nav-navbar nav-text-normal larger-menu-link">
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('about') }}">About</a>
+            <li class="bold-navigations nav-item">
+              <a class="bold-navigations nav-link" href="{{ route('about') }}">About</a>
             </li>
             
             @foreach(\App\Category::where('is_featured', 1)->take(5)->get() as $category)
             @php $sub_cats = $category->children(); @endphp
-            <li class="nav-item">
-              <a class="nav-link" href="#">{{ $category->name }}<span class="arrow"></span></a>
+            <li class="bold-navigations nav-item">
+              <a class="bold-navigations nav-link" href="#">{{ $category->name }}<span class="arrow"></span></a>
                 <ul class="nav">
                   @foreach($sub_cats->take(10)->get() as $cat)
                   <li class="nav-item">
@@ -166,5 +166,10 @@
           <style>
             .btn-round{
               margin-right: 10px;
+            }
+
+            .bold-navigations{
+              font-size: 20px !important;
+              font-weight: bolder !important;
             }
           </style>
