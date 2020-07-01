@@ -260,7 +260,7 @@
                   </paginate>
                 </table>
                 <paginate-links
-                  for="recent_tweets"
+                  for="retweets"
                   :classes="{
                     ul: 'pagination',
                     'ul.paginate-links > li.number': 'page-item',
@@ -448,7 +448,6 @@ export default {
         engagement_rate: this.engagementRate,
         location: this.location,
         retweets: this.retweets,
-        // changed tweets to recent tweets, adjust in pdf
         tweets: this.recent_tweets,
         about: this.about,
         name: this.name
@@ -457,7 +456,6 @@ export default {
       // Add all necessary formaters
       try {
         let response = await axios.post(URL, data, config);
-        console.log(response);
       } catch (err) {
         console.log(err);
       }
@@ -499,14 +497,9 @@ export default {
             this.report_type_days = res.data.report_type_days;
 
             this.displayError = false;
-
-            //              console.log('data');
           } else {
             this.displayError = true;
             this.loading = false;
-
-            //                alert('Error retrieving profile data. Please try again');
-            //                this.getProfile();
           }
         })
         .catch(err => {
@@ -526,8 +519,6 @@ export default {
       } else {
         format = parseInt(number);
       }
-
-      //            console.log([number > 999, format]);
       return format;
     },
     getHumanDate: function(date) {
