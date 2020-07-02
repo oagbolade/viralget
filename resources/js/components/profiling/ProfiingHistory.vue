@@ -45,7 +45,9 @@
                         }}
                         / {{ subscription.plan.profiling_limit }}
                       </h3>
-                      <button class="btn btn-warning btn-sm">Searched Profiles</button>
+                      <button class="btn btn-warning btn-sm">
+                        Searched Profiles
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -71,7 +73,9 @@
                         }}
                         / {{ subscription.plan.reporting_limit }}
                       </h3>
-                      <button class="btn btn-danger btn-sm">Searched Hashtags</button>
+                      <button class="btn btn-danger btn-sm">
+                        Searched Hashtags
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -86,7 +90,8 @@
       <div class="col-md-6">
         <h3 id="block-2">Profiling</h3>
         <h6 id="block-2">
-          Check influencers engagement level, profile their influence and discover their audience interest
+          Check influencers engagement level, profile their influence and
+          discover their audience interest
         </h6>
       </div>
       <div @click="goToCreateCampaign" class="col-md-6">
@@ -107,8 +112,17 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody v-if="campaigns.length !== 0">
-            <tr v-for="(campaign, index) in campaigns" :key="index">
+          <paginate
+            v-if="campaigns.length !== 0"
+            name="campaigns"
+            :list="campaigns"
+            :per="10"
+            tag="tbody"
+          >
+            <tr
+              v-for="(campaign, index) in paginated('campaigns')"
+              :key="index"
+            >
               <th scope="row">{{ index + 1 }}</th>
               <td>
                 <strong>{{ campaign.handle }}</strong>
@@ -145,11 +159,22 @@
                 </button>
               </td>
             </tr>
-          </tbody>
+          </paginate>
+
           <tbody v-else>
-            <td colspan="4"><h5>You have not created any reports</h5></td>
+            <td colspan="4">
+              <h5>You have not created any profiling reports</h5>
+            </td>
           </tbody>
         </table>
+        <paginate-links
+          for="campaigns"
+          :classes="{
+            ul: 'pagination',
+            'ul.paginate-links > li.number': 'page-item',
+            'ul.paginate-links > li.number > a': 'page-link'
+          }"
+        ></paginate-links>
       </section>
     </div>
   </div>
@@ -158,6 +183,7 @@
 <script>
 import axios from "axios";
 import Loading from "vue-loading-overlay";
+import VuePaginate from "vue-paginate";
 import "vue-loading-overlay/dist/vue-loading.css";
 import Swal from "sweetalert2";
 
@@ -165,10 +191,22 @@ import moment from "moment";
 
 export default {
   components: { Loading },
+  props: ["profilingCampaigns", "usage"],
+  watch: {
+    profilingCampaigns: function(campaignValue) {
+      this.campaigns = campaignValue;
+    },
+    usage: function(usageValue) {
+      this.subscription = usageValue;
+      console.log(this.subscription);
+      this.loading = false;
+    }
+  },
   data() {
     return {
       loading: true,
       displayError: false,
+      paginate: ["campaigns"],
       campaigns: [],
       user: {},
       profiling: [],
@@ -176,10 +214,7 @@ export default {
       subscription: {}
     };
   },
-  mounted: function() {
-    this.getSubscriptionUsage();
-    this.getUserCampaigns();
-  },
+  mounted: function() {},
   created: function() {},
   methods: {
     goToCreateCampaign() {
@@ -188,130 +223,7 @@ export default {
     getTimeDifference(created_at) {
       return moment(created_at).fromNow();
     },
-    async getUserCampaigns() {
-      this.loading = true;
-      const URL = `/api/v1/campaign/view`;
-
-      try {
-        let response = await axios.get(URL, {
-          params: {
-            handle: true
-          },
-          headers: {
-            Authorization:
-              "Bearer " + $('meta[name="api-token"]').attr("content")
-          }
-        });
-
-        if (response.data.status === 200) {
-          this.campaigns = response.data.data;
-          console.log(this.campaigns);
-          this.loading = false;
-        }
-
-        if (response.data.status === 204) {
-          this.loading = false;
-        }
-      } catch (err) {
-        this.displayError = true;
-        this.loading = false;
-        console.log(err);
-      }
-    },
-    async getSubscriptionUsage() {
-      this.loading = true;
-
-      const URL = `/api/v1/history`;
-
-      try {
-        let response = await axios.get(URL, {
-          headers: {
-            Authorization:
-              "Bearer " + $('meta[name="api-token"]').attr("content")
-          }
-        });
-
-        if (response.data.status === 200) {
-          let data = response.data.data;
-          this.user = data.user;
-          this.subscription = data.subscription[0];
-          this.reporting = data.reporting;
-          this.profiling = data.profiling;
-          this.loading = false;
-        }
-
-        if (response.data.status === 204) {
-          this.loading = false;
-        }
-
-        if (response.data.status === 403) {
-          window.location.href = "/pricing";
-          this.loading = false;
-        }
-      } catch (err) {
-        this.displayError = true;
-        this.loading = false;
-        console.log(err);
-      }
-    },
-    async deleteCampaign(campaignId) {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        onOpen: toast => {
-          toast.addEventListener("mouseenter", Swal.stopTimer);
-          toast.addEventListener("mouseleave", Swal.resumeTimer);
-        }
-      });
-
-      Toast.fire({
-        icon: "success",
-        title: "Signed in successfully"
-      });
-      return;
-
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then(result => {
-        if (result.value) {
-          Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        }
-      });
-
-      return;
-
-      let options = {
-        okText: "Yes",
-        cancelText: "No",
-        delete: false
-      };
-
-      this.$dialog
-        .confirm("Are you sure you want to delete?", options)
-        .then(function(dialog) {
-          console.log("here");
-          options.delete = true;
-          this.loading = true;
-        })
-        .catch(function(err) {
-          console.log("Canceled", err);
-          // return;
-        });
-      console.log(options.delete);
-
-      if (options.delete === false) {
-        return;
-      }
-      console.log("options", options.delete);
+    async confirmedDelete(campaignId) {
       this.loading = true;
       const URL = `/api/v1/campaign/delete/${campaignId}`;
 
@@ -337,6 +249,22 @@ export default {
         console.log(err);
       }
     },
+    async deleteCampaign(campaignId) {  
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(result => {
+        if (result.value) {
+          this.confirmedDelete(campaignId);
+          Swal.fire("Deleted!", "Your profiling report has been deleted.", "success");
+        }
+      });
+    },
     formatCampaignDates(dates) {
       const jsonData = JSON.parse(dates);
       return {
@@ -349,7 +277,7 @@ export default {
       return formatedDate[0];
     },
     viewCampaign(query, fromDate, toDate) {
-      const URL = `/search/profiles?q=${query}`;
+      const URL = `/search/profile/${query}`;
       window.location.href = URL;
     }
   },

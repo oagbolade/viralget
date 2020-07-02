@@ -30,6 +30,7 @@
     <meta property="og:image" content="http://thetheme.io/thesaas/assets/img/og-img.jpg">
     <meta property="og:url" content="http://thetheme.io/thesaas/">
     <meta name="twitter:card" content="summary_large_image"> -->
+    @stack('pricingStyles')
     <style>
       #particles-js {
         position: absolute;

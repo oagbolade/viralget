@@ -81,8 +81,8 @@ Vue.component(
 
 
 Vue.component(
-    "reporting-history",
-    require("./components/profiling/ReportingHistory.vue").default
+    "profiling-history",
+    require("./components/profiling//ProfiingHistory.vue").default
 );
 
 // Vue.component('pagination', require('laravel-vue-pagination').default);
