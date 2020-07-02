@@ -19,43 +19,84 @@
       </div>
     </div>
 
-    <div class="row gap-y" v-show="displayError && !loading">
-      <div class="col-md-10 mx-auto text-center">
-        <span class="icon-sad lg-error-icon"></span>
-        <h1>Oops!</h1>
-        <h3>
-          Unfortunately, we're unable to access your campaigns at the moment.
-        </h3>
-        <h5>Please try again in few minutes</h5>
+    <!-- <div class="row gap-y" v-show="displayError && !loading"> -->
+    <div class="row gap-y">
+      <main class="main-content">
+        <section class="section">
+          <div class="container">
+            <div class="row gap-y">
+              <div class="col-md-6 mx-auto">
+                <div
+                  class="card card-body shadow-3 hover-shadow-6 text-default"
+                  href="#"
+                >
+                  <div class="media align-items-center">
+                    <div class="mr-5">
+                      <span class="iconbox iconbox-xxl bg-pale-primary">
+                        <i class="icon-profile-male text-primary"></i>
+                      </span>
+                    </div>
+                    <div class="media-body">
+                      <h5>Profiling Usage</h5>
+                      <h3 class="mb-4">
+                        {{
+                          subscription.plan.profiling_limit -
+                            subscription.profiling_balance
+                        }}
+                        / {{ subscription.plan.profiling_limit }}
+                      </h3>
+                      <button class="btn btn-warning btn-sm">
+                        Searched Profiles
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        <button
-          class="btn btn-sm btn-warning btn-round"
-          @click="getUserCampaigns"
-        >
-          <span class="icon-refresh"></span> Try again
-        </button>
-      </div>
+              <div class="col-md-6 mx-auto">
+                <div
+                  class="card card-body shadow-3 hover-shadow-6 text-default"
+                  href="#"
+                >
+                  <div class="media align-items-center">
+                    <div class="mr-5">
+                      <span class="iconbox iconbox-xxl bg-pale-info">
+                        <i class="icon-genius text-info"></i>
+                      </span>
+                    </div>
+                    <div class="media-body">
+                      <h5>Reporting Usage</h5>
+                      <h3 class="mb-4">
+                        {{
+                          subscription.plan.reporting_limit -
+                            subscription.reporting_balance
+                        }}
+                        / {{ subscription.plan.reporting_limit }}
+                      </h3>
+                      <button class="btn btn-danger btn-sm">
+                        Searched Hashtags
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
 
-    <div class="row">
-      <ProfilingHistory
-        :usage="subscription"
-        :profilingCampaigns="profilingCampaigns"
-      />
-    </div>
-
-    <!-- <div class="row" v-show="!loading && !displayError"> -->
-    <div class="row">
+    <div class="profiling row">
       <div class="col-md-6">
-        <h3 id="block-2">Reports</h3>
+        <h3 id="block-2">Profiling</h3>
         <h6 id="block-2">
-          Monitor hastag campaigns, generate reports and listen to what people
-          online are saying about your brand
+          Check influencers engagement level, profile their influence and
+          discover their audience interest
         </h6>
       </div>
       <div @click="goToCreateCampaign" class="col-md-6">
         <button type="button" class="pull-right btn btn-round btn-warning">
-          <label><i class="fa fa-plus"></i></label> New Report
+          <label><i class="fa fa-plus"></i></label> New Profiling
         </button>
       </div>
       <section
@@ -71,7 +112,6 @@
               <th>Actions</th>
             </tr>
           </thead>
-
           <paginate
             v-if="campaigns.length !== 0"
             name="campaigns"
@@ -85,7 +125,7 @@
             >
               <th scope="row">{{ index + 1 }}</th>
               <td>
-                <strong>{{ campaign.keywords }}</strong>
+                <strong>{{ campaign.handle }}</strong>
                 <div>
                   <small
                     v-if="formatCampaignDates(campaign.dates).from !== null"
@@ -122,7 +162,9 @@
           </paginate>
 
           <tbody v-else>
-            <td colspan="4"><h5>You have not created any reports</h5></td>
+            <td colspan="4">
+              <h5>You have not created any profiling reports</h5>
+            </td>
           </tbody>
         </table>
         <paginate-links
@@ -141,93 +183,55 @@
 <script>
 import axios from "axios";
 import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
 import VuePaginate from "vue-paginate";
-import ProfilingHistory from "./../profiling/ProfiingHistory";
+import "vue-loading-overlay/dist/vue-loading.css";
 import Swal from "sweetalert2";
 
 import moment from "moment";
 
 export default {
-  props: ["id"],
-  components: { Loading, ProfilingHistory },
+  components: { Loading },
+  props: ["profilingCampaigns", "usage"],
+  watch: {
+    profilingCampaigns: function(campaignValue) {
+      this.campaigns = campaignValue;
+    },
+    usage: function(usageValue) {
+      this.subscription = usageValue;
+      console.log(this.subscription);
+      this.loading = false;
+    }
+  },
   data() {
     return {
+      loading: true,
+      displayError: false,
       paginate: ["campaigns"],
       campaigns: [],
-      profilingCampaigns: [],
-      subscription: {},
-      loading: true,
-      displayError: false
+      user: {},
+      profiling: [],
+      reporting: [],
+      subscription: {}
     };
   },
   mounted: function() {},
-  created: function() {
-    this.getUserCampaigns();
-  },
+  created: function() {},
   methods: {
-    formatCampaignDates(dates) {
-      const jsonData = JSON.parse(dates);
-      return {
-        from: jsonData.from,
-        to: jsonData.to
-      };
-    },
-    formatCampaignDatesForTwitter(date) {
-      const removeHyphen = date.replace(/-/g, "");
-      const formattedDate = removeHyphen.replace(":", "");
-      return formattedDate;
-    },
     goToCreateCampaign() {
-      window.location.href = "/create-campaign";
+      window.location.href = "/create-campaign?handle=true";
     },
-    async getUserCampaigns() {
-      const URL = `/api/v1/campaign/view`;
-
-      try {
-        let response = await axios.get(URL, {
-          headers: {
-            Authorization:
-              "Bearer " + $('meta[name="api-token"]').attr("content")
-          }
-        });
-
-        if (response.data.status === 200) {
-          this.campaigns = response.data.data;
-          this.profilingCampaigns = response.data.profiling_data;
-          this.subscription = response.data.subscription[0];
-          this.loading = false;
-        }
-
-        if (response.data.status === 204) {
-          this.loading = false;
-        }
-      } catch (err) {
-        this.displayError = true;
-        this.loading = false;
-        console.log(err);
-      }
+    getTimeDifference(created_at) {
+      return moment(created_at).fromNow();
     },
-
-    viewCampaign(keyword, fromDate, toDate) {
-      const formattedFromDate = this.formatCampaignDatesForTwitter(fromDate);
-      const formattedToDate = this.formatCampaignDatesForTwitter(toDate);
-      const URL = `/search/profiles?q=${encodeURIComponent(
-        keyword
-      )}&fromDate=${formattedFromDate}&toDate=${formattedToDate}`;
-      window.location.href = URL;
-    },
-
-    editCampaign(campaignId) {
-      const URL = `/api/v1/campaign/delete`;
-    },
-
     async confirmedDelete(campaignId) {
       this.loading = true;
       const URL = `/api/v1/campaign/delete/${campaignId}`;
 
       try {
         let response = await axios.delete(URL, {
+          params: {
+            handle: true
+          },
           headers: {
             Authorization:
               "Bearer " + $('meta[name="api-token"]').attr("content")
@@ -245,8 +249,7 @@ export default {
         console.log(err);
       }
     },
-
-    async deleteCampaign(campaignId) {
+    async deleteCampaign(campaignId) {  
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -258,18 +261,24 @@ export default {
       }).then(result => {
         if (result.value) {
           this.confirmedDelete(campaignId);
-          Swal.fire(
-            "Deleted!",
-            "Your report has been deleted.",
-            "success"
-          );
+          Swal.fire("Deleted!", "Your profiling report has been deleted.", "success");
         }
       });
     },
-
+    formatCampaignDates(dates) {
+      const jsonData = JSON.parse(dates);
+      return {
+        from: jsonData.from,
+        to: jsonData.to
+      };
+    },
     dateFormatter(date) {
       let formatedDate = date.split(" ");
       return formatedDate[0];
+    },
+    viewCampaign(query, fromDate, toDate) {
+      const URL = `/search/profile/${query}`;
+      window.location.href = URL;
     }
   },
   computed: {}
@@ -281,10 +290,6 @@ export default {
   padding: 20px;
 }
 
-.btn {
-  margin: 10px;
-}
-
 th,
 td {
   text-align: center;
@@ -292,6 +297,10 @@ td {
 
 th {
   font-weight: bold;
+}
+
+.profiling {
+  margin-bottom: 60px;
 }
 </style>
 
