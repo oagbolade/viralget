@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\HashtagCampaigns;
 use App\ProfilingCampaigns;
+use App\Subscription;
+
 use Exception;
 
 class CampaignController extends Controller
@@ -24,33 +26,28 @@ class CampaignController extends Controller
 
     function view()
     {
-        $campaigns = new HashtagCampaigns;
-
-        if(isset(request()->handle)){
-            $campaigns = new ProfilingCampaigns;
-        }
-
         $user = $this->authenticate();
+
+        $hashtag_campaigns = new HashtagCampaigns;
+
+        $profiling_campaigns = new ProfilingCampaigns;
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         try {
             // Add pagination
-            $campaigns = $campaigns::where('user_id', $user->id)->get();
-
-            if (count($campaigns) > 0) {
-                return response([
-                    "status" => 200,
-                    "message" => "successfull",
-                    "data" => $campaigns
-                ], 200);
-            }
+            $hashtag_campaigns = $hashtag_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
+            $profiling_campaigns = $profiling_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
+            $subscription = Subscription::where('user_id', $user->id)->with('plan')->get();
 
             return response([
-                "status" => 204,
-                "message" => "no campaigns found for this user",
-                "data" => []
+                "status" => 200,
+                "message" => "successfull",
+                "data" => $hashtag_campaigns,
+                "profiling_data" => $profiling_campaigns,
+                'subscription' => $subscription,
             ], 200);
+
         } catch (Exception $e) {
             return response([
                 "status" => 500,
@@ -59,10 +56,11 @@ class CampaignController extends Controller
         }
     }
 
-    function create(){
-        if(isset(request()->handle)){
+    function create()
+    {
+        if (isset(request()->handle)) {
             return $this->createProfiling();
-        }else{
+        } else {
             return $this->createKeyword();
         }
     }
@@ -72,7 +70,7 @@ class CampaignController extends Controller
         $user = $this->authenticate();
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-        
+
         $keywords = request()->keywords;
         $dates = json_encode(request()->dates);
         $description = request()->description;
@@ -105,13 +103,13 @@ class CampaignController extends Controller
             "data" => $data
         ], 200);
     }
-    
+
     function createProfiling()
     {
         $user = $this->authenticate();
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-        
+
         $handle = request()->handle;
         $dates = json_encode(request()->dates);
         $description = request()->description;
@@ -149,14 +147,14 @@ class CampaignController extends Controller
     {
         $campaign = new HashtagCampaigns;
 
-        if(isset(request()->handle)){
+        if (isset(request()->handle)) {
             $campaign = new ProfilingCampaigns;
         }
         $campaign_id = request()->campaignId;
 
         try {
             $campaign = $campaign->where('id', $campaign_id)->delete();
-            
+
             return response([
                 "status" => 200,
                 "message" => "successfull",
