@@ -11,6 +11,7 @@
           <a class="nav-link" href="{{ route('contact') }}">Contact</a>
           <a class="nav-link" href="{{ route('pricing.trends') }}">Twitter Trends</a>
           <a class="nav-link" href="{{ route('pricing.management') }}">Influencer Management</a>
+          <a class="nav-link" href="{{ route('pricing') }}">Subscription</a>
         </nav>
 
         <div class="dropdown mr-4  open-on-hover">        
