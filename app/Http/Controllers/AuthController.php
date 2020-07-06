@@ -11,6 +11,7 @@ use Socialite;
 use App\User;
 use App\UserDetails;
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Cookie;
 
 class AuthController extends Controller
 {
@@ -39,14 +40,20 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    public function redirectToProvider()
+    public function redirectToProvider(Request $request)
     {
         $request_token = $this->_connection->oauth('oauth/request_token', array('oauth_callback' => env('TWITTER_CALLBACK')));
         $oauth_token = $request_token['oauth_token'];
         $oauth_token_secret = $request_token['oauth_token_secret'];
 
-        session(['oauth_token' => $oauth_token]);
-        session(['oauth_token_secret' => $oauth_token_secret]);
+        $cookie_time = 60;
+        Cookie::queue('oauth_token', $oauth_token, $cookie_time);
+        Cookie::queue('oauth_token_secret', $oauth_token_secret, $cookie_time);
+
+        // cookie('oauth_token', $oauth_token, $cookie_time);
+        // cookie('oauth_token_secret', $oauth_token_secret, $cookie_time);
+        // session(['oauth_token' => $oauth_token]);
+        // session(['oauth_token_secret' => $oauth_token_secret]);
 
         $url = $this->_connection->url('oauth/authorize', array('oauth_token' => $oauth_token));
 
@@ -55,12 +62,15 @@ class AuthController extends Controller
 
     public function handleProviderCallback(Request $request)
     {
-
         $request_token = [];
-        $request_token['oauth_token'] = $request->session()->pull('oauth_token', 'default');
-        $request_token['oauth_token_secret'] = $request->session()->pull('oauth_token_secret', 'default');
+        $request_token['oauth_token'] = Cookie::get('oauth_token');
+        $request_token['oauth_token_secret'] = Cookie::get('oauth_token_secret');
+        
+        // $request_token['oauth_token'] = $request->session()->pull('oauth_token', 'default');
+        // $request_token['oauth_token_secret'] = $request->session()->pull('oauth_token_secret', 'default');
 
         $this->_connection = new TwitterOAuth(env('TWITTER_CONSUMER_KEY'), env('TWITTER_CONSUMER_SECRET'), $request_token['oauth_token'], $request_token['oauth_token_secret']);
+        // dd('temp  '. $request_token['oauth_token'], ' original', $_REQUEST['oauth_token']);
 
         if (isset($_REQUEST['oauth_token']) && $request_token['oauth_token'] !== $_REQUEST['oauth_token']) {
             return redirect(route('login'))->withError('Error authenticating you at the moment. Please try again.');
