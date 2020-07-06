@@ -109,6 +109,7 @@
               <th>#</th>
               <th>Name</th>
               <th>Created</th>
+              <th>Description</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -126,25 +127,12 @@
               <th scope="row">{{ index + 1 }}</th>
               <td>
                 <strong>{{ campaign.handle }}</strong>
-                <div>
-                  <small
-                    v-if="formatCampaignDates(campaign.dates).from !== null"
-                  >
-                    From: {{ formatCampaignDates(campaign.dates).from }}<br />
-                    To: {{ formatCampaignDates(campaign.dates).to }}
-                  </small>
-                </div>
               </td>
               <td>{{ dateFormatter(campaign.created_at) }}</td>
+              <td>{{ (campaign.description !== null) ? campaign.description : 'N/A' }}</td>
               <td>
                 <button
-                  @click="
-                    viewCampaign(
-                      campaign.handle,
-                      formatCampaignDates(campaign.dates).from,
-                      formatCampaignDates(campaign.dates).to
-                    )
-                  "
+                  @click="viewCampaign(campaign.handle)"
                   type="button"
                   class="btn btn-label btn-success"
                 >
@@ -198,7 +186,6 @@ export default {
     },
     usage: function(usageValue) {
       this.subscription = usageValue;
-      console.log(this.subscription);
       this.loading = false;
     }
   },
@@ -249,7 +236,7 @@ export default {
         console.log(err);
       }
     },
-    async deleteCampaign(campaignId) {  
+    async deleteCampaign(campaignId) {
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -261,7 +248,11 @@ export default {
       }).then(result => {
         if (result.value) {
           this.confirmedDelete(campaignId);
-          Swal.fire("Deleted!", "Your profiling report has been deleted.", "success");
+          Swal.fire(
+            "Deleted!",
+            "Your profiling report has been deleted.",
+            "success"
+          );
         }
       });
     },
@@ -276,7 +267,7 @@ export default {
       let formatedDate = date.split(" ");
       return formatedDate[0];
     },
-    viewCampaign(query, fromDate, toDate) {
+    viewCampaign(query) {
       const URL = `/search/profile/${query}`;
       window.location.href = URL;
     }

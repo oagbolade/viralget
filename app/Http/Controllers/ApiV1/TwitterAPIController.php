@@ -101,7 +101,11 @@ class TwitterAPIController extends Controller
 
         $data = [];
 
-        $data['count'] = count($tweets);
+        if(count($tweets) > 0){
+            $data['count'] = count($tweets);
+        }else{
+            return response(['message' => 'cannot retrieve tweets'], 500);
+        }
 
         $contribution = $this->getUniqueContributors($tweets);
         $reach = $this->getHashtagReach($tweets, $contribution);
@@ -114,12 +118,12 @@ class TwitterAPIController extends Controller
         $data['popular'] = $this->getHashtagPopularUsers($tweets, $user);
         $data['high_retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
         $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets);
-        
+
         $impressions = $this->getTopHashImpactsData($tweets, $user);
         $data['high_impacts'] = $impressions['sorted'];
         $data['contributors'] = $contribution['unique_users'];
         $data['avr_contribution'] = $contribution['avr_contribution'];
-        
+
         $total_engagements = $this->getTotalEngagements($tweets);
         $data['potential_reach'] = $reach['reach'];
         $data['impressions'] = $impressions['sum'];
@@ -130,28 +134,31 @@ class TwitterAPIController extends Controller
         $data['top_original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
         $data['most_recent_tweets'] = $this->getMostRecentTweets($tweets, $user);
 
-        
+
         $data['potential_impact'] =  $impressions['sum'] * 0.60; //$reach['impact'];
         $data['media_meta_data'] = $this->getTweetsMedia($tweets, 'hashtag');
         $data['report_type'] = $package->days;
         $data['report_type_name'] = $package->name;
         $data['engagement_rate'] = $this->getHashtagEngagementData($tweets, $reach['reach']);
-        
-        Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
-        
-        // If query exists, update database
-        // - Find Query from reporting history
-        // -If found update, else create
-        try{
-            $report = ReportingHistory::create([
-                'user_id' => $user->id,
-                'query' => $query,
-                'report_data' => json_encode($data),
-                'package' => $package->id
-            ]);
-        }catch(Exception $e){
-            //return response
-            return 'emcountered error ' . $e->getMessage();
+
+        $report = ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
+
+        if (!$report) {
+            Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
+
+            try {
+                $report = ReportingHistory::create([
+                    'user_id' => $user->id,
+                    'query' => $query,
+                    'report_data' => json_encode($data),
+                    'package' => $package->id
+                ]);
+            } catch (Exception $e) {
+                return response([
+                    "status" => 500,
+                    "message" => "failed to get report " . $e->getMessage(),
+                ], 500);
+            }
         }
 
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
@@ -311,16 +318,34 @@ class TwitterAPIController extends Controller
 
         $data['media_meta_data'] = $this->getTweetsMedia($userTweets);
 
-        // Check if profile history exists for this user, if exists, dont decrement:
-        // Implement soon
-        Subscription::where('user_id', $user->id)->decrement('profiling_balance', 1);
+        if (request()->reload == true) {
+            Subscription::where('user_id', $user->id)->decrement('profiling_balance', 1);
 
-        $profile = ProfilingHistory::create([
-            'user_id' => $user->id,
-            'handle' => $handle,
-            'report_data' => json_encode($data),
-            'package' => $package->id,
-        ]);
+            ProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->update([
+                'report_data' => json_encode($data),
+                'package' => $package->id,
+            ]);
+        }
+
+        $profile = ProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
+
+        if (!$profile) {
+            Subscription::where('user_id', $user->id)->decrement('profiling_balance', 1);
+
+            try {
+                $profile = ProfilingHistory::create([
+                    'user_id' => $user->id,
+                    'handle' => $handle,
+                    'report_data' => json_encode($data),
+                    'package' => $package->id,
+                ]);
+            } catch (Exception $e) {
+                return response([
+                    "status" => 500,
+                    "message" => "failed to get campaigns " . $e,
+                ], 500);
+            }
+        }
 
         Account::where('handle', 'LIKE', "%$handle%")->update(['er' => $data['engagement_rate']]);
 
@@ -332,10 +357,10 @@ class TwitterAPIController extends Controller
         $unique_array_tracker = [];
         $temp_store_tweets = [];
 
-        foreach($tweets as $tweet){
+        foreach ($tweets as $tweet) {
             $temp_store_tweets[] = $tweet;
         }
-        
+
         usort($temp_store_tweets, function ($a, $b) {
             return $b->retweet_count - $a->retweet_count;
         });

@@ -68,6 +68,7 @@
               <th>#</th>
               <th>Name</th>
               <th>Created</th>
+              <th>Description</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -85,7 +86,7 @@
             >
               <th scope="row">{{ index + 1 }}</th>
               <td>
-                <strong>{{ campaign.keywords }}</strong>
+                <strong>{{ campaign.query }}</strong>
                 <div>
                   <small
                     v-if="formatCampaignDates(campaign.dates).from !== null"
@@ -96,11 +97,12 @@
                 </div>
               </td>
               <td>{{ dateFormatter(campaign.created_at) }}</td>
+              <td>{{ (campaign.description !== null) ? campaign.description : 'N/A' }}</td>
               <td>
                 <button
                   @click="
                     viewCampaign(
-                      campaign.handle,
+                      campaign.query,
                       formatCampaignDates(campaign.dates).from,
                       formatCampaignDates(campaign.dates).to
                     )
@@ -174,6 +176,9 @@ export default {
       };
     },
     formatCampaignDatesForTwitter(date) {
+      if (date.trim() === "") {
+        return;
+      }
       const removeHyphen = date.replace(/-/g, "");
       const formattedDate = removeHyphen.replace(":", "");
       return formattedDate;
@@ -194,6 +199,7 @@ export default {
 
         if (response.data.status === 200) {
           this.campaigns = response.data.data;
+          console.log(this.campaigns)
           this.profilingCampaigns = response.data.profiling_data;
           this.subscription = response.data.subscription[0];
           this.loading = false;
@@ -210,11 +216,20 @@ export default {
     },
 
     viewCampaign(keyword, fromDate, toDate) {
+      if (fromDate === null) {
+        fromDate = '';
+      }
+     
+      if (toDate === null) {
+        toDate = '';
+      }
+
       const formattedFromDate = this.formatCampaignDatesForTwitter(fromDate);
       const formattedToDate = this.formatCampaignDatesForTwitter(toDate);
+
       const URL = `/search/profiles?q=${encodeURIComponent(
         keyword
-      )}&fromDate=${formattedFromDate}&toDate=${formattedToDate}`;
+      )}&fromDate=${(fromDate !== null) ? formattedFromDate : ''}&toDate=${(toDate !== null) ? formattedToDate : ''}`;
       window.location.href = URL;
     },
 

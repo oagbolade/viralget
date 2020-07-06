@@ -8,7 +8,7 @@
             @if(isset($is_hashtag))
             <hashtag-loading q='{{ urlencode($q) }}' plan='{{ $plan }}' from='{{ request()->fromDate }}' to='{{ request()->toDate }}'/>
             @else
-            <profile-loading q='{{ $q }}'/>
+            <profile-loading q='{{ $q }}' reload='{{(isset($reload)) ? $reload : false}}'/>
             @endif
         </div>
       </div>

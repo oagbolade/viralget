@@ -7,8 +7,11 @@ namespace App\Http\Controllers\ApiV1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\HashtagCampaigns;
-use App\ProfilingCampaigns;
+// use App\HashtagCampaigns;
+// use App\ProfilingCampaigns;
+use App\ProfilingHistory;
+use App\ReportingHistory;
+
 use App\Subscription;
 
 use Exception;
@@ -28,9 +31,9 @@ class CampaignController extends Controller
     {
         $user = $this->authenticate();
 
-        $hashtag_campaigns = new HashtagCampaigns;
+        $hashtag_campaigns = new ReportingHistory;
 
-        $profiling_campaigns = new ProfilingCampaigns;
+        $profiling_campaigns = new ProfilingHistory;
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
@@ -76,18 +79,27 @@ class CampaignController extends Controller
         $description = request()->description;
         $user_id = $user->id;
 
-        $campaign = new HashtagCampaigns;
+        $campaign = new ReportingHistory;
+        $subscription = Subscription::where('user_id', $user->id)->first();
 
-        $campaign->keywords = $keywords;
+        if($campaign::where(['query' => request()->keywords, 'user_id' => $user->id])->first()){
+            return response([
+                "message" => "query already exists for this user",
+                "status" => 400
+            ], 400);
+        }
+
+        $campaign->query = $keywords;
         $campaign->dates = $dates;
         $campaign->description = $description;
         $campaign->user_id = $user_id;
+        $campaign->package = $subscription->plan_id;
 
         try {
             $campaign->save();
         } catch (Exception $e) {
             return response([
-                "message" => "faileld to create new campaign" . $e,
+                "message" => "failed to create new report" . $e,
                 "status" => 400
             ], 500);
         }
@@ -115,18 +127,24 @@ class CampaignController extends Controller
         $description = request()->description;
         $user_id = $user->id;
 
-        $campaign = new ProfilingCampaigns;
+        $create_campaign = new ProfilingHistory;
 
-        $campaign->handle = $handle;
-        $campaign->dates = $dates;
-        $campaign->description = $description;
-        $campaign->user_id = $user_id;
+        if ($create_campaign::where(['query' => request()->keywords, 'user_id' => $user->id])->first()) {
+            return response([
+                "message" => "query already exists for this user",
+                "status" => 400
+            ], 400);
+        }
+
+        $create_campaign->handle = $handle;
+        $create_campaign->description = $description;
+        $create_campaign->user_id = $user_id;
 
         try {
-            $campaign->save();
+            $create_campaign->save();
         } catch (Exception $e) {
             return response([
-                "message" => "faileld to create new profiling campaign" . $e,
+                "message" => "failed to create new user profiling" . $e,
                 "status" => 400
             ], 500);
         }
@@ -148,7 +166,7 @@ class CampaignController extends Controller
         $campaign = new HashtagCampaigns;
 
         if (isset(request()->handle)) {
-            $campaign = new ProfilingCampaigns;
+            $campaign = new ProfilingHistory;
         }
         $campaign_id = request()->campaignId;
 

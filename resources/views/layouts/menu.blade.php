@@ -11,6 +11,7 @@
           <a class="nav-link" href="{{ route('contact') }}">Contact</a>
           <a class="nav-link" href="{{ route('pricing.trends') }}">Twitter Trends</a>
           <a class="nav-link" href="{{ route('pricing.management') }}">Influencer Management</a>
+          <a class="nav-link" href="{{ route('pricing') }}">Subscription</a>
         </nav>
 
         <div class="dropdown mr-4  open-on-hover">        
@@ -49,8 +50,11 @@
         <!-- <nav class="nav nav-navbar nav-text-normal mr-auto">
             <a class="nav-link" href="{{ route('about') }}">About</a>           -->
         <ul class="nav nav-navbar nav-text-normal larger-menu-link">
-            <li class="bold-navigations nav-item">
-              <a class="bold-navigations nav-link" href="{{ route('about') }}">About</a>
+            <li class="hide-on-lg nav-item">
+              <a class="nav-link" href="{{ route('about') }}">About</a>
+              <a class="nav-link" href="{{ route('pricing.trends') }}">Twitter Trends</a>
+              <a class="nav-link" href="{{ route('pricing.management') }}">Influencer Management</a>
+              <a class="nav-link" href="{{ route('pricing') }}">Subscription</a>
             </li>
             
             @foreach(\App\Category::where('is_featured', 1)->take(5)->get() as $category)
@@ -98,8 +102,7 @@
               </ul>
             </li>
             @endguest
-            {{-- Removed this feature --}}
-            {{-- <li>
+            <li>
             <form class="form-inline mt-5 display-mobile" action="{{ route('profiles') }}">
                 <div class="input-group">
                   <input type="text" name="q" class="form-control form-control-sm" value="{{ isset($q) ? urldecode($q) : '' }}" placeholder="@username or keyword or #hashtag">
@@ -108,7 +111,7 @@
                   </div>
                 </div>     
               </form>
-            </li> --}}
+            </li>
           </ul>
 
 
@@ -125,15 +128,14 @@
             </div>
           @endif
         </section>
-        {{-- Removed this feature --}}
-        {{-- <form class="@if($isDarkBg) input-glass @endif input-round w-400 hide-mobile" action="{{ route('profiles') }}" style="margin-top: -5px">
+        <form class="@if($isDarkBg) input-glass @endif input-round w-400 hide-mobile" action="{{ route('profiles') }}" style="margin-top: -5px">
           <div class="input-group">
             <input type="text" name="q" class="form-control form-control-sm" value="{{ isset($q) ? urldecode($q) : '' }}" placeholder="@username or keyword or #hashtag">
             <div class="input-group-append">
               <button class="btn btn-warning" type="submit">Go!</button>
             </div>
           </div>     
-        </form> --}}
+        </form>
         </div>
         
     </nav><!-- /.navbar -->
@@ -174,5 +176,12 @@
             .bold-navigations{
               font-size: 20px !important;
               font-weight: bolder !important;
+            }
+
+            @media only screen and (min-width: 600px) {
+              .hide-on-lg{
+                display: none;
+                visibility: hidden;
+              }
             }
           </style>

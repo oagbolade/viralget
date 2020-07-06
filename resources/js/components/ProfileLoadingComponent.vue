@@ -42,7 +42,7 @@ import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
-  props: ["q"],
+  props: ["q", "reload"],
   components: { Loading },
   data() {
     return {
@@ -75,7 +75,7 @@ export default {
     getProfile: function() {
       this.loading = true;
       let $this = this;
-      fetch(`/api/v1/profile?q=${this.q}`, {
+      fetch(`/api/v1/profile?q=${this.q}&reload=${this.reload}`, {
         headers: {
           Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
         }
