@@ -39,7 +39,7 @@
                 <h6 class="card-price text-center">
                   <span class="price-unit">&#8358;</span>
                   <span data-bind-radio="pricing" data-monthly="39" data-yearly="399">457,950</span>
-                  <span class="period">/month</span>
+                  <span class="period">/trend</span>
                 </h6>
                 <hr>
                 <ul class="fa-ul">
@@ -73,7 +73,7 @@
                 <h6 class="card-price text-center">
                   <span class="price-unit">&#8358;</span>
                   <span data-bind-radio="pricing" data-monthly="39" data-yearly="399">580,500</span>
-                  <span class="period">/month</span>
+                  <span class="period">/trend</span>
                 </h6>            <hr>
                 <ul class="fa-ul">
                 <li><span class="fa-li"><i class="fa fa-check"></i></span>Minimum of 30 Influencers</li>
@@ -104,7 +104,7 @@
                 <h6 class="card-price text-center">
                   <span class="price-unit">&#8358;</span>
                   <span data-bind-radio="pricing" data-monthly="39" data-yearly="399">864,300</span>
-                  <span class="period">/month</span>
+                  <span class="period">/trend</span>
                 </h6>            <hr>
                 <ul class="fa-ul">
                 <li><span class="fa-li"><i class="fa fa-check"></i></span>Minimum of 40 Influencers</li>
