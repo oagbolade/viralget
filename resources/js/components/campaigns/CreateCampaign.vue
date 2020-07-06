@@ -91,7 +91,7 @@
                 type="button"
                 class="btn btn-round btn-success"
               >
-                Create Campaign
+                {{ (isHandle) ? 'Create User Profiling' : 'Create Campaign' }}
               </button>
             </div>
           </form>
@@ -268,7 +268,7 @@ export default {
     onChange(date, dateString) {
       this.form.dates.from = `${date[0].format("YYYY-MM-DD-HH:MM")}`;
       this.form.dates.to = `${date[1]
-        .subtract(1, "hours")
+        .subtract(1.5, "hours")
         .format("YYYY-MM-DD-HH:MM")}`;
     },
     handleBlur(search, handle = false) {
