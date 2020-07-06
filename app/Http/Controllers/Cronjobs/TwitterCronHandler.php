@@ -81,6 +81,7 @@ class TwitterCronHandler extends Controller
 
     function index() //Rename to search
     {
+        return;
         $page = 0;
         $next = "";
         $searching = true;
