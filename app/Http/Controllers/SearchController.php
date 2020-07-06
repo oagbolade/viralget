@@ -132,13 +132,14 @@ class SearchController extends Controller
             return redirect(route('pricing'))->withError('You have reached your profiling balance limit. Please choose a subscription package to continue.');
         }
         
-        // if it exists for this user, dont decrement subscription
-        Subscription::where('user_id', $user->id)->decrement('profiling_balance', 1);
-
-        $profileExists = ProfilingHistory::where('handle', $handle)->oldest()->first();
+        $profileExists = ProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->oldest()->first();
 
         if($profileExists && !request()->reloadData) {
             return redirect(route('reporting.profile', ['id' => $profileExists->id]));
+        }
+
+        if($profileExists && request()->reloadData){
+            return view('profiles.show')->with(['q' => $handle, 'reload' => true]);
         }
 
         return view('profiles.show')->with('q', $handle);
