@@ -44,7 +44,7 @@ class AuthController extends Controller
         $request_token = $this->_connection->oauth('oauth/request_token', array('oauth_callback' => env('TWITTER_CALLBACK')));
         $oauth_token = $request_token['oauth_token'];
         $oauth_token_secret = $request_token['oauth_token_secret'];
-        // redirect to call back
+
         session(['oauth_token' => $oauth_token]);
         session(['oauth_token_secret' => $oauth_token_secret]);
 
@@ -56,12 +56,13 @@ class AuthController extends Controller
     public function handleProviderCallback(Request $request)
     {
 
-        $temporary_token = $request->session()->pull('oauth_token', 'default');
-        $temporary_token_secret = $request->session()->pull('oauth_token_secret', 'default');
+        $request_token = [];
+        $request_token['oauth_token'] = $request->session()->pull('oauth_token', 'default');
+        $request_token['oauth_token_secret'] = $request->session()->pull('oauth_token_secret', 'default');
 
-        $this->_connection = new TwitterOAuth(env('TWITTER_CONSUMER_KEY'), env('TWITTER_CONSUMER_SECRET'), $temporary_token, $temporary_token_secret);
+        $this->_connection = new TwitterOAuth(env('TWITTER_CONSUMER_KEY'), env('TWITTER_CONSUMER_SECRET'), $request_token['oauth_token'], $request_token['oauth_token_secret']);
 
-        if (isset($_REQUEST['oauth_token']) && $temporary_token !== $_REQUEST['oauth_token']) {
+        if (isset($_REQUEST['oauth_token']) && $request_token['oauth_token'] !== $_REQUEST['oauth_token']) {
             return redirect(route('login'))->withError('Error authenticating you at the moment. Please try again.');
         } else {
             $access_token = $this->_connection->oauth("oauth/access_token", ["oauth_verifier" => $_REQUEST['oauth_verifier']]);
