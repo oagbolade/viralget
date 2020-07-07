@@ -110,8 +110,31 @@ class PremiumTwitterAPIController extends Controller
 
     function getUserTweets($handle, $user)
     {
+        // basic 500
+        // premium lite 2000
+        // premium business 3000
+        // enterprise 5000
 
-        $count = ($user->subscription->plan->name == 'Premium') ? 250 : 500;
+        $user_subscription = $user->subscription->plan;
+
+        $count = 0;
+
+        switch ($user_subscription->name) {
+            case "basic":
+                $count = $user->subscription->tweets; 
+                break;
+            case "premiumLite":
+                $count = $user->subscription->tweets;
+                break;
+            case "premiumBusiness":
+                $count = $user->subscription->tweets;
+                break;
+            case "enterprise":
+                $count = $user->subscription->tweets;
+                break;
+            default:
+                $count = 100;
+        }
 
         $is_searching = true;
         $one_day = date('U', strtotime('-24 hours'));
@@ -121,7 +144,7 @@ class PremiumTwitterAPIController extends Controller
 
         $initialQuery = [
             'screen_name' => $handle,
-            'count' => 100,
+            'count' => $count,
             'include_rts' => false,
             'exclude_replies' => true,
         ];
