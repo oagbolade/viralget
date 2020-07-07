@@ -22,7 +22,13 @@
     @push('subscriptionPricingStyles')
       <link href="{{ asset('static/assets/css/subscriptionPricing.css') }}" rel="stylesheet">
     @endpush
-
+    <div>
+      @if(session('errors'))
+      <div class="alert alert-danger" role="alert">
+        <h3>{{session('errors')->first('error')}}</h3>
+      </div>
+      @endif
+    </div>
     <p class="lead-5 text-center text-dark fw-600 lh-2 mb-5">Select a pricing plan</p>
 
 <!-- DIRTY Responsive pricing table HTML -->
