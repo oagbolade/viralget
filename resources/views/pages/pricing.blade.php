@@ -24,7 +24,7 @@
     @endpush
     <div>
       @if(session('errors'))
-      <div class="alert alert-danger" role="alert">
+      <div class="alert alert-danger text-center" role="alert">
         <h3>{{session('errors')->first('error')}}</h3>
       </div>
       @endif
