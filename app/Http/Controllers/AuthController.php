@@ -74,7 +74,7 @@ class AuthController extends Controller
                 ]
             );
         } catch (\Exception $e) {
-            return redirect(route('login'))->withError('An error occured. Please try again.qqq'. $e);
+            return redirect(route('login'))->withError('An error occured. Please try again.');
         }
 
         if (!$user->api_token) {
