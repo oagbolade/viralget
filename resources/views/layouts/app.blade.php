@@ -16,6 +16,7 @@
     <!-- Styles -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,800,800i,900" rel="stylesheet">
     <link href="{{ asset('static/assets/css/page.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('static/assets/css/bootstrap-social.css') }}" rel="stylesheet">
     <link href="{{ asset('static/assets/css/style.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
