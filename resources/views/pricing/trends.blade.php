@@ -2,7 +2,7 @@
 
 @section('content')
   @push('pricingStyles')
-      <link href="{{ asset('css/pricing.css') }}" rel="stylesheet">
+      <link href="{{ asset('static/assets/css/pricing.css') }}" rel="stylesheet">
   @endpush
    <!-- Header -->
    <header class="header bg-gray" style="background: #fafbfb url('/images/social.png') 800px bottom no-repeat">
