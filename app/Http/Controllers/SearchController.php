@@ -134,7 +134,11 @@ class SearchController extends Controller
         
         $profileExists = ProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->oldest()->first();
 
-        if($profileExists && !request()->reloadData) {
+        if($profileExists && !request()->reloadData && $profileExists->report_data === null) {
+            return view('profiles.show')->with(['q' => $handle, 'reload' => true]);
+        }
+        
+        if($profileExists && !request()->reloadData && $profileExists->report_data !== null) {
             return redirect(route('reporting.profile', ['id' => $profileExists->id]));
         }
 
