@@ -31,10 +31,10 @@ ul {
   list-style:none;
   flex:1;
 }
-li:last-child {
+.top-li:last-child {
   border-right:1px solid #DDD;
 }
-button {
+.pricing-button {
   width:100%;
   border: 1px solid #DDD;
   border-right:0;

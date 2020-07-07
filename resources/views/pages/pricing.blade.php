@@ -37,19 +37,19 @@
 
 <ul>
   <li class="bg-purple active top-li">
-    <button>STARTERS</button>
+    <button class="pricing-button">STARTERS</button>
   </li>
   <li class="bg-blue top-li">
-    <button>BASIC</button>
+    <button class="pricing-button">BASIC</button>
   </li>
   <li class="bg-blue top-li">
-    <button>PREMIUM LITE</button>
+    <button class="pricing-button">PREMIUM LITE</button>
   </li>
   <li class="bg-blue top-li">
-    <button>PREMIUM BUSINESS</button>
+    <button class="pricing-button">PREMIUM BUSINESS</button>
   </li>
   <li class="bg-blue top-li">
-    <button>ENTERPRISE</button>
+    <button class="pricing-button">ENTERPRISE</button>
   </li>
 </ul>  
 
