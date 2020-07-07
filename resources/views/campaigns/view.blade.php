@@ -8,7 +8,9 @@
         <div class="container" style="margin-top: 100px">
           <div>
             @if(session('success'))
-              <h1>{{session('success')}}</h1>
+            <div class="alert alert-success" role="alert">
+              <h3>{{session('success')}}</h3>
+            </div>
             @endif
           </div>
           

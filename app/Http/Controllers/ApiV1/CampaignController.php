@@ -28,9 +28,8 @@ class CampaignController extends Controller
     function view()
     {
         $user = $this->authenticate();
-
         $hashtag_campaigns = new ReportingHistory;
-
+        
         $profiling_campaigns = new ProfilingHistory;
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
@@ -121,13 +120,13 @@ class CampaignController extends Controller
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         $handle = request()->handle;
-        $dates = json_encode(request()->dates);
         $description = request()->description;
         $user_id = $user->id;
 
+        $subscription = Subscription::where('user_id', $user->id)->first();
         $create_campaign = new ProfilingHistory;
 
-        if ($create_campaign::where(['query' => request()->keywords, 'user_id' => $user->id])->first()) {
+        if ($create_campaign::where(['handle' => request()->handle, 'user_id' => $user->id])->first()) {
             return response([
                 "message" => "query already exists for this user",
                 "status" => 400
@@ -137,6 +136,7 @@ class CampaignController extends Controller
         $create_campaign->handle = $handle;
         $create_campaign->description = $description;
         $create_campaign->user_id = $user_id;
+        $create_campaign->package = $subscription->plan_id;
 
         try {
             $create_campaign->save();

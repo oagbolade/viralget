@@ -282,7 +282,7 @@ class TwitterAPIController extends Controller
         }
         $userTweets = $this->getUserTweets($handle);
 
-        if ($package->name == 'Premium' || $package->name == 'Enterprise') {
+        if ($package->name == 'basic' || $package->name == 'premiumBusiness' || $package->name == 'premiumLite' || $package->name == 'enterprise') {
             $premiumData = new PremiumTwitterAPIController;
             $userTweets = $premiumData->getAllProfileData($handle, $user);
         }
