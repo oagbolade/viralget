@@ -49,4 +49,10 @@ return [
         'client_secret' => env('TWITTER_CONSUMER_SECRET'),
         'redirect' => env('TWITTER_CALLBACK'),
     ],
+    
+    'google' => [
+        'client_id' => '838539565632-s4jtbrc8rqiea50tvt5pmjd0l7mvi16s.apps.googleusercontent.com',
+        'client_secret' => 'S_YA1LtmikqlHUhvRAkRrDh_',
+        'redirect' => 'http://localhost:8000/login/google/callback',
+    ],
 ];
