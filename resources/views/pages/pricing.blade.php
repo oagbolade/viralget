@@ -51,9 +51,9 @@
   <thead>
     <tr>
       <th class="hide"></th>
-      <th class="bg-purple">STARTERS</th>
+      <th class="bg-purple default">STARTERS</th>
       <th class="bg-blue">BASIC</th>
-      <th class="bg-blue default">PREMIUM LITE</th>
+      <th class="bg-blue">PREMIUM LITE</th>
       <th class="bg-blue">PREMIUM BUSINESS</th>
       <th class="bg-blue">ENTERPRISE</th>
     </tr>
@@ -61,9 +61,9 @@
   <tbody>
     <tr>
       <td>Monthly price</td>
-      <td><span class="txt-top"></span><span class="txt-l">Free</span></td>
+      <td class="default"><span class="txt-top"></span><span class="txt-l">Free</span></td>
       <td><span class="txt-top">&#8358;</span><span class="txt-l">9,999</span></td>
-      <td class="default"><span class="txt-top">&#8358;</span><span class="txt-l">45,999</span></td>
+      <td><span class="txt-top">&#8358;</span><span class="txt-l">45,999</span></td>
       <td><span class="txt-top">&#8358;</span><span class="txt-l">85,999</span></td>
       <td><span class="txt-top">&#8358;</span><span class="txt-l">199,999</span></td>
     </tr>
@@ -160,7 +160,7 @@
       <td>
         <p class="text-center py-3">
           @if($user && !$user->subscription) 
-            <a class="btn btn-danger" href="{{ route('subscribe', ['plan' => 'free'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">                
+            <a class="btn btn-danger" href="{{ route('subscribe', ['plan' => 'starter'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">                
               Get Started
             </a>
           @endif
@@ -169,8 +169,8 @@
       </td>
       <td>
         <p class="text-center py-3">
-          <a class="btn btn-primary" href="{{ route('subscribe', ['plan' => 'premium'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">                
-            @if($user && $user->subscription && $user->subscription->plan->name == 'Free') 
+          <a class="btn btn-primary" href="{{ route('subscribe', ['plan' => 'basic'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">                
+            @if($user && $user->subscription && $user->subscription->plan->name == 'starter') 
               Upgrade 
             @else
               Get Started
@@ -180,7 +180,7 @@
       </td>
       <td>
         <p class="text-center py-3">
-          <a class="btn btn-warning" href="{{ route('subscribe', ['plan' => 'enterprise'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
+          <a class="btn btn-warning" href="{{ route('subscribe', ['plan' => 'premiumLite'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
             @if($user && $user->subscription && $user->subscription->plan->name != 'premiumLite' && $user->subscription->plan->name != 'premiumBusiness' && $user->subscription->plan->name != 'enterprise') 
               Upgrade 
             @else
@@ -191,7 +191,7 @@
       </td>
       <td>
         <p class="text-center py-3">
-          <a class="btn btn-info" href="{{ route('subscribe', ['plan' => 'enterprise'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
+          <a class="btn btn-info" href="{{ route('subscribe', ['plan' => 'premiumBusiness'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
             @if($user && $user->subscription && $user->subscription->plan->name != 'premiumBusiness' && $user->subscription->plan->name != 'enterprise') 
               Upgrade 
             @else
@@ -244,7 +244,7 @@
             if (mediaQuery.matches) {
               $('.sep').attr('colspan',5);
             } else {
-              $('.sep').attr('colspan',2);
+              $('.sep').attr('colspan',8);
             }
           }
           
