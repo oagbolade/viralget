@@ -151,17 +151,21 @@
                   </button>
                 </div>
                 <div class="modal-body text-center">
-                  <p class="lead-3 fw-200"><strong>Please, log in with Twitter</strong></p>
+                  <p class="lead-3 fw-200"><strong>Please, log in</strong></p>
 
                   <p>
-                    <a href="{{ route('login.twitter') }}">
+                    {{-- <a href="{{ route('login.twitter') }}">
                     <button type="button" class="btn btn-label btn-twitter">
                         <label><i class="fa fa-twitter"></i></label> Sign in with Twitter
                       </button>
+                    </a> --}}
+                    <a href="{{ route('login.google') }}" class="btn btn-social btn-label btn-lg btn-google">
+                      <i class="fa fa-google"></i>
+                      Sign in with Google
                     </a>
                   </p>
 
-                  <a href="/faqs#collapse-1-1" target="_blank"><small>Why do I need to log in with my Twitter account?</small></a>
+                  <a href="/faqs#collapse-1-1" target="_blank"><small>Why do I need to log in with my account?</small></a>
                 </div>
 
               </div>
@@ -171,6 +175,10 @@
           <style>
             .btn-round{
               margin-right: 10px;
+            }
+
+            a:not([href]):not([tabindex]){
+              color: white;
             }
 
             .bold-navigations{
