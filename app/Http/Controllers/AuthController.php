@@ -12,6 +12,7 @@ use App\User;
 use App\UserDetails;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Cookie;
+use Exception;
 
 class AuthController extends Controller
 {
@@ -40,7 +41,26 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    public function redirectToProvider(Request $request)
+    public function redirectToProvider()
+    {
+        try {
+            return Socialite::driver('google')->redirect();
+        } catch (\Exception $e) {
+            return redirect(route('login'))->withError('Error authenticating you at the moment. Please try again.');
+        }
+    }
+    
+    public function handleProviderCallback(Request $request)
+    {
+        try {
+            $user = Socialite::driver('google')->stateless()->user();
+        } catch (\Exception $e) {
+            return redirect(route('login'))->withError('An error occured. Please try again.');
+        }
+        return json_encode($user);
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////
+    public function redirectToProvider2()
     {
         $request_token = $this->_connection->oauth('oauth/request_token', array('oauth_callback' => env('TWITTER_CALLBACK')));
         $oauth_token = $request_token['oauth_token'];
@@ -50,31 +70,34 @@ class AuthController extends Controller
         setcookie('oauth_token', $oauth_token, $cookie_time, "/");
         setcookie('oauth_token_secret', $oauth_token_secret, $cookie_time, "/");
 
-        
-        // Cookie::queue('oauth_token', $oauth_token, $cookie_time);
-        // Cookie::queue('oauth_token_secret', $oauth_token_secret, $cookie_time);
-
         $url = $this->_connection->url('oauth/authorize', array('oauth_token' => $oauth_token));
 
         return redirect($url);
     }
 
-    public function handleProviderCallback(Request $request)
+    public function handleProviderCallback2(Request $request)
     {
+        dd(
+            $request->query('oauth_verifier')
+        );
         $request_token = [];
         $request_token['oauth_token'] = $_COOKIE['oauth_token'];
         $request_token['oauth_token_secret'] = $_COOKIE['oauth_token_secret'];
-        
-        // $request_token['oauth_token'] = Cookie::get('oauth_token');
-        // $request_token['oauth_token_secret'] = Cookie::get('oauth_token_secret');
 
         $this->_connection = new TwitterOAuth(env('TWITTER_CONSUMER_KEY'), env('TWITTER_CONSUMER_SECRET'), $request_token['oauth_token'], $request_token['oauth_token_secret']);
         // dd('temp  '. $request_token['oauth_token'], ' original', $_REQUEST['oauth_token']);
+        $cookie_time = time() + (86400 * 30);
+        setcookie('oauth_verifier', $request->query('oauth_verifier'), $cookie_time, "/");
 
         if (isset($_REQUEST['oauth_token']) && $request_token['oauth_token'] !== $_REQUEST['oauth_token']) {
             return redirect(route('login'))->withError('Error authenticating you at the moment. Please try again.');
         } else {
-            $access_token = $this->_connection->oauth("oauth/access_token", ["oauth_verifier" => $_REQUEST['oauth_verifier']]);
+            try{
+                $access_token = $this->_connection->oauth("oauth/access_token", ["oauth_verifier" => $_COOKIE['oauth_verifier']]);
+            }catch(Exception $e){
+                dd($e);
+            }
+
             $this->_connection = new TwitterOAuth(env('TWITTER_CONSUMER_KEY'), env('TWITTER_CONSUMER_SECRET'), $access_token['oauth_token'], $access_token['oauth_token_secret']);
 
             $userData = json_decode($this->userCredentials());
@@ -108,6 +131,7 @@ class AuthController extends Controller
             }
         }
     }
+/////////////////////////////////////////////////////////////////////////////////////////////
 
     public function userCredentials()
     {
