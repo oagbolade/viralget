@@ -118,22 +118,21 @@ class PremiumTwitterAPIController extends Controller
         $user_subscription = $user->subscription->plan;
 
         $count = 0;
-
         switch ($user_subscription->name) {
             case "basic":
-                $count = $user->subscription->tweets; 
-                break;
+                $count = $user_subscription->tweets; 
+            break;
             case "premiumLite":
-                $count = $user->subscription->tweets;
-                break;
+                $count = $user_subscription->tweets;
+            break;
             case "premiumBusiness":
-                $count = $user->subscription->tweets;
-                break;
+                $count = $user_subscription->tweets;
+            break;
             case "enterprise":
-                $count = $user->subscription->tweets;
-                break;
+                $count = $user_subscription->tweets;
+            break;
             default:
-                $count = 100;
+            $count = 100;
         }
 
         $is_searching = true;
