@@ -34,14 +34,8 @@ Route::middleware('guest')->group(function () {
 
     Route::get('login', 'AuthController@login')->name('login');
 
-    Route::get('login/google', 'AuthController@redirectToProvider')->name('login.twitter');
+    Route::get('login/google', 'AuthController@redirectToProvider')->name('login.google');
     Route::get('login/google/callback', 'AuthController@handleProviderCallback');
-    
-    // Route::get('login/twitter', 'AuthController@redirectToProvider')->name('login.twitter');
-    // Route::get('login/twitter/callback', 'AuthController@handleProviderCallback');
-
-
-    //Route::get('/profile/{handle}', 'ScrapperController@index')  ;
 });
 
 Route::middleware('auth')->group(function () {
