@@ -7,8 +7,6 @@ namespace App\Http\Controllers\ApiV1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-// use App\HashtagCampaigns;
-// use App\ProfilingCampaigns;
 use App\ProfilingHistory;
 use App\ReportingHistory;
 
