@@ -38,6 +38,11 @@
     </div>
 
     <div class="row">
+      <div v-if="planName !== 'enterprise'" class="col-md-6">
+        <button @click="goToSubscription" type="button" class="btn btn-round btn-primary">
+          <label><i class="fa fa-thumbs-up"></i></label> UPGRADE PLAN
+        </button>
+      </div>
       <ProfilingHistory
         :usage="subscription"
         :profilingCampaigns="profilingCampaigns"
@@ -157,6 +162,7 @@ export default {
     return {
       paginate: ["campaigns"],
       campaigns: [],
+      planName: "",
       profilingCampaigns: [],
       subscription: {},
       loading: true,
@@ -186,6 +192,9 @@ export default {
     goToCreateCampaign() {
       window.location.href = "/create-campaign";
     },
+    goToSubscription() {
+      window.location.href = "/pricing";
+    },
     async getUserCampaigns() {
       const URL = `/api/v1/campaign/view`;
 
@@ -199,7 +208,7 @@ export default {
 
         if (response.data.status === 200) {
           this.campaigns = response.data.data;
-          console.log(this.campaigns)
+          this.planName = response.data.subscription[0].plan.name;
           this.profilingCampaigns = response.data.profiling_data;
           this.subscription = response.data.subscription[0];
           this.loading = false;
