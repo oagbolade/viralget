@@ -176,7 +176,7 @@ class PremiumTwitterAPIController extends Controller
         $fromDate = $days;
         $toDate = $now;
 
-        if (request()->fromDate !== null && request()->toDate !== null) {
+        if (request()->fromDate !== null && request()->toDate !== null && $package->tweets !== 'starter' && $package->tweets !== 'basic') {
             $fromDate = request()->fromDate;
             $toDate = request()->toDate;
         }
