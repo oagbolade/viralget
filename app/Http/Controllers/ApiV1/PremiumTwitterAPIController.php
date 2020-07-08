@@ -115,12 +115,12 @@ class PremiumTwitterAPIController extends Controller
         $count = $user_subscription->tweets;
         
         $is_searching = true;
-        $days = date("YmdHi", strtotime('-' . $user_subscription->days . ' days'));
+        $days = date("U", strtotime('-' . $user_subscription->days . ' days'));
         $tweets_30_days = [];
 
         $initialQuery = [
             'screen_name' => $handle,
-            'count' => $count,
+            'count' => 200,
             'include_rts' => false,
             'exclude_replies' => true,
         ];
@@ -156,7 +156,6 @@ class PremiumTwitterAPIController extends Controller
 
             $initialQuery["max_id"] = $max_id - 1;
         }
-
         return $tweets_30_days;
     }
 
