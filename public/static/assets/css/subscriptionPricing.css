@@ -79,6 +79,7 @@ td.default {
 .txt-l { font-size:28px; font-weight:bold; }
 .txt-top { position:relative; top:-9px; left:-2px; }
 .tick { font-size:18px; color:#2CA01C; }
+.cancel { font-size:18px; color:#c93c3c; }
 .hide {
   border:0;
   background:none;
