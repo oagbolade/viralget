@@ -54,16 +54,21 @@ class TwitterAPIController extends Controller
             }
 
             switch ($user->subscription->plan->name) {
-                case 'Enterprise':
-                    $proceed = (in_array($package->name, ['Free', 'Premium', 'Enterprise'])) ? true : false;
+                case 'enterprise':
+                    $proceed = (in_array($package->name, ['starter', 'basic', 'premiumLite', 'premiumBusiness', 'enterprise'])) ? true : false;
                     break;
-                case 'Premium':
-                    $proceed = (in_array($package->name, ['Free', 'Premium'])) ? true : false;
+                case 'premiumBusiness':
+                    $proceed = (in_array($package->name, ['starter', 'basic', 'premiumLite', 'premiumBusiness'])) ? true : false;
                     break;
-                case 'Free':
-                    $proceed = ($package->name == 'Free') ? true : false;
+                case 'premiumLite':
+                    $proceed = (in_array($package->name, ['starter', 'basic', 'premiumLite'])) ? true : false;
                     break;
-
+                case 'basic':
+                    $proceed = (in_array($package->name, ['starter', 'basic'])) ? true : false;
+                    break;
+                case 'starter':
+                    $proceed = (in_array($package->name, ['starter'])) ? true : false;
+                    break;
                 default:
                     $proceed = false;
                     break;
@@ -85,8 +90,7 @@ class TwitterAPIController extends Controller
 
 
         $no_of_tweets = 100;
-
-        if ($package->name == 'Premium' || $package->name == 'Enterprise') {
+        if ($package->name == 'basic' || $package->name == 'premiumBusiness' || $package->name == 'premiumLite' || $package->name == 'enterprise') {
             $premiumData = new PremiumTwitterAPIController;
             $tweets = $premiumData->getHashtagTweets($package, $query, $request);
         } else {
@@ -148,6 +152,22 @@ class TwitterAPIController extends Controller
 
             try {
                 $report = ReportingHistory::create([
+                    'user_id' => $user->id,
+                    'query' => $query,
+                    'report_data' => json_encode($data),
+                    'package' => $package->id
+                ]);
+            } catch (Exception $e) {
+                return response([
+                    "status" => 500,
+                    "message" => "failed to get report " . $e->getMessage(),
+                ], 500);
+            }
+        }elseif($report && $report->report_data === null){
+            Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
+
+            try {
+                ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->update([
                     'user_id' => $user->id,
                     'query' => $query,
                     'report_data' => json_encode($data),
