@@ -242,8 +242,10 @@ export default {
         }
       };
 
+      const removeSymbol = this.form.handle.replace("@", "");
+
       const data = {
-        handle: this.form.handle,
+        handle: removeSymbol,
         dates: {
           from: this.form.dates.from,
           to: this.form.dates.to

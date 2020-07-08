@@ -39,9 +39,25 @@
 
     <div class="row">
       <div v-if="planName !== 'enterprise'" class="col-md-6">
-        <button @click="goToSubscription" type="button" class="btn btn-round btn-primary">
+        <button
+          @click="goToSubscription"
+          type="button"
+          class="btn btn-round btn-primary"
+        >
           <label><i class="fa fa-thumbs-up"></i></label> UPGRADE PLAN
         </button>
+      </div>
+
+      <div class="col-md-6 align-self-center">
+        <h5 class="float-right">
+          <button
+            type="button"
+            :class="planColor"
+            class="plan-dynamic btn btn-round"
+          >
+            {{ planSchema[planName] }}
+          </button>
+        </h5>
       </div>
       <ProfilingHistory
         :usage="subscription"
@@ -91,7 +107,7 @@
             >
               <th scope="row">{{ index + 1 }}</th>
               <td>
-                <strong>{{ campaign.query }}</strong>
+                <strong>{{ makeCamelCase(campaign.query) }}</strong>
                 <div>
                   <small
                     v-if="formatCampaignDates(campaign.dates).from !== null"
@@ -102,7 +118,11 @@
                 </div>
               </td>
               <td>{{ dateFormatter(campaign.created_at) }}</td>
-              <td>{{ (campaign.description !== null) ? campaign.description : 'N/A' }}</td>
+              <td>
+                {{
+                  campaign.description !== null ? campaign.description : "N/A"
+                }}
+              </td>
               <td>
                 <button
                   @click="
@@ -161,8 +181,16 @@ export default {
   data() {
     return {
       paginate: ["campaigns"],
+      planSchema: {
+        starter: "Starter",
+        basic: "Basic",
+        premiumLite: "Premium Lite",
+        premiumBusiness: "Premium Business",
+        enterprise: "Enterprise"
+      },
       campaigns: [],
       planName: "",
+      planColor: "",
       profilingCampaigns: [],
       subscription: {},
       loading: true,
@@ -209,6 +237,7 @@ export default {
         if (response.data.status === 200) {
           this.campaigns = response.data.data;
           this.planName = response.data.subscription[0].plan.name;
+          this.planColor = response.data.subscription[0].plan.color;
           this.profilingCampaigns = response.data.profiling_data;
           this.subscription = response.data.subscription[0];
           this.loading = false;
@@ -226,19 +255,19 @@ export default {
 
     viewCampaign(keyword, fromDate, toDate) {
       if (fromDate === null) {
-        fromDate = '';
+        fromDate = "";
       }
-     
+
       if (toDate === null) {
-        toDate = '';
+        toDate = "";
       }
 
       const formattedFromDate = this.formatCampaignDatesForTwitter(fromDate);
       const formattedToDate = this.formatCampaignDatesForTwitter(toDate);
 
-      const URL = `/search/profiles?q=${encodeURIComponent(
-        keyword
-      )}&fromDate=${(fromDate !== null) ? formattedFromDate : ''}&toDate=${(toDate !== null) ? formattedToDate : ''}`;
+      const URL = `/search/profiles?q=${encodeURIComponent(keyword)}&fromDate=${
+        formattedFromDate !== undefined ? formattedFromDate : ""
+      }&toDate=${formattedToDate !== undefined ? formattedToDate : "%02%03"}`;
       window.location.href = URL;
     },
 
@@ -282,13 +311,19 @@ export default {
       }).then(result => {
         if (result.value) {
           this.confirmedDelete(campaignId);
-          Swal.fire(
-            "Deleted!",
-            "Your report has been deleted.",
-            "success"
-          );
+          Swal.fire("Deleted!", "Your report has been deleted.", "success");
         }
       });
+    },
+
+    makeCamelCase(str) {
+      return str
+        .replace(/\s(.)/g, function(a) {
+          return a.toUpperCase();
+        })
+        .replace(/^(.)/, function(b) {
+          return b.toUpperCase();
+        });
     },
 
     dateFormatter(date) {
@@ -316,6 +351,10 @@ td {
 
 th {
   font-weight: bold;
+}
+
+.plan-dynamic {
+  color: white;
 }
 </style>
 

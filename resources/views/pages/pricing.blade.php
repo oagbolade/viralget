@@ -75,95 +75,95 @@
     </tr>
     <tr>
       <td>Unlimited Access to Influencer Database</td>
-      <td><span class="tick">&#10004;</span></td>
-      <td><span class="tick">&#10004;</span></td>
       <td class="default"><span class="tick">&#10004;</span></td>
+      <td><span class="tick">&#10004;</span></td>
+      <td><span class="tick">&#10004;</span></td>
       <td><span class="tick">&#10004;</span></td>
       <td><span class="tick">&#10004;</span></td>
     </tr>
     <tr>
       <td>Advanced Stats</td>
-      <td><span class="tick">&#10004;</span></td>
-      <td><span class="tick">&#10004;</span></td>
       <td class="default"><span class="tick">&#10004;</span></td>
+      <td><span class="tick">&#10004;</span></td>
+      <td><span class="tick">&#10004;</span></td>
       <td><span class="tick">&#10004;</span></td>
       <td><span class="tick">&#10004;</span></td>
     </tr>
     <tr>
       <td>Economic Stats</td>
-      <td><span class="tick">&#10004;</span></td>
-      <td><span class="tick">&#10004;</span></td>
       <td class="default"><span class="tick">&#10004;</span></td>
+      <td><span class="tick">&#10004;</span></td>
+      <td><span class="tick">&#10004;</span></td>
       <td><span class="tick">&#10004;</span></td>
       <td><span class="tick">&#10004;</span></td>
     </tr>
     <tr>
       <td>Influencer Profiling</td>
-      <td><span class="tick">&#10004;</span>2</td>
+      <td class="default"><span class="tick">&#10004;</span>2</td>
       <td><span class="tick">&#10004;</span>5</td>
-      <td class="default"><span class="tick">&#10004;</span>10</td>
+      <td><span class="tick">&#10004;</span>10</td>
       <td><span class="tick">&#10004;</span>20</td>
       <td><span class="tick">&#10004;</span>25</td>
     </tr>
     <tr>
       <td>Reports</td>
-      <td><span class="tick">&#10004;</span>2</td>
+      <td class="default"><span class="tick">&#10004;</span>2</td>
       <td><span class="tick">&#10004;</span>5</td>
-      <td class="default"><span class="tick">&#10004;</span>10</td>
+      <td><span class="tick">&#10004;</span>10</td>
       <td><span class="tick">&#10004;</span>20</td>
       <td><span class="tick">&#10004;</span>25</td>
     </tr>
     <tr>
       <td>Up to 30 Days Worth of Tweets</td>
-      <td><span class="tick">&#10004;</span>7</td>
+      <td class="default"><span class="tick">&#10004;</span>7</td>
       <td><span class="tick">&#10004;</span>14</td>
-      <td class="default"><span class="tick">&#10004;</span>30</td>
+      <td><span class="tick">&#10004;</span>30</td>
       <td><span class="tick">&#10004;</span>30</td>
       <td><span class="tick">&#10004;</span>30</td>
     </tr>
     <tr>
       <td>Up to 4500 Tweets per Report</td>
-      <td><span class="tick">&#10004;</span>100</td>
+      <td class="default"><span class="tick">&#10004;</span>100</td>
       <td><span class="tick">&#10004;</span>500</td>
-      <td class="default"><span class="tick">&#10004;</span>2000</td>
+      <td><span class="tick">&#10004;</span>2000</td>
       <td><span class="tick">&#10004;</span>2500</td>
       <td><span class="tick">&#10004;</span>4500</td>
     </tr>
     <tr>
       <td>Generate PDF Reports</td>
-      <td><span class="tick">&#10004;</span></td>
-      <td><span class="tick">&#10004;</span></td>
       <td class="default"><span class="tick">&#10004;</span></td>
+      <td><span class="tick">&#10004;</span></td>
+      <td><span class="tick">&#10004;</span></td>
       <td><span class="tick">&#10004;</span></td>
       <td><span class="tick">&#10004;</span></td>
     </tr>
     <tr>
       <td>Twitter Live Report</td>
+      <td class="default"><span class="cancel">x</span></td>
+      <td><span class="cancel">x</span></td>
       <td><span class="tick">&#10004;</span></td>
-      <td><span class="tick">&#10004;</span></td>
-      <td class="default"><span class="tick">&#10004;</span></td>
       <td><span class="tick">&#10004;</span></td>
       <td><span class="tick">&#10004;</span></td>
     </tr>
     <tr>
       <td>Twitter Historic Report</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td class="default"><span class="cancel">x</span></td>
+      <td><span class="cancel">x</span></td>
+      <td><span class="cancel">x</span></td>
+      <td><span class="cancel">x</span></td>
       <td><span class="tick">&#10004;</span></td>
     </tr>
     <tr>
       <td>Support</td>
-      <td><span class="tick">&#10004;</span></td>
-      <td><span class="tick">&#10004;</span></td>
-      <td class="default"><span class="tick">&#10004;</span>Email</td>
+      <td class="default"><span class="cancel">x</span></td>
+      <td><span class="cancel">x</span></td>
+      <td><span class="tick">&#10004;</span>Email</td>
       <td><span class="tick">&#10004;</span>24/7</td>
       <td><span class="tick">&#10004;</span>Dedicated agent</td>
     </tr>
     <tr>
       <td class="hide"></td>
-      <td>
+      <td class="default">
         <p class="text-center py-3">
           @if($user && !$user->subscription) 
             <a class="btn btn-danger" href="{{ route('subscribe', ['plan' => 'starter'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">                
