@@ -235,10 +235,10 @@ export default {
 
       const formattedFromDate = this.formatCampaignDatesForTwitter(fromDate);
       const formattedToDate = this.formatCampaignDatesForTwitter(toDate);
-
+      
       const URL = `/search/profiles?q=${encodeURIComponent(
         keyword
-      )}&fromDate=${(fromDate !== null) ? formattedFromDate : ''}&toDate=${(toDate !== null) ? formattedToDate : ''}`;
+      )}&fromDate=${(formattedFromDate !== undefined) ? formattedFromDate : ''}&toDate=${(formattedToDate !== undefined) ? formattedToDate : '%02%03'}`;
       window.location.href = URL;
     },
 
