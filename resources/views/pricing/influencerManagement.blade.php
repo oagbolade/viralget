@@ -61,7 +61,7 @@
                 <h5 class="card-title text-muted text-uppercase text-center">BUSINESS</h5>
                 <h6 class="card-price text-center">
                   <span class="price-unit">&#8358;</span>
-                  <span data-bind-radio="pricing" data-monthly="39" data-yearly="399">580,500</span>
+                  <span data-bind-radio="pricing" data-monthly="39" data-yearly="399">230,000</span>
                   <span class="period">/month</span>
                 </h6>            <hr>
                 <ul class="fa-ul">
@@ -88,7 +88,7 @@
                 <h5 class="card-title text-muted text-uppercase text-center">ENTERPRISE</h5>
                 <h6 class="card-price text-center">
                   <span class="price-unit">&#8358;</span>
-                  <span data-bind-radio="pricing" data-monthly="39" data-yearly="399">864,300</span>
+                  <span data-bind-radio="pricing" data-monthly="39" data-yearly="399">290,000</span>
                   <span class="period">/month</span>
                 </h6>            <hr>
                 <ul class="fa-ul">
