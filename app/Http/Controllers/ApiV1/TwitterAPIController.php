@@ -24,11 +24,16 @@ use Exception;
 class TwitterAPIController extends Controller
 {
     //
-    //    private $connection;
+    private $connection;
 
     function connect()
     {
-        $this->connection = new TwitterOAuth(env('CONSUMER_KEY'), env('CONSUMER_SECRET'), env('ACCESS_TOKEN'), env('TOKEN_SECRET'));
+        $this->connection = new TwitterOAuth(
+            env('TWITTER_CONSUMER_KEY'),
+            env('TWITTER_CONSUMER_SECRET'),
+            env('TWITTER_ACCESS_TOKEN'),
+            env('TWITTER_TOKEN_SECRET')
+        );
     }
 
     function authenticate()
@@ -90,12 +95,15 @@ class TwitterAPIController extends Controller
 
 
         $no_of_tweets = 100;
+
         if ($package->name == 'basic' || $package->name == 'premiumBusiness' || $package->name == 'premiumLite' || $package->name == 'enterprise') {
             $premiumData = new PremiumTwitterAPIController;
             $tweets = $premiumData->getHashtagTweets($package, $query, $request);
         } else {
-            $tweets_result = $this->guzzleClient('search/tweets', ['q' => $query, 'count' => $no_of_tweets], $user->token, $user->secret);
+            $this->connect();
 
+            $tweets_result = $this->connection->get("search/tweets", ['q' => $query, 'count' => $no_of_tweets]);
+            
             if (!$tweets_result || isset($tweets_result->error)) {
                 return response(['status' => 'error', 'message' => 'Error fetching data'], 403);
             } else {
@@ -105,9 +113,9 @@ class TwitterAPIController extends Controller
 
         $data = [];
 
-        if(count($tweets) > 0){
+        if (count($tweets) > 0) {
             $data['count'] = count($tweets);
-        }else{
+        } else {
             return response(['message' => 'cannot retrieve tweets'], 500);
         }
 
@@ -163,7 +171,7 @@ class TwitterAPIController extends Controller
                     "message" => "failed to get report " . $e->getMessage(),
                 ], 500);
             }
-        }elseif($report && $report->report_data === null){
+        } elseif ($report && $report->report_data === null) {
             Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
 
             try {
