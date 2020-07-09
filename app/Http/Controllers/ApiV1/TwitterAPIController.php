@@ -129,7 +129,7 @@ class TwitterAPIController extends Controller
         $data['most_active'] = $this->getHashtagTweetsData($tweets, $user, 'original', true);
         $data['popular'] = $this->getHashtagPopularUsers($tweets, $user);
         $data['high_retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
-        $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets);
+        $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets, true);
 
         $impressions = $this->getTopHashImpactsData($tweets, $user);
         $data['high_impacts'] = $impressions['sorted'];
@@ -380,15 +380,20 @@ class TwitterAPIController extends Controller
         return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
     }
 
-    function getProfileHighestRetweets($tweets)
+    function getProfileHighestRetweets($tweets, $isHashtag = false)
     {
-        $unique_array_tracker = [];
         $temp_store_tweets = [];
 
         foreach ($tweets as $tweet) {
-            $temp_store_tweets[] = $tweet;
-        }
+            if(!isset($tweet->retweeted_status) && $isHashtag === true){
+                $temp_store_tweets[] = $tweet;
+            }
 
+            if($isHashtag === false){
+                $temp_store_tweets[] = $tweet;
+            }
+        }
+        
         usort($temp_store_tweets, function ($a, $b) {
             return $b->retweet_count - $a->retweet_count;
         });
