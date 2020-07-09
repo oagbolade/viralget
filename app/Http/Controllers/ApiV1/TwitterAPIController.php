@@ -94,6 +94,26 @@ class TwitterAPIController extends Controller
         }
 
 
+        // If already cached, no need to proceed
+        // COMING SOON
+        // $report = ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
+
+        // if($report && $report->report_data !== null) {
+        //     try {
+        //         ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->update([
+        //             'user_id' => $user->id,
+        //             'query' => $query,
+        //             'report_data' => json_encode($data),
+        //             'package' => $package->id
+        //         ]);
+        //     } catch (Exception $e) {
+        //         return response([
+        //             "status" => 500,
+        //             "message" => "failed to get report " . $e->getMessage(),
+        //         ], 500);
+        //     }
+        // }
+
         $no_of_tweets = 100;
 
         if ($package->name == 'basic' || $package->name == 'premiumBusiness' || $package->name == 'premiumLite' || $package->name == 'enterprise') {
