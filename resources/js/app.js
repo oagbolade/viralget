@@ -59,16 +59,6 @@ Vue.component(
     require("./components/PaginationComponent.vue").default
 );
 
-// For search page
-Vue.component(
-    "search-page-result",
-    require("./components/search/SearchResultComponent.vue").default
-);
-Vue.component(
-    "search-page-profile",
-    require("./components/search/SearchProfileComponent.vue").default
-);
-
 // For campaign pages
 Vue.component(
     "view-campaign",
