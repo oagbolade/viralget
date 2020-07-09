@@ -418,6 +418,17 @@ ViralGet is an easy-to-use platform that matches you with the right influencers 
       }
       console.log(data)
     })
-  })
+  });
+  
+  window.navigator.geolocation
+  .getCurrentPosition(success, canceled);
+
+  function success(data){
+    console.log('success', data);
+  }
+  
+  function canceled(){
+    console.log('location disallowed');
+  }
 </script>
 @endsection
