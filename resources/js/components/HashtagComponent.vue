@@ -486,6 +486,12 @@
               </table>
               <paginate-links
                 for="most_active"
+                :show-step-links="true"
+                  :limit="5"
+                  :step-links="{
+                    next: 'NEXT',
+                    prev: 'PREV'
+                  }"
                 :classes="{
                   ul: 'pagination',
                   'ul.paginate-links > li.number': 'page-item',
@@ -530,6 +536,12 @@
               </table>
               <paginate-links
                 for="high_retweets"
+                :show-step-links="true"
+                  :limit="5"
+                  :step-links="{
+                    next: 'NEXT',
+                    prev: 'PREV'
+                  }"
                 :classes="{
                   ul: 'pagination',
                   'ul.paginate-links > li.number': 'page-item',
@@ -574,6 +586,12 @@
               </table>
               <paginate-links
                 for="high_impacts"
+                :show-step-links="true"
+                  :limit="5"
+                  :step-links="{
+                    next: 'NEXT',
+                    prev: 'PREV'
+                  }"
                 :classes="{
                   ul: 'pagination',
                   'ul.paginate-links > li.number': 'page-item',
@@ -622,6 +640,12 @@
                 </table>
                 <paginate-links
                   for="original_contributors"
+                  :show-step-links="true"
+                  :limit="5"
+                  :step-links="{
+                    next: 'NEXT',
+                    prev: 'PREV'
+                  }"
                   :classes="{
                     ul: 'pagination',
                     'ul.paginate-links > li.number': 'page-item',
@@ -669,6 +693,12 @@
                 </table>
                 <paginate-links
                   for="top_original_contributors"
+                  :show-step-links="true"
+                  :limit="5"
+                  :step-links="{
+                    next: 'NEXT',
+                    prev: 'PREV'
+                  }"
                   :classes="{
                     ul: 'pagination',
                     'ul.paginate-links > li.number': 'page-item',
@@ -731,6 +761,12 @@
                 </table>
                 <paginate-links
                   for="most_recent_tweets"
+                  :show-step-links="true"
+                  :limit="5"
+                  :step-links="{
+                    next: 'NEXT',
+                    prev: 'PREV'
+                  }"
                   :classes="{
                     ul: 'pagination',
                     'ul.paginate-links > li.number': 'page-item',
@@ -738,7 +774,7 @@
                   }"
                 ></paginate-links>
               </div>
-             
+
               <div class="col-md-6">
                 <h3>
                   Highest Retweeted Tweets
@@ -751,7 +787,9 @@
                     tag="tbody"
                   >
                     <tr
-                      v-for="(retweet, index) in paginated('high_retweet_tweets')"
+                      v-for="(retweet, index) in paginated(
+                        'high_retweet_tweets'
+                      )"
                       :key="index"
                     >
                       <td width="70%">
@@ -764,11 +802,8 @@
                             />
                           </div>
                           <div class="media-body">
-                            <strong
-                              >@{{ retweet.user.screen_name }}</strong
-                            ><br /><small>{{
-                              retweet.user.name
-                            }}</small>
+                            <strong>@{{ retweet.user.screen_name }}</strong
+                            ><br /><small>{{ retweet.user.name }}</small>
                           </div>
                         </div>
                         <p>{{ retweet.text }}</p>
@@ -793,6 +828,12 @@
                 </table>
                 <paginate-links
                   for="high_retweet_tweets"
+                  :show-step-links="true"
+                  :limit="5"
+                  :step-links="{
+                    next: 'NEXT',
+                    prev: 'PREV'
+                  }"
                   :classes="{
                     ul: 'pagination',
                     'ul.paginate-links > li.number': 'page-item',
@@ -1107,7 +1148,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .pagination {
   justify-content: center;
 }
@@ -1126,4 +1167,12 @@ export default {
 .btn {
   margin: 10px;
 }
+
+/* .left-arrow, .right-arrow{
+
+} */
+
+/* a:not([href]):not([tabindex]){
+  color: black;
+} */
 </style>
