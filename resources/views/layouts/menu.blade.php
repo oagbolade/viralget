@@ -1,3 +1,5 @@
+@extends('layouts.menuLayout')
+
 @php $isDarkBg = isset($isDarkBg) ?? false; @endphp
   <section class="topbar d-lg-flex bg-transparent @if($isDarkBg) text-white @endif">
       @push('menuCSS')

@@ -2,9 +2,9 @@
     margin-right: 10px;
 }
 
-a:not([href]):not([tabindex]) {
+/* a:not([href]):not([tabindex]) {
     color: white;
-}
+} */
 
 .bold-navigations {
     font-size: 20px !important;

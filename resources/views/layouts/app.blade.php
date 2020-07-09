@@ -20,7 +20,6 @@
     @stack('pricingStyles')
     @stack('subscriptionPricingStyles')
     @stack('dirtyTable')
-    @stack('menuCSS')
     <link href="{{ asset('static/assets/css/style.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
