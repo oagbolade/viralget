@@ -177,11 +177,12 @@ class TwitterAPIController extends Controller
 
         if (!$report) {
             Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
+            $removeSymbol = str_replace('#', '', strip_tags(request()->q));
 
             try {
                 $report = ReportingHistory::create([
                     'user_id' => $user->id,
-                    'query' => $query,
+                    'query' => $removeSymbol,
                     'report_data' => json_encode($data),
                     'package' => $package->id
                 ]);
