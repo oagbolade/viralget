@@ -9,13 +9,10 @@ require("./bootstrap");
 window.Vue = require("vue");
 
 import VueToastr from "vue-toastr";
-import VuejsDialog from "vuejs-dialog";
 import VueSweetalert2 from "vue-sweetalert2";
+import JwPagination from "jw-vue-pagination";
 
 
-Vue.use(VueSweetalert2);
-
-import VuejsDialogMixin from "vuejs-dialog/dist/vuejs-dialog-mixin.min.js"; // only needed in custom components
 
 // If you don't need the styles, do not connect
 import "sweetalert2/dist/sweetalert2.min.css";
@@ -23,7 +20,8 @@ import "sweetalert2/dist/sweetalert2.min.css";
 // include the default style
 import "vuejs-dialog/dist/vuejs-dialog.min.css";
 
-Vue.use(VuejsDialog);
+Vue.use(VueSweetalert2);
+Vue.component("jw-pagination", JwPagination);
 Vue.use(VueToastr);
 
 /**
