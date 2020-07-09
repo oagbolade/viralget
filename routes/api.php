@@ -21,9 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
-#    Route::get('/tweets', 'TwitterAPIController@getTweets');
-
-    Route::get('/influencers', 'InfluencerController@getAllInfluencers');
+    Route::get('/influencers/{category}', 'InfluencerController@getAllInfluencers');
 
     Route::get('/profile', 'TwitterAPIController@getAllProfileData');
     Route::get('/hashtag', 'TwitterAPIController@getHashtagTweets');
