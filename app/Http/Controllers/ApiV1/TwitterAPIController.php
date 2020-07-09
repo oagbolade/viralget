@@ -863,19 +863,6 @@ class TwitterAPIController extends Controller
     }
 
 
-    // function getTweets() {
-    //     $query = request()->q;
-
-    //     $this->connect();
-
-    //     if(!$query) {
-    //         return response(['status' => 'error', 'message' => 'Please specify the hashtag/query'], 401);
-    //     }
-
-    //     $tweets = $this->connection->get("search/tweets", ['q' => $query, 'result_type'=>'mixed', 'count' => '100']);
-
-    //     return response(['status' => 'ok', 'data' => $tweets], 200);
-    // }
 
 
 
@@ -991,9 +978,15 @@ class TwitterAPIController extends Controller
 
     public function trending()
     {
+        $connection = new TwitterOAuth(
+            env('TWITTER_CONSUMER_KEY'),
+            env('TWITTER_CONSUMER_SECRET'),
+            env('TWITTER_ACCESS_TOKEN'),
+            env('TWITTER_TOKEN_SECRET')
+        );
 
-        $trends = $this->guzzleClient('trends/place', ['id' => '23424908']);
-
+        $trends = $connection->get('trends/place', ['id' => '23424908']);
+        
         if (isset($trends->error)) {
             return response(['message' => 'Error fetching trends at the moment', 'status' => 'error']);
         }
