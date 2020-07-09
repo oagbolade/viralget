@@ -1,0 +1,19 @@
+.btn-round {
+    margin-right: 10px;
+}
+
+a:not([href]):not([tabindex]) {
+    color: white;
+}
+
+.bold-navigations {
+    font-size: 20px !important;
+    font-weight: bolder !important;
+}
+
+@media only screen and (min-width: 600px) {
+    .hide-on-lg {
+        display: none;
+        visibility: hidden;
+    }
+}

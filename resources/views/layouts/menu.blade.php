@@ -1,5 +1,8 @@
 @php $isDarkBg = isset($isDarkBg) ?? false; @endphp
   <section class="topbar d-lg-flex bg-transparent @if($isDarkBg) text-white @endif">
+      @push('menuCSS')
+      <link href="{{ asset('static/assets/css/menu.css') }}" rel="stylesheet">
+      @endpush
       <div class="container small-3">
         <nav class="nav">
           <a class="nav-link" href="{{ route('about') }}">About</a>
@@ -171,25 +174,3 @@
               </div>
             </div>
           </div>
-    
-          <style>
-            .btn-round{
-              margin-right: 10px;
-            }
-
-            a:not([href]):not([tabindex]){
-              color: white;
-            }
-
-            .bold-navigations{
-              font-size: 20px !important;
-              font-weight: bolder !important;
-            }
-
-            @media only screen and (min-width: 600px) {
-              .hide-on-lg{
-                display: none;
-                visibility: hidden;
-              }
-            }
-          </style>

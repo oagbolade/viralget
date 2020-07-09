@@ -1122,4 +1122,8 @@ export default {
 .high-retweet-seperator {
   padding: 8px;
 }
+
+.btn {
+  margin: 10px;
+}
 </style>
