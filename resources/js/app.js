@@ -9,21 +9,14 @@ require("./bootstrap");
 window.Vue = require("vue");
 
 import VueToastr from "vue-toastr";
-import VuejsDialog from "vuejs-dialog";
 import VueSweetalert2 from "vue-sweetalert2";
 
 
-Vue.use(VueSweetalert2);
-
-import VuejsDialogMixin from "vuejs-dialog/dist/vuejs-dialog-mixin.min.js"; // only needed in custom components
 
 // If you don't need the styles, do not connect
 import "sweetalert2/dist/sweetalert2.min.css";
 
-// include the default style
-import "vuejs-dialog/dist/vuejs-dialog.min.css";
-
-Vue.use(VuejsDialog);
+Vue.use(VueSweetalert2);
 Vue.use(VueToastr);
 
 /**
@@ -57,16 +50,6 @@ Vue.component(
 Vue.component(
     "pagination",
     require("./components/PaginationComponent.vue").default
-);
-
-// For search page
-Vue.component(
-    "search-page-result",
-    require("./components/search/SearchResultComponent.vue").default
-);
-Vue.component(
-    "search-page-profile",
-    require("./components/search/SearchProfileComponent.vue").default
 );
 
 // For campaign pages

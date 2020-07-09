@@ -129,7 +129,11 @@
                 <strong>{{ campaign.handle }}</strong>
               </td>
               <td>{{ dateFormatter(campaign.created_at) }}</td>
-              <td>{{ (campaign.description !== null) ? campaign.description : 'N/A' }}</td>
+              <td>
+                {{
+                  campaign.description !== null ? campaign.description : "N/A"
+                }}
+              </td>
               <td>
                 <button
                   @click="viewCampaign(campaign.handle)"
@@ -157,6 +161,12 @@
         </table>
         <paginate-links
           for="campaigns"
+          :show-step-links="true"
+          :limit="5"
+          :step-links="{
+            next: 'NEXT',
+            prev: 'PREV'
+          }"
           :classes="{
             ul: 'pagination',
             'ul.paginate-links > li.number': 'page-item',

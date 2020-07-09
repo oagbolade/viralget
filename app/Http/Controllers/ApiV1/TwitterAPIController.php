@@ -94,6 +94,26 @@ class TwitterAPIController extends Controller
         }
 
 
+        // If already cached, no need to proceed
+        // COMING SOON
+        // $report = ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
+
+        // if($report && $report->report_data !== null) {
+        //     try {
+        //         ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->update([
+        //             'user_id' => $user->id,
+        //             'query' => $query,
+        //             'report_data' => json_encode($data),
+        //             'package' => $package->id
+        //         ]);
+        //     } catch (Exception $e) {
+        //         return response([
+        //             "status" => 500,
+        //             "message" => "failed to get report " . $e->getMessage(),
+        //         ], 500);
+        //     }
+        // }
+
         $no_of_tweets = 100;
 
         if ($package->name == 'basic' || $package->name == 'premiumBusiness' || $package->name == 'premiumLite' || $package->name == 'enterprise') {
@@ -129,7 +149,7 @@ class TwitterAPIController extends Controller
         $data['most_active'] = $this->getHashtagTweetsData($tweets, $user, 'original', true);
         $data['popular'] = $this->getHashtagPopularUsers($tweets, $user);
         $data['high_retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
-        $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets);
+        $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets, true);
 
         $impressions = $this->getTopHashImpactsData($tweets, $user);
         $data['high_impacts'] = $impressions['sorted'];
@@ -157,11 +177,12 @@ class TwitterAPIController extends Controller
 
         if (!$report) {
             Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
+            $removeSymbol = str_replace('#', '', strip_tags(request()->q));
 
             try {
                 $report = ReportingHistory::create([
                     'user_id' => $user->id,
-                    'query' => $query,
+                    'query' => $removeSymbol,
                     'report_data' => json_encode($data),
                     'package' => $package->id
                 ]);
@@ -380,15 +401,20 @@ class TwitterAPIController extends Controller
         return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
     }
 
-    function getProfileHighestRetweets($tweets)
+    function getProfileHighestRetweets($tweets, $isHashtag = false)
     {
-        $unique_array_tracker = [];
         $temp_store_tweets = [];
 
         foreach ($tweets as $tweet) {
-            $temp_store_tweets[] = $tweet;
-        }
+            if(!isset($tweet->retweeted_status) && $isHashtag === true){
+                $temp_store_tweets[] = $tweet;
+            }
 
+            if($isHashtag === false){
+                $temp_store_tweets[] = $tweet;
+            }
+        }
+        
         usort($temp_store_tweets, function ($a, $b) {
             return $b->retweet_count - $a->retweet_count;
         });
@@ -863,19 +889,6 @@ class TwitterAPIController extends Controller
     }
 
 
-    // function getTweets() {
-    //     $query = request()->q;
-
-    //     $this->connect();
-
-    //     if(!$query) {
-    //         return response(['status' => 'error', 'message' => 'Please specify the hashtag/query'], 401);
-    //     }
-
-    //     $tweets = $this->connection->get("search/tweets", ['q' => $query, 'result_type'=>'mixed', 'count' => '100']);
-
-    //     return response(['status' => 'ok', 'data' => $tweets], 200);
-    // }
 
 
 
@@ -991,9 +1004,15 @@ class TwitterAPIController extends Controller
 
     public function trending()
     {
+        $connection = new TwitterOAuth(
+            env('TWITTER_CONSUMER_KEY'),
+            env('TWITTER_CONSUMER_SECRET'),
+            env('TWITTER_ACCESS_TOKEN'),
+            env('TWITTER_TOKEN_SECRET')
+        );
 
-        $trends = $this->guzzleClient('trends/place', ['id' => '23424908']);
-
+        $trends = $connection->get('trends/place', ['id' => '23424908']);
+        
         if (isset($trends->error)) {
             return response(['message' => 'Error fetching trends at the moment', 'status' => 'error']);
         }

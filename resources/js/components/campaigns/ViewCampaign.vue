@@ -153,6 +153,11 @@
           </tbody>
         </table>
         <paginate-links
+          :show-step-links="true"
+          :step-links="{
+            next: 'NEXT',
+            prev: 'PREV'
+          }"
           for="campaigns"
           :classes="{
             ul: 'pagination',

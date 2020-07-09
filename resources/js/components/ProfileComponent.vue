@@ -249,6 +249,12 @@
                 </table>
                 <paginate-links
                   for="retweets"
+                  :show-step-links="true"
+                  :limit="5"
+                  :step-links="{
+                    next: 'NEXT',
+                    prev: 'PREV'
+                  }"
                   :classes="{
                     ul: 'pagination',
                     'ul.paginate-links > li.number': 'page-item',
@@ -307,6 +313,12 @@
                 </table>
                 <paginate-links
                   for="recent_tweets"
+                  :show-step-links="true"
+                  :limit="5"
+                  :step-links="{
+                    next: 'NEXT',
+                    prev: 'PREV'
+                  }"
                   :classes="{
                     ul: 'pagination',
                     'ul.paginate-links > li.number': 'page-item',
