@@ -10,18 +10,13 @@ window.Vue = require("vue");
 
 import VueToastr from "vue-toastr";
 import VueSweetalert2 from "vue-sweetalert2";
-import JwPagination from "jw-vue-pagination";
 
 
 
 // If you don't need the styles, do not connect
 import "sweetalert2/dist/sweetalert2.min.css";
 
-// include the default style
-import "vuejs-dialog/dist/vuejs-dialog.min.css";
-
 Vue.use(VueSweetalert2);
-Vue.component("jw-pagination", JwPagination);
 Vue.use(VueToastr);
 
 /**
