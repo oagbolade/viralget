@@ -959,9 +959,6 @@ export default {
         campaign_value: this.number(
           parseInt((this.potential_impact * 80) / 1000)
         ),
-
-        // potential_impact: this.potential_impact,
-        // potential_reach: this.potential_reach,
         totalTweets: this.totalTweets,
         text_count: this.text_count,
         media_count: this.media_count,
@@ -1035,16 +1032,16 @@ export default {
             this.text_percentage = `width: ${data.media_meta_data.text.percentage}%`;
             this.media_percentage = `width: ${data.media_meta_data.media.percentage}%`;
             this.report_type = res.data.report_type;
-            // this.report_type_days = res.data.report_type_days;
+            this.report_type_days = res.data.report_type_days;
             this.handle = res.data.handle;
             this.displayError = false;
 
             this.date_from = data.date_from;
             this.date_to = data.date_to;
 
-            let start = moment(data.date_from);
-            let end = moment(data.date_to);
-            this.report_type_days = end.from(start, true);
+            // let start = moment(data.date_from);
+            // let end = moment(data.date_to);
+            // this.report_type_days = end.from(start, true);
 
             this.fillData();
           } else {
