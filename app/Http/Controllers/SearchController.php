@@ -89,16 +89,21 @@ class SearchController extends Controller
             }
 
             switch ($user->subscription->plan->name) {
-                case 'Enterprise':
-                    $proceed = (in_array($subscription->name, ['Free', 'Premium', 'Enterprise'])) ? true : false;
+                case 'enterprise':
+                    $proceed = (in_array($subscription->name, ['starter', 'basic', 'premiumLite', 'premiumBusiness', 'enterprise'])) ? true : false;
                     break;
-                case 'Premium':
-                    $proceed = (in_array($subscription->name, ['Free', 'Premium'])) ? true : false;
+                case 'premiumBusiness':
+                    $proceed = (in_array($subscription->name, ['starter', 'basic', 'premiumLite', 'premiumBusiness'])) ? true : false;
                     break;
-                case 'Free':
-                    $proceed = ($subscription->name == 'Free') ? true : false;
+                case 'premiumLite':
+                    $proceed = (in_array($subscription->name, ['starter', 'basic', 'premiumLite'])) ? true : false;
                     break;
-
+                case 'basic':
+                    $proceed = (in_array($subscription->name, ['starter', 'basic'])) ? true : false;
+                    break;
+                case 'starter':
+                    $proceed = (in_array($subscription->name, ['starter'])) ? true : false;
+                    break;
                 default:
                     $proceed = false;
                     break;
@@ -150,15 +155,6 @@ class SearchController extends Controller
     }
 
     function search() {
-        // $connection = new TwitterOAuth(env('CONSUMER_KEY'), env('CONSUMER_SECRET'), env('ACCESS_TOKEN'), env('TOKEN_SECRET'));
-        // $trends = $connection->get("trends/place", ['id' => '23424908']);
-
-        // if($trends[0]->trends) {
-        //     $trends = $trends[0]->trends;
-        // } else {
-        //     $trends = [];
-        // }
-
         $trends = [];
         return view('pages.search')->withTrends($trends)->withIsDarkBg(true);
     }
