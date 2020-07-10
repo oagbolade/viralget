@@ -161,7 +161,7 @@ class CampaignController extends Controller
 
     function delete()
     {
-        $campaign = new HashtagCampaigns;
+        $campaign = new ReportingHistory;
 
         if (isset(request()->handle)) {
             $campaign = new ProfilingHistory;
