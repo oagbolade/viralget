@@ -44,7 +44,9 @@ class HomeController extends Controller
 
 
     function faqs() {
-        return view('pages.faqs');
+        return view('home');
+        // Disabled faq page for now
+        // return view('pages.faqs');
     }
 
     function terms() {
