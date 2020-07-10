@@ -56,7 +56,7 @@
                 <p class="text-center py-3">
                   <a class="btn btn-block btn-primary text-uppercase" href="{{ route('subscribe', ['plan' => 'enterprise'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
                   @if($user && $user->subscription && $user->subscription->plan->name != 'enterprise') 
-                    Upgrade 
+                    Get Started 
                   @else
                     Get Started
                   @endif
@@ -87,7 +87,7 @@
                 <p class="text-center py-3">
                   <a class="btn btn-block btn-warning text-uppercase" href="{{ route('subscribe', ['plan' => 'enterprise'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
                   @if($user && $user->subscription && $user->subscription->plan->name != 'enterprise') 
-                    Upgrade 
+                    Get Started  
                   @else
                     Get Started
                   @endif
@@ -118,7 +118,7 @@
                 <p class="text-center py-3">
                   <a class="btn btn-block btn-success text-uppercase" href="{{ route('subscribe', ['plan' => 'enterprise'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
                   @if($user && $user->subscription && $user->subscription->plan->name != 'enterprise') 
-                    Upgrade 
+                    Get Started  
                   @else
                     Get Started
                   @endif
