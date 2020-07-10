@@ -342,6 +342,7 @@ ViralGet is an easy-to-use platform that matches you with the right influencers 
                               <span class="input-group-text"><i class="ti-search mt-1"></i></span>
                             </div>
                             <input type="text" class="form-control" name="q" placeholder="@username or keyword or #hashtag">
+                            <input type="hidden" name="isSearchbar" value="true">
                           </div>
                         </div>
 

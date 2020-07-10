@@ -19,6 +19,7 @@
                               <span class="input-group-text"><i class="ti-search mt-1"></i></span>
                             </div>
                             <input type="text" class="form-control" name="q" placeholder="@username or keyword or #hashtag">
+                            <input type="hidden" name="isSearchbar" value="true">
                           </div>
                         </div>
                         <div class="advancedSearch col-md-6  offset-md-3 mt-2">

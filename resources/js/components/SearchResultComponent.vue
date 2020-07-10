@@ -28,7 +28,11 @@
             <h5 class="divider" style="margin: 5px 0">Followers</h5>
           </div>
           <div class="form-group">
-            <select class="form-control" v-model="form.followers" name="followers">
+            <select
+              class="form-control"
+              v-model="form.followers"
+              name="followers"
+            >
               <option value="">Select Option</option>
               <option value="low">5000 - 10000</option>
               <option value="middle">10000 - 20000</option>
@@ -40,7 +44,11 @@
             <h5 class="divider" style="margin: 5px 0">Engagement Rate</h5>
           </div>
           <div class="form-group">
-            <select class="form-control" v-model="form.engagement_rate" name="engagement_rate">
+            <select
+              class="form-control"
+              v-model="form.engagement_rate"
+              name="engagement_rate"
+            >
               <option value="">Select Option</option>
               <option value="low">Low</option>
               <option value="good">Good</option>
@@ -53,7 +61,11 @@
             <h5 class="divider" style="margin: 5px 0">Location</h5>
           </div>
           <div class="form-group">
-            <select class="form-control" v-model="form.location" name="location">
+            <select
+              class="form-control"
+              v-model="form.location"
+              name="location"
+            >
               <option value="">Select a Location</option>
               <option value="Africa">Africa</option>
               <option value="Nigeria">Nigeria</option>
@@ -123,8 +135,8 @@
               </div>
               <pagination
                 :pagination="pagination"
-                @paginate="getTopInfluencers()"
-                :offset="5"
+                @paginate="(!isSearchbar) ? getTopInfluencers() : ''"
+                :offset="(!isSearchbar) ? 5 : ''"
               >
               </pagination>
             </div>
@@ -152,6 +164,7 @@ export default {
   data() {
     return {
       loading: true,
+      isSearchbar: false,
       paginate: ["q"],
       pagination: {
         current_page: 1
@@ -171,12 +184,33 @@ export default {
   },
   mounted: function() {},
   created: function() {
-    // this.fetchProfiles(this.q, this.category);
-    this.getTopInfluencers();
+    this.checkSearchBar();
     this.getStates();
     this.getCategories();
   },
   methods: {
+    checkSearchBar() {
+      const url_string = window.location.href;
+      const url = new URL(url_string);
+      const searchbar = url.searchParams.get("isSearchbar");
+
+      if (searchbar !== null) {
+        this.isSearchbar = true;
+        this.getSearchbarResults(this.q);
+      } else {
+        this.getTopInfluencers();
+      }
+    },
+    getSearchbarResults(handle) {
+      handle = handle.replace('@', '');
+      this.profiles = [
+        {
+          handle,
+          category: { color: "success" }
+        }
+      ];
+      this.loading = false;
+    },
     getTopInfluencers() {
       const URL = `/api/v1/influencers/${this.category}?page=${this.pagination.current_page}`;
       axios
@@ -187,7 +221,7 @@ export default {
           }
         })
         .then(res => {
-          console.log(res);
+          console.log(res.data.data.data);
           this.profiles = res.data.data.data;
           this.pagination = res.data.data;
           this.loading = false;
@@ -205,8 +239,6 @@ export default {
       location = "",
       engagement_rate = ""
     ) {
-      console.log(category);
-
       this.profiles = [];
       this.loading = true;
       axios
@@ -290,9 +322,7 @@ export default {
       return numeral(value).format("0,0");
     }
   },
-  computed: {
-    
-  }
+  computed: {}
 };
 </script>
 
