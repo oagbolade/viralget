@@ -25,10 +25,6 @@ Route::get('/terms', 'HomeController@terms')->name('terms');
 Route::get('/privacy-policy', 'HomeController@privacy')->name('privacy');
 Route::get('/search', 'SearchController@search')->name('search');
 
-// Temporary route
-Route::get('/pdfview', function(){
-    return view('report.reportPDF');
-})->name('pdf');
 
 Route::middleware('guest')->group(function () {
 

@@ -407,19 +407,25 @@ class TwitterAPIController extends Controller
 
         foreach ($tweets as $tweet) {
             if(!isset($tweet->retweeted_status) && $isHashtag === true){
+
                 $temp_store_tweets[] = $tweet;
             }
-
-            if($isHashtag === false){
+            
+            if($isHashtag === false){                
                 $temp_store_tweets[] = $tweet;
             }
         }
         
         usort($temp_store_tweets, function ($a, $b) {
+            if ($b->retweet_count == $a->retweet_count) {
+                return 0;
+            }
+
             return $b->retweet_count - $a->retweet_count;
         });
+        $unique_array = array_unique($temp_store_tweets,SORT_REGULAR);
 
-        $topRetweets = array_slice($temp_store_tweets, 0, 30);
+        $topRetweets = array_slice($unique_array, 0, 30);
         return $topRetweets;
     }
 

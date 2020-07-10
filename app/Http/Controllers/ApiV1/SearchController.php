@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ApiV1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Account;
+use App\Influencers;
 use App\Category;
 use App\Keyword;
 use App\States;
@@ -151,7 +152,7 @@ class SearchController extends Controller
 
         if(!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
-        $handle = Account::where('handle', 'like', '%'.request()->handle.'%')->first();
+        $handle = Influencers::where('handle', 'like', '%'.request()->handle.'%')->first();
         // Add option to also check influencers table
 
         if(!$handle) return response(['status' => 'error', 'message' => 'User handle not found']);
