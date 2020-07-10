@@ -16,7 +16,7 @@
         <span class="icon-sad lg-error-icon"></span>
         <h1>Oops!</h1>
         <h3>
-          Unfortunately, we're unable to create your campaign at the moment.
+          {{errorMessage}}
         </h3>
         <h5>Please try again in few minutes</h5>
 
@@ -114,6 +114,7 @@ export default {
   components: { Loading },
   data() {
     return {
+      errorMessage: "Unfortunately, we're unable to create your campaign at the moment.",
       loading: false,
       displayError: false,
       isHandle: false,
