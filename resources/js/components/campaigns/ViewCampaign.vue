@@ -272,7 +272,7 @@ export default {
 
       const URL = `/search/profiles?q=${encodeURIComponent(keyword)}&fromDate=${
         formattedFromDate !== undefined ? formattedFromDate : ""
-      }&toDate=${formattedToDate !== undefined ? formattedToDate : "%02%03"}`;
+      }&toDate=${formattedToDate !== undefined ? formattedToDate : ""}`;
       window.location.href = URL;
     },
 
