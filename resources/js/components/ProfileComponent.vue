@@ -248,6 +248,7 @@
                   </paginate>
                 </table>
                 <paginate-links
+                  v-if="!exceptPlans.includes(report_type)"
                   for="retweets"
                   :show-step-links="true"
                   :limit="5"
@@ -312,6 +313,7 @@
                   </paginate>
                 </table>
                 <paginate-links
+                  v-if="!exceptPlans.includes(report_type)"
                   for="recent_tweets"
                   :show-step-links="true"
                   :limit="5"
@@ -388,6 +390,7 @@ export default {
   components: { Loading },
   data() {
     return {
+      exceptPlans: ["starter", "basic"],
       loading: true,
       paginate: ["recent_tweets", "retweets"],
       avatar: "",
@@ -422,6 +425,13 @@ export default {
     this.getProfile();
   },
   methods: {
+    dynamicLimit(plan) {
+      if (plan === "starter" || plan === "basic") {
+        return 1;
+      }
+
+      return 1;
+    },
     async downloadReport() {
       const URL = `/api/v1/report/profiling/download`;
 

@@ -42,34 +42,6 @@
 
       <div class="col-md-12">
         <div>
-          <div class="dropdown open-on-hover pull-right">
-            <span class="dropdown-toggle" data-toggle="dropdown"
-              >Try out another Plan</span
-            >
-            <div class="dropdown-menu">
-              <h6 class="dropdown-header">Select a plan</h6>
-              <a
-                class="dropdown-item"
-                :href="`/hashtag/${encodeURIComponent(handle)}?plan=free`"
-                >Free</a
-              >
-              <a
-                class="dropdown-item"
-                :href="`/hashtag/${encodeURIComponent(handle)}?plan=premium`"
-                >Premium</a
-              >
-              <a
-                class="dropdown-item"
-                :href="`/hashtag/${encodeURIComponent(handle)}?plan=enterprise`"
-                >Enterprise</a
-              >
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/pricing">View all pricing</a>
-            </div>
-          </div>
-        </div>
-
-        <div>
           <p>
             <small
               ><span class="icon-calendar"></span> &nbsp; {{ date_from }} -
@@ -485,6 +457,7 @@
                 </paginate>
               </table>
               <paginate-links
+                v-if="!exceptPlans.includes(report_type)"
                 for="most_active"
                 :show-step-links="true"
                   :limit="5"
@@ -535,6 +508,7 @@
                 </paginate>
               </table>
               <paginate-links
+              v-if="!exceptPlans.includes(report_type)"
                 for="high_retweets"
                 :show-step-links="true"
                   :limit="5"
@@ -585,6 +559,7 @@
                 </paginate>
               </table>
               <paginate-links
+              v-if="!exceptPlans.includes(report_type)"
                 for="high_impacts"
                 :show-step-links="true"
                   :limit="5"
@@ -639,6 +614,7 @@
                   </paginate>
                 </table>
                 <paginate-links
+                v-if="!exceptPlans.includes(report_type)"
                   for="original_contributors"
                   :show-step-links="true"
                   :limit="5"
@@ -692,6 +668,7 @@
                   </paginate>
                 </table>
                 <paginate-links
+                v-if="!exceptPlans.includes(report_type)"
                   for="top_original_contributors"
                   :show-step-links="true"
                   :limit="5"
@@ -760,6 +737,7 @@
                   </paginate>
                 </table>
                 <paginate-links
+                v-if="!exceptPlans.includes(report_type)"
                   for="most_recent_tweets"
                   :show-step-links="true"
                   :limit="5"
@@ -827,6 +805,7 @@
                   </paginate>
                 </table>
                 <paginate-links
+                v-if="!exceptPlans.includes(report_type)"
                   for="high_retweet_tweets"
                   :show-step-links="true"
                   :limit="5"
@@ -871,6 +850,7 @@ export default {
   components: { Loading, LineChart, PieChart },
   data() {
     return {
+      exceptPlans: ["starter", "basic"],
       dateFormat: "YYYY-MM-DD",
       loading: true,
       tweets: [],
@@ -1073,6 +1053,8 @@ export default {
             this.text_percentage = `width: ${data.media_meta_data.text.percentage}%`;
             this.media_percentage = `width: ${data.media_meta_data.media.percentage}%`;
             this.report_type = res.data.report_type;
+            console.log(this.report_type);
+
             this.report_type_days = res.data.report_type_days;
             this.handle = res.data.handle;
             this.displayError = false;
