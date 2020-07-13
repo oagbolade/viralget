@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Account;
 use App\Influencers;
 use App\Category;
+use App\FilterCategories;
 use App\Keyword;
 use App\States;
 use App\User;
@@ -141,9 +142,15 @@ class SearchController extends Controller
     }
 
     public function getCategories() {
-        $states = Category::get();
+        $categories = Category::get();
 
-        return response($states);
+        return response($categories);
+    }
+    
+    public function getFilterCategories() {
+        $filter_categories = FilterCategories::get();
+
+        return response($filter_categories);
     }
 
 
