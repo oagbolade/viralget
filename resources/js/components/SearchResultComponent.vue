@@ -5,6 +5,13 @@
         <h6 class="sidebar-title">Filter Result</h6>
         <form action="#" v-on:submit.prevent="filterResults" method="GET">
           <div class="text-center">
+            <h5 class="divider" style="margin: 5px 0">Handle</h5>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="@username" v-model="form.handle" name="handle">
+          </div>
+          
+          <div class="text-center">
             <h5 class="divider" style="margin: 5px 0">Category</h5>
           </div>
           <div class="form-group">
@@ -14,7 +21,7 @@
               name="category"
             >
               <option value="">Select Category</option>
-              <option value="">All</option>
+              <option value="0">All</option>
               <option
                 v-for="(category, index) in categories"
                 :key="index"
@@ -221,7 +228,7 @@ export default {
           }
         })
         .then(res => {
-          console.log(res.data.data.data);
+          // console.log(res.data.data.data);
           this.profiles = res.data.data.data;
           this.pagination = res.data.data;
           this.loading = false;
@@ -305,7 +312,7 @@ export default {
     },
     getCategories() {
       axios
-        .get(`/api/v1/misc/categories`, {
+        .get(`/api/v1/misc/categories/filter`, {
           headers: {
             Authorization:
               "Bearer " + $('meta[name="api-token"]').attr("content")

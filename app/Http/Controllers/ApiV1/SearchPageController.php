@@ -2,27 +2,12 @@
 
 namespace App\Http\Controllers\ApiV1;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Account;
 use App\Category;
 use App\Influencers;
-use App\Keyword;
 use App\States;
 use App\User;
-
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
-
-
-use App\Subscription;
-use App\ReportingHistory;
-use App\ProfilingHistory;
-
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 class SearchPageController extends Controller
 {
@@ -31,7 +16,6 @@ class SearchPageController extends Controller
         $auth_data = explode(' ', request()->header('Authorization'));
         $token = $auth_data[1];
         $user = User::where('api_token', $token)->first();
-        // $user = User::first();
 
         return $user;
     }
@@ -50,8 +34,19 @@ class SearchPageController extends Controller
         $er = request()->er;
         
         $filterInfluencers = (new Influencers)->with('category')->newQuery();
+
+        if ($q) {
+            $q = str_replace('@', '', $q);
+            $filterInfluencers->where('handle', 'like', '%' . $q . '%');
+        }
         
-        if ($category) {
+        if($category == 0){
+            $filterInfluencers->get();
+            // dd($filterInfluencers);
+        }
+
+        if ($category && $category != 0) {
+            dd('here');
             $filterInfluencers->where(function ($query) use ($category) {
                 $query->where('category_id', $category);
             });
@@ -71,7 +66,6 @@ class SearchPageController extends Controller
         
         if ($followers) {
             $filterInfluencers->where(function ($query) use ($followers) {
-                           // ->where('min_cash', '<=',  $user->cash)
                 if($followers === "low"){
                     $query->where('followers', '>=',  5000)
                         ->where('followers', '<=',  10000);
