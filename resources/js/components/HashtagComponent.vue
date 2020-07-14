@@ -33,7 +33,7 @@
 
     <div class="row" v-show="!loading && !displayError">
       <h6 id="block-2" class="block-number">
-        {{ report_type_days }} report for:
+        {{ report_type_days }} days report for:
         <strong>{{ decodeURIComponent(handle) }}</strong>
         <span v-show="report_type_days !== '30'">
           <a href="/pricing"> | Upgrade Plan</a></span
@@ -460,11 +460,11 @@
                 v-if="!exceptPlans.includes(report_type)"
                 for="most_active"
                 :show-step-links="true"
-                  :limit="5"
-                  :step-links="{
-                    next: 'NEXT',
-                    prev: 'PREV'
-                  }"
+                :limit="5"
+                :step-links="{
+                  next: 'NEXT',
+                  prev: 'PREV'
+                }"
                 :classes="{
                   ul: 'pagination',
                   'ul.paginate-links > li.number': 'page-item',
@@ -508,14 +508,14 @@
                 </paginate>
               </table>
               <paginate-links
-              v-if="!exceptPlans.includes(report_type)"
+                v-if="!exceptPlans.includes(report_type)"
                 for="high_retweets"
                 :show-step-links="true"
-                  :limit="5"
-                  :step-links="{
-                    next: 'NEXT',
-                    prev: 'PREV'
-                  }"
+                :limit="5"
+                :step-links="{
+                  next: 'NEXT',
+                  prev: 'PREV'
+                }"
                 :classes="{
                   ul: 'pagination',
                   'ul.paginate-links > li.number': 'page-item',
@@ -559,14 +559,14 @@
                 </paginate>
               </table>
               <paginate-links
-              v-if="!exceptPlans.includes(report_type)"
+                v-if="!exceptPlans.includes(report_type)"
                 for="high_impacts"
                 :show-step-links="true"
-                  :limit="5"
-                  :step-links="{
-                    next: 'NEXT',
-                    prev: 'PREV'
-                  }"
+                :limit="5"
+                :step-links="{
+                  next: 'NEXT',
+                  prev: 'PREV'
+                }"
                 :classes="{
                   ul: 'pagination',
                   'ul.paginate-links > li.number': 'page-item',
@@ -614,7 +614,7 @@
                   </paginate>
                 </table>
                 <paginate-links
-                v-if="!exceptPlans.includes(report_type)"
+                  v-if="!exceptPlans.includes(report_type)"
                   for="original_contributors"
                   :show-step-links="true"
                   :limit="5"
@@ -668,7 +668,7 @@
                   </paginate>
                 </table>
                 <paginate-links
-                v-if="!exceptPlans.includes(report_type)"
+                  v-if="!exceptPlans.includes(report_type)"
                   for="top_original_contributors"
                   :show-step-links="true"
                   :limit="5"
@@ -684,141 +684,233 @@
                 ></paginate-links>
               </div>
 
-              <div class="col-md-6">
-                <h3>
-                  Most Recent Tweets
-                </h3>
-                <table class="table shadow bg-white table-hover table-striped">
-                  <paginate
-                    name="most_recent_tweets"
-                    :list="most_recent_tweets"
-                    :per="5"
-                    tag="tbody"
+              <div class="row">
+                <div class="col-lg-4">
+                  <h3>
+                    Most Recent<br />
+                    Tweets
+                  </h3>
+                  <table
+                    class="table shadow bg-white table-hover table-striped"
                   >
-                    <tr
-                      v-for="(active, index) in paginated('most_recent_tweets')"
-                      :key="index"
+                    <paginate
+                      name="most_recent_tweets"
+                      :list="most_recent_tweets"
+                      :per="5"
+                      tag="tbody"
                     >
-                      <td width="70%">
-                        <div class="media mb-3">
-                          <div class="lead-6 line-height-1 text-danger w-50px">
-                            <img
-                              class="avatar avatar-sm"
-                              :src="active.tweet_data.user.profile_image_url"
-                              alt=""
-                            />
+                      <tr
+                        v-for="(active, index) in paginated(
+                          'most_recent_tweets'
+                        )"
+                        :key="index"
+                      >
+                        <td class="high-tweets" width="70%">
+                          <div class="media mb-3">
+                            <div
+                              class="lead-6 line-height-1 text-danger w-50px"
+                            >
+                              <img
+                                class="avatar avatar-sm"
+                                :src="active.tweet_data.user.profile_image_url"
+                                alt=""
+                              />
+                            </div>
+                            <div class="media-body">
+                              <strong
+                                >@{{
+                                  active.tweet_data.user.screen_name
+                                }}</strong
+                              ><br /><small>{{
+                                active.tweet_data.user.name
+                              }}</small>
+                            </div>
                           </div>
-                          <div class="media-body">
-                            <strong
-                              >@{{ active.tweet_data.user.screen_name }}</strong
-                            ><br /><small>{{
-                              active.tweet_data.user.name
-                            }}</small>
-                          </div>
-                        </div>
-                        <p>{{ active.tweet_data.text }}</p>
-                        <p>
-                          <small>
-                            <strong
-                              >Posted on
-                              {{ getHumanDate(active.tweet_data.created_at) }}
-                            </strong>
-                          </small>
-                        </p>
-                        <p>
-                          <i class="fa fa-retweet text-primary"></i>
-                          {{ active.tweet_data.retweet_count }} &nbsp;&nbsp;
-                          <i class="fa fa-heart text-danger"></i>
-                          {{ active.tweet_data.favorite_count }}
-                        </p>
-                        <!-- <hr class="my-7" /> -->
-                      </td>
-                    </tr>
-                  </paginate>
-                </table>
-                <paginate-links
-                v-if="!exceptPlans.includes(report_type)"
-                  for="most_recent_tweets"
-                  :show-step-links="true"
-                  :limit="5"
-                  :step-links="{
-                    next: 'NEXT',
-                    prev: 'PREV'
-                  }"
-                  :classes="{
-                    ul: 'pagination',
-                    'ul.paginate-links > li.number': 'page-item',
-                    'ul.paginate-links > li.number > a': 'page-link'
-                  }"
-                ></paginate-links>
-              </div>
+                          <p>{{ active.tweet_data.text }}</p>
+                          <p>
+                            <small>
+                              <strong
+                                >Posted on
+                                {{ getHumanDate(active.tweet_data.created_at) }}
+                              </strong>
+                            </small>
+                          </p>
+                          <p>
+                            <i class="fa fa-retweet text-primary"></i>
+                            {{ active.tweet_data.retweet_count }} &nbsp;&nbsp;
+                            <i class="fa fa-heart text-danger"></i>
+                            {{ active.tweet_data.favorite_count }}
+                          </p>
+                          <!-- <hr class="my-7" /> -->
+                        </td>
+                      </tr>
+                    </paginate>
+                  </table>
+                  <paginate-links
+                    v-if="!exceptPlans.includes(report_type)"
+                    for="most_recent_tweets"
+                    :show-step-links="true"
+                    :limit="5"
+                    :step-links="{
+                      next: 'NEXT',
+                      prev: 'PREV'
+                    }"
+                    :classes="{
+                      ul: 'pagination',
+                      'ul.paginate-links > li.number': 'page-item',
+                      'ul.paginate-links > li.number > a': 'page-link'
+                    }"
+                  ></paginate-links>
+                </div>
 
-              <div class="col-md-6">
-                <h3>
-                  Highest Retweeted Tweets
-                </h3>
-                <table class="table shadow bg-white table-hover table-striped">
-                  <paginate
-                    name="high_retweet_tweets"
-                    :list="high_retweet_tweets"
-                    :per="5"
-                    tag="tbody"
+                <div class="col-md-4">
+                  <h3>
+                    Most Recent Replies to Tweets
+                  </h3>
+                  <table
+                    class="table shadow bg-white table-hover table-striped"
                   >
-                    <tr
-                      v-for="(retweet, index) in paginated(
-                        'high_retweet_tweets'
-                      )"
-                      :key="index"
+                    <paginate
+                      name="most_recent_replies"
+                      :list="most_recent_replies"
+                      :per="5"
+                      tag="tbody"
                     >
-                      <td width="70%">
-                        <div class="media mb-3">
-                          <div class="lead-6 line-height-1 text-danger w-50px">
-                            <img
-                              class="avatar avatar-sm"
-                              :src="retweet.user.profile_image_url"
-                              alt=""
-                            />
+                      <tr
+                        v-for="(active, index) in paginated(
+                          'most_recent_replies'
+                        )"
+                        :key="index"
+                      >
+                        <td class="high-tweets" width="70%">
+                          <div class="media mb-3">
+                            <div
+                              class="lead-6 line-height-1 text-danger w-50px"
+                            >
+                              <img
+                                class="avatar avatar-sm"
+                                :src="active.tweet_data.user.profile_image_url"
+                                alt=""
+                              />
+                            </div>
+                            <div class="media-body">
+                              <strong
+                                >@{{
+                                  active.tweet_data.user.screen_name
+                                }}</strong
+                              ><br /><small>{{
+                                active.tweet_data.user.name
+                              }}</small>
+                            </div>
                           </div>
-                          <div class="media-body">
-                            <strong>@{{ retweet.user.screen_name }}</strong
-                            ><br /><small>{{ retweet.user.name }}</small>
+                          <p>{{ active.tweet_data.text }}</p>
+                          <p>
+                            <small>
+                              <strong
+                                >Posted on
+                                {{ getHumanDate(active.tweet_data.created_at) }}
+                              </strong>
+                            </small>
+                          </p>
+                          <p>
+                            <i class="fa fa-retweet text-primary"></i>
+                            {{ active.tweet_data.retweet_count }} &nbsp;&nbsp;
+                            <i class="fa fa-heart text-danger"></i>
+                            {{ active.tweet_data.favorite_count }}
+                          </p>
+                          <!-- <hr class="my-7" /> -->
+                        </td>
+                      </tr>
+                    </paginate>
+                  </table>
+                  <paginate-links
+                    v-if="!exceptPlans.includes(report_type)"
+                    for="most_recent_replies"
+                    :show-step-links="true"
+                    :limit="5"
+                    :step-links="{
+                      next: 'NEXT',
+                      prev: 'PREV'
+                    }"
+                    :classes="{
+                      ul: 'pagination',
+                      'ul.paginate-links > li.number': 'page-item',
+                      'ul.paginate-links > li.number > a': 'page-link'
+                    }"
+                  ></paginate-links>
+                </div>
+
+                <div class="col-md-4">
+                  <h3>
+                    Highest Retweeted Tweets
+                  </h3>
+                  <table
+                    class="table shadow bg-white table-hover table-striped"
+                  >
+                    <paginate
+                      name="high_retweet_tweets"
+                      :list="high_retweet_tweets"
+                      :per="5"
+                      tag="tbody"
+                    >
+                      <tr
+                        v-for="(retweet, index) in paginated(
+                          'high_retweet_tweets'
+                        )"
+                        :key="index"
+                      >
+                        <td class="high-tweets" width="70%">
+                          <div class="media mb-3">
+                            <div
+                              class="lead-6 line-height-1 text-danger w-50px"
+                            >
+                              <img
+                                class="avatar avatar-sm"
+                                :src="retweet.user.profile_image_url"
+                                alt=""
+                              />
+                            </div>
+                            <div class="media-body">
+                              <strong>@{{ retweet.user.screen_name }}</strong
+                              ><br /><small>{{ retweet.user.name }}</small>
+                            </div>
                           </div>
-                        </div>
-                        <p>{{ retweet.text }}</p>
-                        <p>
-                          <small>
-                            <strong
-                              >Posted on
-                              {{ getHumanDate(retweet.created_at) }}
-                            </strong>
-                          </small>
-                        </p>
-                        <p>
-                          <i class="fa fa-retweet text-primary"></i>
-                          {{ retweet.retweet_count }} &nbsp;&nbsp;
-                          <i class="fa fa-heart text-danger"></i>
-                          {{ retweet.favorite_count }}
-                        </p>
-                        <!-- <hr class="my-7" /> -->
-                      </td>
-                    </tr>
-                  </paginate>
-                </table>
-                <paginate-links
-                v-if="!exceptPlans.includes(report_type)"
-                  for="high_retweet_tweets"
-                  :show-step-links="true"
-                  :limit="5"
-                  :step-links="{
-                    next: 'NEXT',
-                    prev: 'PREV'
-                  }"
-                  :classes="{
-                    ul: 'pagination',
-                    'ul.paginate-links > li.number': 'page-item',
-                    'ul.paginate-links > li.number > a': 'page-link'
-                  }"
-                ></paginate-links>
+                          <p>{{ retweet.text }}</p>
+                          <p>
+                            <small>
+                              <strong
+                                >Posted on
+                                {{ getHumanDate(retweet.created_at) }}
+                              </strong>
+                            </small>
+                          </p>
+                          <p>
+                            <i class="fa fa-retweet text-primary"></i>
+                            {{ retweet.retweet_count }} &nbsp;&nbsp;
+                            <i class="fa fa-heart text-danger"></i>
+                            {{ retweet.favorite_count }}
+                          </p>
+                          <!-- <hr class="my-7" /> -->
+                        </td>
+                      </tr>
+                    </paginate>
+                  </table>
+                  <paginate-links
+                    v-if="!exceptPlans.includes(report_type)"
+                    for="high_retweet_tweets"
+                    :show-step-links="true"
+                    :limit="5"
+                    :step-links="{
+                      next: 'NEXT',
+                      prev: 'PREV'
+                    }"
+                    :classes="{
+                      ul: 'pagination',
+                      'ul.paginate-links > li.number': 'page-item',
+                      'ul.paginate-links > li.number > a': 'page-link'
+                    }"
+                  ></paginate-links>
+                </div>
               </div>
             </div>
           </div>
@@ -890,7 +982,8 @@ export default {
         "popular",
         "original_contributors",
         "top_original_contributors",
-        "most_recent_tweets"
+        "most_recent_tweets",
+        "most_recent_replies"
       ],
       displayError: false,
       selected_date_from: "",
@@ -903,6 +996,7 @@ export default {
       original_contributors: [],
       top_original_contributors: [],
       most_recent_tweets: [],
+      most_recent_replies: [],
       total_engagements: 0,
       ad_recall: 0,
       selectedDays: ""
@@ -1028,6 +1122,7 @@ export default {
             this.original_contributors = data.original_contributors;
             this.top_original_contributors = data.top_original_contributors;
             this.most_recent_tweets = data.most_recent_tweets;
+            this.most_recent_replies = data.most_recent_replies;
 
             this.totalTweets = data.count;
             this.loading = false;
@@ -1150,9 +1245,9 @@ export default {
   margin: 10px;
 }
 
-/* .left-arrow, .right-arrow{
-
-} */
+.high-tweets{
+    height: 250px;
+}
 
 /* a:not([href]):not([tabindex]){
   color: black;

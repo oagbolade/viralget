@@ -123,7 +123,7 @@ class TwitterAPIController extends Controller
             $this->connect();
 
             $tweets_result = $this->connection->get("search/tweets", ['q' => $query, 'count' => $no_of_tweets]);
-            
+
             if (!$tweets_result || isset($tweets_result->error)) {
                 return response(['status' => 'error', 'message' => 'Error fetching data'], 403);
             } else {
@@ -164,7 +164,8 @@ class TwitterAPIController extends Controller
         $data['total_engagements'] = $total_engagements;
         $data['original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
         $data['top_original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
-        $data['most_recent_tweets'] = $this->getMostRecentTweets($tweets, $user);
+        $data['most_recent_tweets'] = $this->getMostRecentTweets($tweets);
+        $data['most_recent_replies'] = $this->getMostRecentReplies($tweets);
 
 
         $data['potential_impact'] =  $impressions['sum'] * 0.60; //$reach['impact'];
@@ -213,13 +214,33 @@ class TwitterAPIController extends Controller
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
     }
 
-    function getMostRecentTweets($tweets, $user)
+    function getMostRecentTweets($tweets)
     {
         $recent_tweets = [];
         $temp_recent_tweets = [];
 
         foreach ($tweets as $tweet) {
-            if (!array_key_exists($tweet->user->screen_name, $recent_tweets) && (!isset($tweet->retweeted_status))) {
+            if (!array_key_exists($tweet->user->screen_name, $recent_tweets) && (!isset($tweet->retweeted_status)) && $tweet->in_reply_to_screen_name === null) {
+                $temp_recent_tweets[$tweet->user->screen_name] = ["tweet_data" => $tweet];
+            }
+        }
+
+        $sliced_array = array_slice($temp_recent_tweets, 0, 30);
+
+        foreach ($sliced_array as $key => $value) {
+            $recent_tweets[] = $value;
+        }
+
+        return $recent_tweets;
+    }
+    
+    function getMostRecentReplies($tweets)
+    {
+        $recent_tweets = [];
+        $temp_recent_tweets = [];
+
+        foreach ($tweets as $tweet) {
+            if ((!isset($tweet->retweeted_status)) && $tweet->in_reply_to_screen_name !== null) {
                 $temp_recent_tweets[$tweet->user->screen_name] = ["tweet_data" => $tweet];
             }
         }
@@ -406,16 +427,15 @@ class TwitterAPIController extends Controller
         $temp_store_tweets = [];
 
         foreach ($tweets as $tweet) {
-            if(!isset($tweet->retweeted_status) && $isHashtag === true){
-
+            if (!isset($tweet->retweeted_status) && $tweet->in_reply_to_screen_name === null && $isHashtag === true) {
                 $temp_store_tweets[] = $tweet;
             }
-            
-            if($isHashtag === false){                
+
+            if ($isHashtag === false) {
                 $temp_store_tweets[] = $tweet;
             }
         }
-        
+
         usort($temp_store_tweets, function ($a, $b) {
             if ($b->retweet_count == $a->retweet_count) {
                 return 0;
@@ -423,7 +443,7 @@ class TwitterAPIController extends Controller
 
             return $b->retweet_count - $a->retweet_count;
         });
-        $unique_array = array_unique($temp_store_tweets,SORT_REGULAR);
+        $unique_array = array_unique($temp_store_tweets, SORT_REGULAR);
 
         $topRetweets = array_slice($unique_array, 0, 30);
         return $topRetweets;
@@ -591,20 +611,19 @@ class TwitterAPIController extends Controller
 
         if ($total_tweets > 0) {
             foreach ($tweets as $tweet) {
-                //                dd($tweet->entities->media);
                 switch ($type) {
-                    case 'retweets': //retweeted tweets
+                    case 'retweets':
                         if (isset($tweet->retweeted_status)) {
                             $_tweets[] = $tweet;
                             $total_count += 1;
                             //$tweet->retweeted_status->retweet_count
                         }
                         break;
-                    case 'likes': //original tweets
+                    case 'likes':
                         $_tweets[] = $tweet;
                         $total_count += $tweet->favorite_count;
                         break;
-                    case 'original': //original tweets
+                    case 'original':
                         if (!isset($tweet->retweeted_status)) {
                             $_tweets[] = $tweet;
                             $total_count += 1;
@@ -727,12 +746,19 @@ class TwitterAPIController extends Controller
 
         $count = 1;
 
-        $account_limit = 5;
-        if ($user->subscription->plan->name == 'Premium') {
-            $account_limit = 10;
-        }
-        if ($user->subscription->plan->name == 'Enterprise') {
-            $account_limit = 15;
+        switch ($user->subscription->plan->name) {
+            case ('premiumLite'):
+                $account_limit = 15;
+                break;
+            case ('premiumBusiness'):
+                $account_limit = 20;
+                break;
+            case ('enterprise'):
+                $account_limit = 25;
+                break;
+            default:
+                $account_limit = 5;
+                break;
         }
 
         $sum = 0;
@@ -775,11 +801,19 @@ class TwitterAPIController extends Controller
         $count = 1;
 
         $account_limit = 5;
-        if ($user->subscription->plan->name == 'Premium') {
-            $account_limit = 10;
-        }
-        if ($user->subscription->plan->name == 'Enterprise') {
-            $account_limit = 15;
+        switch ($user->subscription->plan->name) {
+            case ('premiumLite'):
+                $account_limit = 15;
+                break;
+            case ('premiumBusiness'):
+                $account_limit = 20;
+                break;
+            case ('enterprise'):
+                $account_limit = 25;
+                break;
+            default:
+                $account_limit = 5;
+                break;
         }
         //Return all data with the details user profiles and account name
         foreach ($new_array as $key => $value) {
@@ -823,12 +857,20 @@ class TwitterAPIController extends Controller
         $reversed = array_unique(array_reverse($accounts));
 
         $count = 1;
-        $account_limit = 5;
-        if ($user->subscription->plan->name == 'Premium') {
-            $account_limit = 10;
-        }
-        if ($user->subscription->plan->name == 'Enterprise') {
-            $account_limit = 15;
+        
+        switch ($user->subscription->plan->name) {
+            case ('premiumLite'):
+                $account_limit = 15;
+                break;
+            case ('premiumBusiness'):
+                $account_limit = 20;
+                break;
+            case ('enterprise'):
+                $account_limit = 25;
+                break;
+            default:
+                $account_limit = 5;
+                break;
         }
 
         foreach ($reversed as $value) {
@@ -848,7 +890,6 @@ class TwitterAPIController extends Controller
         return array_slice($sorted, 0, 30); //Return only the first 30 of the result
     }
 
-
     function getHashtagHighImpactUsers($tweets, $user)
     {
 
@@ -856,10 +897,10 @@ class TwitterAPIController extends Controller
         $sorted = [];
 
         foreach ($tweets as $tweet) {
-            $accounts[] = $tweet->user->followers_count; //get all followers to sort occurence count
+            $accounts[] = $tweet->user->followers_count;
         }
 
-        asort($accounts); //sort according to values
+        asort($accounts);
         $_followers = [];
         $listed = [];
         foreach ($accounts as $key => $value) {
@@ -870,12 +911,20 @@ class TwitterAPIController extends Controller
         $reversed = array_reverse(array_unique($_followers));
 
         $count = 1;
-        $account_limit = 5;
-        if ($user->subscription->plan->name == 'Premium') {
-            $account_limit = 10;
-        }
-        if ($user->subscription->plan->name == 'Enterprise') {
-            $account_limit = 15;
+
+        switch ($user->subscription->plan->name) {
+            case ('premiumLite'):
+                $account_limit = 15;
+                break;
+            case ('premiumBusiness'):
+                $account_limit = 20;
+                break;
+            case ('enterprise'):
+                $account_limit = 25;
+                break;
+            default:
+                $account_limit = 5;
+                break;
         }
 
         foreach ($reversed as $value) {
@@ -894,10 +943,6 @@ class TwitterAPIController extends Controller
         return $sorted;
     }
 
-
-
-
-
     function getTweetsMedia($tweets, $type = 'profile')
     {
 
@@ -907,22 +952,13 @@ class TwitterAPIController extends Controller
 
         if ($total_tweets > 0) {
             foreach ($tweets as $tweet) {
-                // if($type == 'hashtag') {
-                //     if(isset($tweet->extended_tweet->entities->media)) {
-                //         $media_tweets[] = $tweet;
-                //     }
-                // } else {
                 if (isset($tweet->entities->media)) {
                     $media_tweets[] = $tweet;
                 }
-                // }
             }
         }
 
-
         $total_media_tweets = count($media_tweets);
-
-
 
         $text_tweets = $total_tweets - $total_media_tweets;
 
@@ -1018,7 +1054,7 @@ class TwitterAPIController extends Controller
         );
 
         $trends = $connection->get('trends/place', ['id' => '23424908']);
-        
+
         if (isset($trends->error)) {
             return response(['message' => 'Error fetching trends at the moment', 'status' => 'error']);
         }
