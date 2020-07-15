@@ -18,11 +18,11 @@ class ManagementsController extends Controller
     public function managementSignup()
     {
         $bookingType = request()->bookingType;
-        $plan = request()->plan;
+        $plan_id = request()->plan;
 
         return view('managements.signup')->with([
             'bookingType' => $bookingType,
-            'plan' => $plan,
+            'plan' => $plan_id,
         ]);
     }
 
@@ -46,6 +46,7 @@ class ManagementsController extends Controller
         $phone = request()->phone;
         $email = request()->email;
         $user_query = request()->user_query;
+        $influencers = request()->influencers;
         $brand_name = request()->brand_name;
         $brand_industry = request()->brand_industry;
         $campaign_objective = request()->campaign_objective;
@@ -105,6 +106,7 @@ class ManagementsController extends Controller
                 'position' => $position,
                 'phone' => $phone,
                 'email' => $email,
+                'influencers' => $influencers,
                 'user_query' => $user_query,
                 'brand_name' => $brand_name,
                 'brand_industry' => $brand_industry,

@@ -110,6 +110,9 @@
          ]
       },
       callback: function(response) {
+          // Send mail 
+          // Authenticate user
+          // Go to dashboard
           window.location = '/subscribe/confirm/'+ response.reference;
       },
     });

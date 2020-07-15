@@ -9,8 +9,11 @@
       <div class="container">
         <div class="row gap-y">
           <div class="col-md-6">
-            <h1 class="display-5">Choose the best plan for your business</h1>
-            <p class="lead-2 mt-6">The most fair pricing plans ever. Our prices are very easy to understand. There's not any extra or hidden fee. You just pay what is listed here.</p>
+            <h1 class="display-5">Choose the best twitter trending topic plan for your business</h1>
+            <p class="lead-2 mt-6">With our twitter trending topic, you have influencers talking about your campaign/brand,
+               saying the right things to help boost your campaign objective. we are very keen on the type of tweets that
+                goes out on every trend, ensuring they resonate with the brand.
+            </p>
           </div>
         </div>
       </div>
@@ -85,7 +88,7 @@
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Comprehensive Report</li>
                 </ul>
                 <p class="text-center py-3">
-                  <a class="btn btn-block btn-warning text-uppercase" href="{{ route('subscribe', ['plan' => 'enterprise'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
+                  <a class="btn btn-block btn-warning text-uppercase" href="{{ route('managements.signup', ['bookingType' => 'trends', 'plan' => 2])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
                   @if($user && $user->subscription && $user->subscription->plan->name != 'enterprise') 
                     Get Started  
                   @else
@@ -116,7 +119,7 @@
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Comprehensive Report</li>
                 </ul>
                 <p class="text-center py-3">
-                  <a class="btn btn-block btn-success text-uppercase" href="{{ route('subscribe', ['plan' => 'enterprise'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
+                  <a class="btn btn-block btn-success text-uppercase" href="{{ route('managements.signup', ['bookingType' => 'trends', 'plan' => 3])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
                   @if($user && $user->subscription && $user->subscription->plan->name != 'enterprise') 
                     Get Started  
                   @else
