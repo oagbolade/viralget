@@ -54,7 +54,7 @@
                   {{-- <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Unlimited Private Projects</li> --}}
                 </ul>
                 <p class="text-center py-3">
-                  <a class="btn btn-block btn-primary text-uppercase" href="{{ route('subscribe', ['plan' => 'enterprise'])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
+                  <a class="btn btn-block btn-primary text-uppercase" href="{{ route('managements.signup', ['bookingType' => 'trends', 'plan' => 1])}}" data-bind-href="pricing" data-monthly="#monthly" data-yearly="#yearly">
                   @if($user && $user->subscription && $user->subscription->plan->name != 'enterprise') 
                     Get Started 
                   @else

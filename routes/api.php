@@ -32,6 +32,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
     Route::get('/list/queryProfile', 'SearchController@profile');
 
     Route::get('/misc/categories', 'SearchController@getCategories');
+    Route::get('/misc/categories/filter', 'SearchController@getFilterCategories');
     Route::get('/misc/states', 'SearchController@getStates');
 
     Route::get('/report/hashtag/{id}', 'ShowDataController@showReportingHistory');

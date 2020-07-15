@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,800,800i,900" rel="stylesheet">
     <link href="{{ asset('static/assets/css/page.min.css') }}" rel="stylesheet">
     <link href="{{ asset('static/assets/css/style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" href="{{ asset('static/assets/img/favicon.png') }}">
@@ -33,6 +34,9 @@
     <script src="{{ asset('static/assets/js/page.min.js') }}"></script>
     <script src="{{ asset('static/assets/js/script.js') }}"></script>
     <!-- <script src="{{ asset('static/assets/js/particles.js') }} "></script> -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     @yield('scripts')
   </body>
 </html>

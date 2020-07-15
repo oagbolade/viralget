@@ -17,7 +17,6 @@ use Exception;
 class AuthController extends Controller
 {
     private $_connection;
-    private $_callback;
 
     function __construct()
     {
@@ -63,10 +62,10 @@ class AuthController extends Controller
 
         try {
             $user =  User::updateOrCreate(
-                ['twitter_id' => $get_user['sub']],
+                ['email' => $get_user['email']],
                 [
+                    'twitter_id' => $get_user['sub'],
                     'name' => $get_user['name'],
-                    'email' => $get_user['email'],
                     'password' => $token,
                     'avatar' => $avatar,
                     'token' => $token,
@@ -94,8 +93,9 @@ class AuthController extends Controller
     public function signup()
     {
         if (Auth()->user()->details) {
-            return redirect(route('campaigns.view'));
+            return redirect()->intended('campaigns');
         }
+
         return view('auth.signup');
     }
 
@@ -127,7 +127,6 @@ class AuthController extends Controller
             'address' => request()->address,
             'objective' => request()->objective,
         ]);
-
 
         return redirect()->intended(route('pricing'))->withSuccess('Profile successfully updated! You can now select a pricing plan to continue...');
     }
