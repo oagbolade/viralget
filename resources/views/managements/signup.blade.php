@@ -8,23 +8,23 @@
         <h5 class="mb-7 text-center">Kindly give us details about your campaign</h5>
         <p>All fields are required</p>
         @include('layouts.partials.status')
+        @if($errors->any())
           <div class="alert alert-danger" role="alert">
-             @if($errors->any())
-                <div class="error">{{ $errors->first('name') }}</div>
-                <div class="error">{{ $errors->first('agency_type') }}</div>
-                <div class="error">{{ $errors->first('bookingType') }}</div>
-                <div class="error">{{ $errors->first('position') }}</div>
-                <div class="error">{{ $errors->first('agency_type') }}</div>
-                <div class="error">{{ $errors->first('email') }}</div>
-                <div class="error">{{ $errors->first('phone') }}</div>
-                <div class="error">{{ $errors->first('user_query') }}</div>
-                <div class="error">{{ $errors->first('date') }}</div>
-                <div class="error">{{ $errors->first('brand_name') }}</div>
-                <div class="error">{{ $errors->first('brand_industry') }}</div>
-                <div class="error">{{ $errors->first('campaign_objective') }}</div>
-                <div class="error">{{ $errors->first('errors') }}</div>
-            @endif
+            <div class="error">{{ $errors->first('name') }}</div>
+            <div class="error">{{ $errors->first('agency_type') }}</div>
+            <div class="error">{{ $errors->first('bookingType') }}</div>
+            <div class="error">{{ $errors->first('position') }}</div>
+            <div class="error">{{ $errors->first('agency_type') }}</div>
+            <div class="error">{{ $errors->first('email') }}</div>
+            <div class="error">{{ $errors->first('phone') }}</div>
+            <div class="error">{{ $errors->first('user_query') }}</div>
+            <div class="error">{{ $errors->first('date') }}</div>
+            <div class="error">{{ $errors->first('brand_name') }}</div>
+            <div class="error">{{ $errors->first('brand_industry') }}</div>
+            <div class="error">{{ $errors->first('campaign_objective') }}</div>
+            <div class="error">{{ $errors->first('errors') }}</div>
           </div>
+        @endif
 
         <form class="input-border" method="post" action="{{ route('signup.post.managements', ['bookingType' => $bookingType, 'plan' => request()->plan]) }}">
         @csrf
@@ -67,12 +67,21 @@
                 <input name="phone" type="text" class="form-control form-control-lg" placeholder="Phone Number">
                 </div>
               </div>
+              
+              <div class="form-row">
+                @if($bookingType === 'influencer_management')
+                  <div class="form-group col-md-6">
+                    <label>Influencers Username</label>
+                  <input name="influencers" type="text" class="form-control form-control-lg" placeholder="'@'username" multiple>
+                  </div>
+                @endif
 
-              <div class="form-group">
-                <label>{{($bookingType == 'trends') ? 'Keyword/Hashtag' : '@'.'username' }}</label>
-                <input name="user_query" type="text" class="form-control form-control-lg" placeholder="{{($bookingType == 'trends') ? 'Keyword/Hashtag' : '@'.'username' }}">
+                <div class="form-group col-md-6">
+                  <label>Keyword/Hashtag</label>
+                <input name="user_query" type="text" class="form-control form-control-lg" placeholder="Keyword/Hashtag">
+                </div>
               </div>
-
+              
               @if($bookingType === 'trends')
                 <div class="alert alert-primary" role="alert">
                   Note: You can only select a date 48hrs onwards from when you are filling this form 

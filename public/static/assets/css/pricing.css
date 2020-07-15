@@ -58,6 +58,10 @@
   transition: all 0.2s;
 }
 
+.space-hack{
+  padding-bottom: 70px;
+}
+
 /* Hover Effects on Card */
 
 @media (min-width: 992px) {
