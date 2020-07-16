@@ -24,7 +24,6 @@ Route::get('/faqs', 'HomeController@faqs')->name('faqs');
 Route::get('/terms', 'HomeController@terms')->name('terms');
 Route::get('/privacy-policy', 'HomeController@privacy')->name('privacy');
 Route::get('/search', 'SearchController@search')->name('search');
-Route::get('signup/{bookingType}', 'ManagementsController@managementSignup')->name('managements.signup');
 
 
 Route::middleware('guest')->group(function () {
@@ -40,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('complete-signup', 'AuthController@signup')->name('login.signup');
     Route::post('complete-signup', 'AuthController@postSignup')->name('login.signup.post');
     
+    Route::get('signup/{bookingType}', 'ManagementsController@managementSignup')->name('managements.signup');
     Route::post('complete-signup/{bookingType}', 'ManagementsController@submitDetails')->name('signup.post.managements');
     Route::get('checkout/{bookingType}/{plan}', 'ManagementsController@checkout')->name('management.checkout');
 

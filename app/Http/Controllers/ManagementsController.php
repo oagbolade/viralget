@@ -71,32 +71,6 @@ class ManagementsController extends Controller
                 ->withInput();
         }
 
-        $user = User::where(['email' => $email])->first();
-
-        if ($user && $user->user_type !== $bookingType) {
-            $message = 'User with this email already exists, please signup with a different email';
-
-            return redirect()->back()
-                ->withErrors(['errors' => $message])
-                ->withInput();
-        }
-
-        try {
-            User::updateOrCreate(
-                ['email' => $email],
-                [
-                    'name' => $name,
-                    'password' => Hash::make($email),
-                    'user_type' => $bookingType,
-                ]
-            );
-        } catch (Exception $e) {
-            return response([
-                'status' => 500,
-                'message' => $e->getMessage(),
-            ], 500);
-        }
-
         try {
             UserDetailsManagement::create([
                 'booking_type' => $bookingType,
