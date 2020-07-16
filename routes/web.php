@@ -25,14 +25,12 @@ Route::get('/terms', 'HomeController@terms')->name('terms');
 Route::get('/privacy-policy', 'HomeController@privacy')->name('privacy');
 Route::get('/search', 'SearchController@search')->name('search');
 Route::get('signup/{bookingType}', 'ManagementsController@managementSignup')->name('managements.signup');
-Route::post('complete-signup/{bookingType}', 'ManagementsController@submitDetails')->name('signup.post.managements');
-Route::get('checkout/{bookingType}/{plan}', 'ManagementsController@checkout')->name('management.checkout');
 
 
 Route::middleware('guest')->group(function () {
-
+    
     Route::get('login', 'AuthController@login')->name('login');
-
+    
     Route::get('login/google', 'AuthController@redirectToProvider')->name('login.google');
     Route::get('login/google/callback', 'AuthController@handleProviderCallback');
 });
@@ -41,10 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/search-page', 'SearchController@index')->name('search-page');
     Route::get('complete-signup', 'AuthController@signup')->name('login.signup');
     Route::post('complete-signup', 'AuthController@postSignup')->name('login.signup.post');
-
-
-    // Removed dashboard because we want to make the user experience better
-    // Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    
+    Route::post('complete-signup/{bookingType}', 'ManagementsController@submitDetails')->name('signup.post.managements');
+    Route::get('checkout/{bookingType}/{plan}', 'ManagementsController@checkout')->name('management.checkout');
 
     Route::get('/history/reports', 'DashboardController@reporting')->name('reporting');
     Route::get('/history/profiles', 'DashboardController@profiling')->name('profiling');
