@@ -73,10 +73,11 @@
                 <ul class="fa-ul">
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>14 Days Campaign</li>
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>15 Influencers</li>
-                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Up to 500 Tweets</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Up to 1000 Tweets</li>
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Advanced Stats</li>
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Generate PDF Report</li>
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Comprehensive Report</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>24/7 Support</li>
                   <br>
                 </ul>
                 <p class="text-center py-3">
@@ -104,7 +105,7 @@
                 <ul class="fa-ul">
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>30 Days Campaign</li>
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>25 Influencers</li>
-                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Up to 1000 Tweets</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Up to 2000 Tweets</li>
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Advanced Stats</li>
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Generate PDF Report</li>
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Comprehensive Report</li>
