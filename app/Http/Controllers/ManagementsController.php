@@ -28,9 +28,12 @@ class ManagementsController extends Controller
 
     public function submitDetails()
     {
-        $bookingType = request()->bookingType;
+        $user = Auth()->user();
 
-        if(!isset($bookingType)){
+        $bookingType = request()->bookingType;
+        $plan_id = request()->plan;
+
+        if(!isset($bookingType) || !isset($plan_id)){
             $message = 'Cannot get price data please go to the pricing page';
 
             return redirect()->back()
@@ -38,7 +41,14 @@ class ManagementsController extends Controller
                 ->withInput();
         }
 
-        $plan = request()->plan;
+        $plan = TrendsPlan::where(['id' => $plan_id])->first();
+
+        if ($bookingType === 'influencer_management') {
+            $plan = InfluencerManagementPlan::where(['id' => $plan_id])->first();
+        }
+
+        $split = $plan->no_of_influencers;
+
         $agency_type = request()->agency_type;
         $name = request()->name;
         $company_name = request()->company_name;
@@ -51,6 +61,7 @@ class ManagementsController extends Controller
         $brand_industry = request()->brand_industry;
         $campaign_objective = request()->campaign_objective;
         $date = request()->date;
+        $time = request()->time;
 
         $validator = Validator::make(request()->all(), [
             'agency_type' => 'required',
@@ -62,7 +73,6 @@ class ManagementsController extends Controller
             'brand_name' => 'required',
             'brand_industry' => 'required',
             'campaign_objective' => 'required',
-            'date' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -71,14 +81,10 @@ class ManagementsController extends Controller
                 ->withInput();
         }
 
-        $user = User::where(['email' => $email])->first();
+        $preparedInfluencers = null;
 
-        if ($user && $user->user_type !== $bookingType) {
-            $message = 'User with this email already exists, please signup with a different email';
-
-            return redirect()->back()
-                ->withErrors(['errors' => $message])
-                ->withInput();
+        if(isset($influencers)){
+            $preparedInfluencers = $this->prepareInfluencers($influencers, $split);
         }
 
         try {
@@ -87,7 +93,7 @@ class ManagementsController extends Controller
                 [
                     'name' => $name,
                     'password' => Hash::make($email),
-                    'user_type' => $bookingType,
+                    'company_email' => $email,
                 ]
             );
         } catch (Exception $e) {
@@ -96,9 +102,10 @@ class ManagementsController extends Controller
                 'message' => $e->getMessage(),
             ], 500);
         }
-
+        
         try {
             UserDetailsManagement::create([
+                'user_id' => $user->id,
                 'booking_type' => $bookingType,
                 'name' => $name,
                 'agency_type' => $agency_type,
@@ -106,12 +113,14 @@ class ManagementsController extends Controller
                 'position' => $position,
                 'phone' => $phone,
                 'email' => $email,
-                'influencers' => $influencers,
+                'influencers' => $preparedInfluencers,
                 'user_query' => $user_query,
                 'brand_name' => $brand_name,
                 'brand_industry' => $brand_industry,
                 'campaign_objective' => $campaign_objective,
+                'expired' => 0,
                 'date' => $date,
+                'time' => $time,
             ]);
         } catch (Exception $e) {
             return response([
@@ -120,8 +129,18 @@ class ManagementsController extends Controller
             ], 500);
         }
 
-        return redirect()->intended(route('management.checkout', ['plan' => $plan, 'bookingType' => $bookingType, 'email' => $email]))
+        return redirect()->intended(route('management.checkout', ['plan' => $plan_id, 'bookingType' => $bookingType, 'email' => $email]))
             ->withSuccess('We have received your details, kindly proceed to make payments');
+    }
+
+    public function prepareInfluencers($influencers = [], $split){
+        $temp_influencers = [];
+        $word_to_replace = ["@", " "];
+        foreach($influencers as $influencer){
+            $temp_influencers[] = str_replace($word_to_replace, "", $influencer);
+        }
+
+        return json_encode(array_splice($temp_influencers, 0, $split));
     }
 
     public function checkout()

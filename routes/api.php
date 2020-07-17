@@ -42,6 +42,9 @@ Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
     Route::get('/campaign/view', 'CampaignController@view');
     Route::delete('/campaign/delete/{campaignId}', 'CampaignController@delete');
 
+    Route::get('/campaign/management/view', 'CampaignController@managementView');
+    Route::get('/campaign/trends/view', 'CampaignController@trendsView');
+
     Route::post('/report/keyword/download', 'ReportPDFController@downloadKeywordReport');
     Route::post('/report/profiling/download', 'ReportPDFController@downloadProfilingReport');
 });

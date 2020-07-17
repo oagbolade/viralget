@@ -66,10 +66,6 @@
           </button>
         </h5>
       </div>
-      <ProfilingHistory
-        :usage="subscription"
-        :profilingCampaigns="profilingCampaigns"
-      />
     </div>
 
     <!-- <div class="row" v-show="!loading && !displayError"> -->
@@ -81,11 +77,7 @@
           online are saying about your brand
         </h6>
       </div>
-      <div @click="goToCreateCampaign" class="col-md-6">
-        <button type="button" class="pull-right btn btn-round btn-warning">
-          <label><i class="fa fa-plus"></i></label> New Report
-        </button>
-      </div>
+      
       <section
         class="table-section bg-white col-md-12"
         style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
@@ -182,14 +174,13 @@ import axios from "axios";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import VuePaginate from "vue-paginate";
-import ProfilingHistory from "./../profiling/ProfiingHistory";
 import Swal from "sweetalert2";
 
 import moment from "moment";
 
 export default {
   props: ["id"],
-  components: { Loading, ProfilingHistory },
+  components: { Loading },
   data() {
     return {
       collapsed: false,
@@ -201,16 +192,16 @@ export default {
         },
         {
           href: "/campaigns",
-          title: "Dashboard",
+          title: "Profiling & Reports",
           icon: "fa fa-dashboard"
         },
         {
-          href: "/influencer-management",
+          href: "/campaigns/influencermanagement",
           title: "Influencer Management",
           icon: "fa fa-user"
         },
         {
-          href: "/trends",
+          href: "/campaigns/trends",
           title: "Trends",
           icon: "fa fa-line-chart"
         }
