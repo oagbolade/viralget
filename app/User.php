@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\UserDetailsManagement;
 
 class User extends Authenticatable
 {
@@ -36,6 +37,10 @@ class User extends Authenticatable
 
     public function details() {
         return $this->belongsTo(UserDetails::class, 'id', 'user_id');
+    }
+    
+    public function managementDetails() {
+        return $this->belongsTo(UserDetailsManagement::class, 'id', 'user_id');
     }
 
 }
