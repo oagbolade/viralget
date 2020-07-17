@@ -106,6 +106,7 @@ class ManagementsController extends Controller
         try {
             UserDetailsManagement::create([
                 'user_id' => $user->id,
+                'plan_id' => $plan_id,
                 'booking_type' => $bookingType,
                 'name' => $name,
                 'agency_type' => $agency_type,
