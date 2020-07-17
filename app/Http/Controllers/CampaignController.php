@@ -15,6 +15,30 @@ class CampaignController extends Controller
         }
         return view('campaigns.view');
     }
+    
+    function trends()
+    {
+        $user = Auth()->user();
+        $isUserSubscribed = $user->managementDetails->where('booking_type', 'trends')->first();
+
+        if(!$isUserSubscribed){
+            return redirect()->to('/pricing/trends')->withErrors(['error' => 'Please select a plan to continue']);
+        }
+        
+        return view('campaigns.trends');
+    }
+    
+    function influencerManagement()
+    {
+        $user = Auth()->user();
+        $isUserSubscribed = $user->managementDetails->where('booking_type', 'influencer_management')->first();
+
+        if (!$isUserSubscribed) {
+            return redirect()->to('/pricing/management')->withErrors(['error' => 'Please select a plan to continue']);
+        }
+
+        return view('campaigns.management');
+    }
    
     function create()
     {
