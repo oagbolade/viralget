@@ -254,12 +254,12 @@ export default {
 
         if (response.data.status === 200) {
           this.campaigns = response.data.data;
-          console.log(response);
-          this.planName = response.data.subscription[0].plan.name;
-          this.planColor = response.data.subscription[0].plan.color;
-          this.profilingCampaigns = response.data.profiling_data;
-          this.subscription = response.data.subscription[0];
+        //   this.planName = response.data.subscription[0].plan.name;
+        //   this.planColor = response.data.subscription[0].plan.color;
+        //   this.profilingCampaigns = response.data.profiling_data;
+        //   this.subscription = response.data.subscription[0];
           this.loading = false;
+          this.displayError = false;
         }
 
         if (response.data.status === 204) {
