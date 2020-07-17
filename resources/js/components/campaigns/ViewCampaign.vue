@@ -201,16 +201,16 @@ export default {
         },
         {
           href: "/campaigns",
-          title: "Dashboard",
+          title: "Profiling & Reports",
           icon: "fa fa-dashboard"
         },
         {
-          href: "/influencer-management",
+          href: "/campaigns/influencermanagement",
           title: "Influencer Management",
           icon: "fa fa-user"
         },
         {
-          href: "/trends",
+          href: "/campaigns/trends",
           title: "Trends",
           icon: "fa fa-line-chart"
         }

@@ -77,7 +77,7 @@
           online are saying about your brand
         </h6>
       </div>
-      
+
       <section
         class="table-section bg-white col-md-12"
         style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
@@ -86,9 +86,13 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
+              <th>Hashtag/Keyword</th>
+              <th>Trend Date</th>
+              <th>Time</th>
+              <th>Campaign Objective</th>
+              <th>Plan</th>
+              <th>Expired</th>
               <th>Created</th>
-              <th>Description</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -106,31 +110,19 @@
             >
               <th scope="row">{{ index + 1 }}</th>
               <td>
-                <strong>{{ makeCamelCase(campaign.query) }}</strong>
-                <div>
-                  <small
-                    v-if="formatCampaignDates(campaign.dates).from !== null"
-                  >
-                    From: {{ formatCampaignDates(campaign.dates).from }}<br />
-                    To: {{ formatCampaignDates(campaign.dates).to }}
-                  </small>
-                </div>
+                <strong>{{ makeCamelCase(campaign.user_query) }}</strong>
               </td>
-              <td>{{ dateFormatter(campaign.created_at) }}</td>
+              <td>{{ campaign.date }}</td>
+              <td>{{ campaign.time }}</td>
               <td>
-                {{
-                  campaign.description !== null ? campaign.description : "N/A"
-                }}
+                {{ campaign.campaign_objective }}
               </td>
+              <td>{{ campaign.trends_plan.name }}</td>
+              <td>{{ campaign.expired === 0 ? "No" : "Yes" }}</td>
+              <td>{{ campaign.created_at }}</td>
               <td>
                 <button
-                  @click="
-                    viewCampaign(
-                      campaign.query,
-                      formatCampaignDates(campaign.dates).from,
-                      formatCampaignDates(campaign.dates).to
-                    )
-                  "
+                  @click="viewCampaign(campaign.query)"
                   type="button"
                   class="btn btn-label btn-success"
                 >
@@ -250,7 +242,7 @@ export default {
       window.location.href = "/pricing";
     },
     async getUserCampaigns() {
-      const URL = `/api/v1/campaign/view`;
+      const URL = `/api/v1/campaign/trends/view`;
 
       try {
         let response = await axios.get(URL, {
@@ -262,11 +254,12 @@ export default {
 
         if (response.data.status === 200) {
           this.campaigns = response.data.data;
-          this.planName = response.data.subscription[0].plan.name;
-          this.planColor = response.data.subscription[0].plan.color;
-          this.profilingCampaigns = response.data.profiling_data;
-          this.subscription = response.data.subscription[0];
+        //   this.planName = response.data.subscription[0].plan.name;
+        //   this.planColor = response.data.subscription[0].plan.color;
+        //   this.profilingCampaigns = response.data.profiling_data;
+        //   this.subscription = response.data.subscription[0];
           this.loading = false;
+          this.displayError = false;
         }
 
         if (response.data.status === 204) {
@@ -280,21 +273,18 @@ export default {
     },
 
     viewCampaign(keyword, fromDate, toDate) {
-      if (fromDate === null) {
-        fromDate = "";
-      }
-
-      if (toDate === null) {
-        toDate = "";
-      }
-
-      const formattedFromDate = this.formatCampaignDatesForTwitter(fromDate);
-      const formattedToDate = this.formatCampaignDatesForTwitter(toDate);
-
-      const URL = `/search/profiles?q=${encodeURIComponent(keyword)}&fromDate=${
-        formattedFromDate !== undefined ? formattedFromDate : ""
-      }&toDate=${formattedToDate !== undefined ? formattedToDate : ""}`;
-      window.location.href = URL;
+      //   if (fromDate === null) {
+      //     fromDate = "";
+      //   }
+      //   if (toDate === null) {
+      //     toDate = "";
+      //   }
+      //   const formattedFromDate = this.formatCampaignDatesForTwitter(fromDate);
+      //   const formattedToDate = this.formatCampaignDatesForTwitter(toDate);
+      //   const URL = `/search/profiles?q=${encodeURIComponent(keyword)}&fromDate=${
+      //     formattedFromDate !== undefined ? formattedFromDate : ""
+      //   }&toDate=${formattedToDate !== undefined ? formattedToDate : ""}`;
+      //   window.location.href = URL;
     },
 
     editCampaign(campaignId) {
