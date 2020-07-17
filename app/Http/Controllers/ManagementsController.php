@@ -28,6 +28,8 @@ class ManagementsController extends Controller
 
     public function submitDetails()
     {
+        $user = Auth()->user();
+
         $bookingType = request()->bookingType;
         $plan_id = request()->plan;
 
@@ -103,6 +105,7 @@ class ManagementsController extends Controller
         
         try {
             UserDetailsManagement::create([
+                'user_id' => $user->id,
                 'booking_type' => $bookingType,
                 'name' => $name,
                 'agency_type' => $agency_type,
@@ -115,6 +118,7 @@ class ManagementsController extends Controller
                 'brand_name' => $brand_name,
                 'brand_industry' => $brand_industry,
                 'campaign_objective' => $campaign_objective,
+                'expired' => 0,
                 'date' => $date,
                 'time' => $time,
             ]);
