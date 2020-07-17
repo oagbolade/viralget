@@ -15,7 +15,10 @@ import VueSweetalert2 from "vue-sweetalert2";
 
 // If you don't need the styles, do not connect
 import "sweetalert2/dist/sweetalert2.min.css";
+import VueSidebarMenu from "vue-sidebar-menu";
+import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 
+Vue.use(VueSidebarMenu);
 Vue.use(VueSweetalert2);
 Vue.use(VueToastr);
 
