@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\ProfilingHistory;
 use App\ReportingHistory;
+use App\UserDetailsManagement;
 
 use App\Subscription;
 
@@ -25,6 +26,56 @@ class CampaignController extends Controller
         return $user;
     }
 
+    function managementView()
+    {
+        $user = $this->authenticate();
+
+        if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
+
+        $campaign_details = new UserDetailsManagement;
+        
+        try {
+            $campaign_details = $campaign_details::where(['user_id' => $user->id, 'booking_type' => 'influencer_management'])->orderBy('id', 'desc')->get();
+
+            return response([
+                "status" => 200,
+                "message" => "successfull",
+                "data" => $campaign_details,
+            ], 200);
+
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to get management campaigns " . $e,
+            ], 500);
+        }
+    }
+    
+    function trendsView()
+    {
+        $user = $this->authenticate();
+
+        if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
+
+        $campaign_details = new UserDetailsManagement;
+        
+        try {
+            $campaign_details = $campaign_details::where(['user_id' => $user->id, 'booking_type' => 'trends'])->orderBy('id', 'desc')->get();
+
+            return response([
+                "status" => 200,
+                "message" => "successfull",
+                "data" => $campaign_details,
+            ], 200);
+
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to get trends campaigns " . $e,
+            ], 500);
+        }
+    }
+    
     function view()
     {
         $user = $this->authenticate();
