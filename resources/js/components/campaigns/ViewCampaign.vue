@@ -1,5 +1,12 @@
 <template>
   <div class="container">
+    <!-- <sidebar-menu theme="white-theme" :menu="menu"/> -->
+    <sidebar-menu
+      :collapsed="collapsed"
+      :menu="menu"
+      theme="white-theme"
+      :show-one-child="true"
+    ></sidebar-menu>
     <loading
       :active.sync="loading"
       :is-full-page="true"
@@ -185,6 +192,29 @@ export default {
   components: { Loading, ProfilingHistory },
   data() {
     return {
+      collapsed: false,
+      menu: [
+        {
+          header: true,
+          title: "Main Navigation",
+          hiddenOnCollapse: true
+        },
+        {
+          href: "/campaigns",
+          title: "Dashboard",
+          icon: "fa fa-dashboard"
+        },
+        {
+          href: "/influencer-management",
+          title: "Influencer Management",
+          icon: "fa fa-user"
+        },
+        {
+          href: "/trends",
+          title: "Trends",
+          icon: "fa fa-line-chart"
+        }
+      ],
       paginate: ["campaigns"],
       planSchema: {
         starter: "Starter",
@@ -360,6 +390,12 @@ th {
 
 .plan-dynamic {
   color: white;
+}
+
+/* //Sidebar CSS */
+.vsm--item,
+.v-sidebar-menu {
+  padding-top: 50px;
 }
 </style>
 
