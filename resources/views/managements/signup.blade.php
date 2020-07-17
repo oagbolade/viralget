@@ -3,7 +3,7 @@
 @section('content')
 <!-- Main Content -->
 <main class="main-content">
-
+  <link href="{{ asset('static/assets/css/select2.min.css') }}" rel="stylesheet" />
   <div class="bg-white rounded shadow-7 w-600 mw-100 p-6">
     <h5 class="mb-7 text-center">Kindly give us details about your campaign</h5>
     <p>All fields are required</p>
@@ -32,12 +32,11 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label>Name</label>
-          <input type="text" name="name" class="form-control form-control-lg" placeholder="e.g John Doe">
+          <input type="text" name="name" class="form-control form-control-lg">
         </div>
         <div class="form-group col-md-6">
           <label>Company's Name</label>
-          <input type="text" name="company_name" class="form-control form-control-lg"
-            placeholder="e.g Viralget Limited">
+          <input type="text" name="company_name" class="form-control form-control-lg">
         </div>
       </div>
 
@@ -52,33 +51,34 @@
         </div>
         <div class="form-group col-md-6">
           <label>Position</label>
-          <input type="text" name="position" class="form-control form-control-lg"
-            placeholder="Your position at the company/agency">
+          <input type="text" name="position" class="form-control form-control-lg">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group col-md-6">
           <label>Email</label>
-          <input name="email" class="form-control form-control-lg" placeholder="email">
+          <input name="email" class="form-control form-control-lg">
         </div>
         <div class="form-group col-md-6">
           <label>Phone Number</label>
-          <input name="phone" type="text" class="form-control form-control-lg" placeholder="Phone Number">
+          <input name="phone" type="text" class="form-control form-control-lg">
         </div>
       </div>
 
       <div class="form-row">
         @if($bookingType === 'influencer_management')
         <div class="form-group col-md-6">
-          <label>Influencers Username</label>
-          <input name="influencers" type="text" class="form-control form-control-lg" placeholder="'@'username" multiple>
+          <label>Influencer Username</label>
+          <select class="form-control js-tokenizer form-control-lg" name="influencers[]" multiple="multiple">
+            <option value="">@username Seperate with a space or comma</option>
+          </select>
         </div>
         @endif
 
         <div class="form-group col-md-6">
-          <label>Keyword/Hashtag</label>
-          <input name="user_query" type="text" class="form-control form-control-lg" placeholder="Keyword/Hashtag">
+          <label>Keyword/Hashtag to trend</label>
+          <input name="user_query" type="text" class="form-control">
         </div>
       </div>
 
@@ -86,34 +86,41 @@
       <div class="alert alert-primary" role="alert">
         Note: You can only select a date 48hrs onwards from when you are filling this form
       </div>
-      <div class="form-group text-center">
+      <div class="form-row">
         <h6>When do you want your keyword/hashtag to trend?</h6>
-        <input type="text" name="date" class="form-control date text-center" />
+        <div class="form-group col-md-6">
+          <input type="text" name="date" class="form-control date form-control-lg text-center" />
+        </div>
+        <div class="form-group col-md-6">
+          <select class="form-control form-control-lg" name="time">
+            <option value="">Select Time</option>
+            <option value="morning">Morning 8:00-11:59am</option>
+            <option value="afternoon">Afternoon 12:00-3:59pm</option>
+            <option value="evening">Evening 4:00-10:00pm</option>
+          </select>
+        </div>
       </div>
       @endif
 
       <div class="form-row">
         <div class="form-group col-md-6">
           <label>Brand Name</label>
-          <input name="brand_name" type="text" class="form-control form-control-lg" placeholder="Brand Name">
+          <input name="brand_name" type="text" class="form-control form-control-lg">
         </div>
         <div class="form-group col-md-6">
           <label>Brand Industry</label>
-          <input name="brand_industry" type="text" class="form-control form-control-lg" placeholder="Brand Industry">
+          <input name="brand_industry" type="text" class="form-control form-control-lg">
         </div>
       </div>
 
       <div class="form-group">
         <label>Campaign Objective</label>
-        <textarea name="campaign_objective" class="form-control form-control-lg"
-          placeholder="Campaign Objective"></textarea>
+        <textarea name="campaign_objective" class="form-control form-control-lg"></textarea>
       </div>
 
-      <button class="btn btn-block btn-xl btn-success">Complete Signup</button>
+      <button class="btn btn-block btn-xl btn-success">Submit</button>
     </form>
-
     <hr class="w-30">
-
   </div>
 
 
@@ -131,6 +138,15 @@
       minYear: moment().year(),
     }, function(start, end, label) {
       console.log('start', start.format('YYYY-MM-DD'))
+    });
+  });
+
+  $(document).ready(function() {
+    $(".js-tokenizer").select2({
+    tags: true,
+    // maximumSelectionLength: 2,
+    placeholder: 'Seperate with a space or comma',
+    tokenSeparators: [',', ' ']
     });
   });
   </script>
