@@ -15,7 +15,7 @@
           </div>
           
           <div id="app">
-              <view-campaign></view-campaign>
+              <trends-campaign></trends-campaign>
           </div>
         </div>
       </div>

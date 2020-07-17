@@ -57,6 +57,14 @@ Vue.component(
 
 // For campaign pages
 Vue.component(
+    "trends-campaign",
+    require("./components/campaigns/management/Trends.vue").default
+);
+Vue.component(
+    "influencer-management-campaign",
+    require("./components/campaigns/management/InfluencerManagement.vue").default
+);
+Vue.component(
     "view-campaign",
     require("./components/campaigns/ViewCampaign.vue").default
 );

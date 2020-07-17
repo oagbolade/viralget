@@ -15,7 +15,7 @@
           </div>
           
           <div id="app">
-              <view-campaign></view-campaign>
+              <influencer-management-campaign></influencer-management-campaign>
           </div>
         </div>
       </div>
