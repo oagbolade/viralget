@@ -59,6 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/profile/{id}', 'ProfilingController@index')->name('reporting.profile');
     
     Route::get('/campaigns', 'CampaignController@index')->name('campaigns.view');
+    Route::get('/campaigns/trends', 'CampaignController@trends')->name('campaigns.trends');
+    Route::get('/campaigns/influencermanagement', 'CampaignController@influencerManagement')->name('campaigns.influencermanagement');
     Route::get('/create-campaign', 'CampaignController@create')->name('campaigns.create');
 
     Route::get('/logout', 'AuthController@logout')->name('logout');
