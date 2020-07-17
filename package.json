@@ -36,6 +36,7 @@
         "vue-loading-overlay": "^3.3.2",
         "vue-moment": "^4.0.0",
         "vue-paginate": "^3.6.0",
+        "vue-sidebar-menu": "^4.6.1",
         "vue-toastr": "^2.1.2",
         "vuejs-datatables-sui": "0.0.3",
         "vuetify-daterange-picker": "^3.1.6"
