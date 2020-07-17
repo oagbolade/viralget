@@ -29,8 +29,9 @@ class ManagementsController extends Controller
     public function submitDetails()
     {
         $bookingType = request()->bookingType;
+        $plan_id = request()->plan;
 
-        if(!isset($bookingType)){
+        if(!isset($bookingType) || !isset($plan_id)){
             $message = 'Cannot get price data please go to the pricing page';
 
             return redirect()->back()
@@ -38,7 +39,14 @@ class ManagementsController extends Controller
                 ->withInput();
         }
 
-        $plan = request()->plan;
+        $plan = TrendsPlan::where(['id' => $plan_id])->first();
+
+        if ($bookingType === 'influencer_management') {
+            $plan = InfluencerManagementPlan::where(['id' => $plan_id])->first();
+        }
+
+        $split = $plan->no_of_influencers;
+
         $agency_type = request()->agency_type;
         $name = request()->name;
         $company_name = request()->company_name;
@@ -51,6 +59,7 @@ class ManagementsController extends Controller
         $brand_industry = request()->brand_industry;
         $campaign_objective = request()->campaign_objective;
         $date = request()->date;
+        $time = request()->time;
 
         $validator = Validator::make(request()->all(), [
             'agency_type' => 'required',
@@ -62,7 +71,6 @@ class ManagementsController extends Controller
             'brand_name' => 'required',
             'brand_industry' => 'required',
             'campaign_objective' => 'required',
-            'date' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -71,6 +79,28 @@ class ManagementsController extends Controller
                 ->withInput();
         }
 
+        $preparedInfluencers = null;
+
+        if(isset($influencers)){
+            $preparedInfluencers = $this->prepareInfluencers($influencers, $split);
+        }
+
+        try {
+            User::updateOrCreate(
+                ['email' => $email],
+                [
+                    'name' => $name,
+                    'password' => Hash::make($email),
+                    'company_email' => $email,
+                ]
+            );
+        } catch (Exception $e) {
+            return response([
+                'status' => 500,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+        
         try {
             UserDetailsManagement::create([
                 'booking_type' => $bookingType,
@@ -80,12 +110,13 @@ class ManagementsController extends Controller
                 'position' => $position,
                 'phone' => $phone,
                 'email' => $email,
-                'influencers' => $influencers,
+                'influencers' => $preparedInfluencers,
                 'user_query' => $user_query,
                 'brand_name' => $brand_name,
                 'brand_industry' => $brand_industry,
                 'campaign_objective' => $campaign_objective,
                 'date' => $date,
+                'time' => $time,
             ]);
         } catch (Exception $e) {
             return response([
@@ -94,8 +125,18 @@ class ManagementsController extends Controller
             ], 500);
         }
 
-        return redirect()->intended(route('management.checkout', ['plan' => $plan, 'bookingType' => $bookingType, 'email' => $email]))
+        return redirect()->intended(route('management.checkout', ['plan' => $plan_id, 'bookingType' => $bookingType, 'email' => $email]))
             ->withSuccess('We have received your details, kindly proceed to make payments');
+    }
+
+    public function prepareInfluencers($influencers = [], $split){
+        $temp_influencers = [];
+        $word_to_replace = ["@", " "];
+        foreach($influencers as $influencer){
+            $temp_influencers[] = str_replace($word_to_replace, "", $influencer);
+        }
+
+        return json_encode(array_splice($temp_influencers, 0, $split));
     }
 
     public function checkout()
