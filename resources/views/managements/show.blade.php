@@ -6,7 +6,7 @@
       <div class="section bg-gray">
         <div class="container" style="margin-top: 100px; min-height: 100vh">
             @if(isset($is_hashtag))
-            <management-hashtag-loading q='{{ urlencode($q) }}' plan='{{ $plan }}' from='{{ request()->fromDate }}' to='{{ request()->toDate }}'/>
+            <management-hashtag-loading q='{{ urlencode($q) }}'/>
             @else
             <management-profile-loading q='{{ $q }}' reload='{{(isset($reload)) ? $reload : false}}'/>
             @endif
