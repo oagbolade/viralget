@@ -13,8 +13,8 @@ use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 use App\User;
 use App\Subscription;
-use App\Plans;
-use App\ReportingHistory;
+use App\TrendsPlan;
+use App\ManagementReportingHistory;
 use App\ProfilingHistory;
 use App\Account;
 
@@ -25,6 +25,7 @@ class ManagementTwitterAPIController extends Controller
 {
     //
     private $connection;
+    private $_temporary_parameters;
 
     function connect()
     {
@@ -50,42 +51,6 @@ class ManagementTwitterAPIController extends Controller
         $user = $this->authenticate();
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
-
-        if (request()->has('plan')) {
-            $package = Plans::where('name', request()->plan)->first();
-
-            if (!$package) {
-                return response(['status' => 'error', 'message' => 'Plan does not exist']);
-            }
-
-            switch ($user->subscription->plan->name) {
-                case 'enterprise':
-                    $proceed = (in_array($package->name, ['starter', 'basic', 'premiumLite', 'premiumBusiness', 'enterprise'])) ? true : false;
-                    break;
-                case 'premiumBusiness':
-                    $proceed = (in_array($package->name, ['starter', 'basic', 'premiumLite', 'premiumBusiness'])) ? true : false;
-                    break;
-                case 'premiumLite':
-                    $proceed = (in_array($package->name, ['starter', 'basic', 'premiumLite'])) ? true : false;
-                    break;
-                case 'basic':
-                    $proceed = (in_array($package->name, ['starter', 'basic'])) ? true : false;
-                    break;
-                case 'starter':
-                    $proceed = (in_array($package->name, ['starter'])) ? true : false;
-                    break;
-                default:
-                    $proceed = false;
-                    break;
-            }
-
-            if (!$proceed) {
-                return response(['status' => 'error', 'message' => 'Sorry, you do not have access to the specified plan']);
-            }
-        } else {
-            $package = $user->subscription->plan;
-        }
-
         $decode_query = urldecode(request()->q);
         $query = $decode_query;
 
@@ -93,14 +58,17 @@ class ManagementTwitterAPIController extends Controller
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
 
+        // Check if expired
+        // Check if paid
+
 
         // If already cached, no need to proceed
         // COMING SOON
-        // $report = ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
+        // $report = ManagementReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
 
         // if($report && $report->report_data !== null) {
         //     try {
-        //         ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->update([
+        //         ManagementReportingHistory::where(['user_id' => $user->id, 'query' => $query])->update([
         //             'user_id' => $user->id,
         //             'query' => $query,
         //             'report_data' => json_encode($data),
@@ -114,22 +82,7 @@ class ManagementTwitterAPIController extends Controller
         //     }
         // }
 
-        $no_of_tweets = 100;
-
-        if ($package->name == 'basic' || $package->name == 'premiumBusiness' || $package->name == 'premiumLite' || $package->name == 'enterprise') {
-            $premiumData = new PremiumTwitterAPIController;
-            $tweets = $premiumData->getHashtagTweets($package, $query, $request);
-        } else {
-            $this->connect();
-
-            $tweets_result = $this->connection->get("search/tweets", ['q' => $query, 'count' => $no_of_tweets]);
-
-            if (!$tweets_result || isset($tweets_result->error)) {
-                return response(['status' => 'error', 'message' => 'Error fetching data'], 403);
-            } else {
-                $tweets = $tweets_result->statuses;
-            }
-        }
+        $tweets = $this->getManagementHashtagTweets($query);
 
         $data = [];
 
@@ -139,10 +92,13 @@ class ManagementTwitterAPIController extends Controller
             return response(['message' => 'cannot retrieve tweets'], 500);
         }
 
+        $plan_id = request()->plan_id;
+        $plan = TrendsPlan::where(['id' => $plan_id])->first();
+
         $contribution = $this->getUniqueContributors($tweets);
         $reach = $this->getHashtagReach($tweets, $contribution);
-        $data['date_to'] = $request->has('toDate') ? \Carbon\Carbon::parse($request->toDate)->toDayDateTimeString() : \Carbon\Carbon::now()->toDayDateTimeString();
-        $data['date_from'] = $request->has('fromDate') ? \Carbon\Carbon::parse($request->fromDate)->toDayDateTimeString() :  \Carbon\Carbon::now()->subDays($package->days)->toDayDateTimeString();
+        // $data['date_to'] = $request->has('toDate') ? \Carbon\Carbon::parse($request->toDate)->toDayDateTimeString() : \Carbon\Carbon::now()->toDayDateTimeString();
+        // $data['date_from'] = $request->has('fromDate') ? \Carbon\Carbon::parse($request->fromDate)->toDayDateTimeString() :  \Carbon\Carbon::now()->subDays($package->days)->toDayDateTimeString();
         $data['retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
         $data['replies'] =  $this->getHashtagTweetsData($tweets, $user, 'replies');
         $data['high_likes'] =  $this->getHashtagTweetsData($tweets, $user, 'likes', true);
@@ -170,38 +126,21 @@ class ManagementTwitterAPIController extends Controller
 
         $data['potential_impact'] =  $impressions['sum'] * 0.60; //$reach['impact'];
         $data['media_meta_data'] = $this->getTweetsMedia($tweets, 'hashtag');
-        $data['report_type'] = $package->days;
-        $data['report_type_name'] = $package->name;
+        $data['report_type'] = $plan->name;
+        $data['report_type_days'] = '24';
         $data['engagement_rate'] = $this->getHashtagEngagementData($tweets, $reach['reach']);
 
-        $report = ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
+        $removeSymbol = str_replace('#', '', strip_tags(request()->q));
+
+        $report = ManagementReportingHistory::where(['user_id' => $user->id, 'query' => $removeSymbol])->first();
 
         if (!$report) {
-            Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
-            $removeSymbol = str_replace('#', '', strip_tags(request()->q));
-
             try {
-                $report = ReportingHistory::create([
+                $report = ManagementReportingHistory::create([
                     'user_id' => $user->id,
                     'query' => $removeSymbol,
                     'report_data' => json_encode($data),
-                    'package' => $package->id
-                ]);
-            } catch (Exception $e) {
-                return response([
-                    "status" => 500,
-                    "message" => "failed to get report " . $e->getMessage(),
-                ], 500);
-            }
-        } elseif ($report && $report->report_data === null) {
-            Subscription::where('user_id', $user->id)->decrement('reporting_balance', 1);
-
-            try {
-                ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->update([
-                    'user_id' => $user->id,
-                    'query' => $query,
-                    'report_data' => json_encode($data),
-                    'package' => $package->id
+                    'package' => $plan->id
                 ]);
             } catch (Exception $e) {
                 return response([
@@ -212,6 +151,65 @@ class ManagementTwitterAPIController extends Controller
         }
 
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+    }
+
+    function getManagementHashtagTweets($query)
+    {
+        $tweet_cap = 2000;
+
+        $now = date("YmdH00");
+
+        $toDate = $now;
+
+        $page = 0;
+        $next = "";
+        $searching = true;
+        $tweets_array = [];
+
+        $count = 500;
+
+        while ($searching) {
+            if ($page === 0) {
+                $this->_temporary_parameters = [
+                    "query" => $query,
+                    "maxResults" => $count,
+                    'toDate' => $toDate,
+                ];
+            } else {
+                $this->_temporary_parameters = [
+                    "query" => $query,
+                    "maxResults" => $count,
+                    'toDate' => $toDate,
+                    "next" => $next
+                ];
+            }
+
+            if (count($tweets_array) >= $tweet_cap) {
+                $searching = false;
+                return $tweets_array;
+            }
+
+            try {
+                $this->connect();
+                $tweets_result = $this->connection->get("tweets/search/" . env('TWITTER_API_TYPE') . "/" . env('TWITTER__APP_DEVELOPMENT_NAME'), $this->_temporary_parameters);
+            } catch (\Exception $e) {
+                // return error response
+                return $e->getMessage();
+            }
+
+            if (isset($tweets_result->results)) {
+                foreach ($tweets_result->results as $status) {
+                    $tweets_array[] = $status;
+                }
+            }
+
+            if (isset($tweets_result->next)) {
+                $next = $tweets_result->next;
+            } else {
+                $searching = false;
+                return $tweets_array;
+            }
+        }
     }
 
     function getMostRecentTweets($tweets)
