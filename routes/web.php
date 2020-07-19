@@ -58,6 +58,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/subscribe/management/confirm/{email}/{user_plan_id}/{reference}', 'ManagementSubscriptionController@verifySubscription')->name('subscribe.confirm');
 
+    Route::get('management/hashtag', 'ManagementSearchController@hashtag')->name('profiles');
+
     Route::get('/search/profiles', 'SearchController@list')->name('profiles');
     Route::get('/search/profiles/{category}', 'SearchController@list')->name('profiles.category');
     Route::get('/search/profile/{handle}', 'SearchController@showProfile')->name('profile.show');
