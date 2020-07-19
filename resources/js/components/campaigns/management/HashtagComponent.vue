@@ -33,10 +33,10 @@
 
     <div class="row" v-show="!loading && !displayError">
       <h6 id="block-2" class="block-number">
-        {{ report_type_days }} days report for:
+        {{ report_type_days }} hours report for:
         <strong>{{ decodeURIComponent(handle) }}</strong>
         <span v-show="report_type_days !== '30'">
-          <a href="/pricing"> | Upgrade Plan</a></span
+          <a href="/pricing/trends"> | Upgrade Plan</a></span
         >
       </h6>
 
@@ -926,8 +926,8 @@ import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import VuePaginate from "vue-paginate";
 import moment from "moment";
-import LineChart from "../charts/LineChart.js";
-import PieChart from "../charts/PieChart.js";
+import LineChart from "../../../charts/LineChart.js";
+import PieChart from "../../../charts/PieChart.js";
 
 import {
   Datepicker,
@@ -1100,7 +1100,7 @@ export default {
     moment,
     getData: function() {
       this.loading = true;
-      fetch(`/api/v1/report/hashtag/${this.id}`, {
+      fetch(`/api/v1/management/report/hashtag/${this.id}`, {
         headers: {
           Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
         }
