@@ -82,7 +82,7 @@ class ManagementSubscriptionController extends Controller
             $update = $user_details->update(['paid' => 'true']);
 
             $viralget_email = 'info@viralget.com.ng';
-            Mail::to($email)->send(new PlanMailables($get_user_details));
+            Mail::to($viralget_email)->send(new PlanMailables($get_user_details));
 
             // Store transactions records
             Transactions::create([
