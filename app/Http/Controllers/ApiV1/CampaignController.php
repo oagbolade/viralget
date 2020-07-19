@@ -35,7 +35,7 @@ class CampaignController extends Controller
         $campaign_details = new UserDetailsManagement;
         
         try {
-            $campaign_details = UserDetailsManagement::with('trendsPlan')->where(['user_id' => $user->id, 'booking_type' => 'influencer_management'])->get();
+            $campaign_details = UserDetailsManagement::with('trendsPlan')->where(['user_id' => $user->id, 'booking_type' => 'influencer_management'])->orderBy('id', 'desc')->get();
 
             return response([
                 "status" => 200,
@@ -60,7 +60,7 @@ class CampaignController extends Controller
         $campaign_details = new UserDetailsManagement;
         
         try {
-            $campaign_details = UserDetailsManagement::with('trendsPlan')->where(['user_id' => $user->id, 'booking_type' => 'trends'])->get();
+            $campaign_details = UserDetailsManagement::with('trendsPlan')->where(['user_id' => $user->id, 'booking_type' => 'trends'])->orderBy('id', 'desc')->get();
             
             return response([
                 "status" => 200,
