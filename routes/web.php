@@ -55,8 +55,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/subscribe/{plan}', 'SubscriptionController@subscribe')->name('subscribe');
     Route::get('/subscribe/confirm/{reference}', 'SubscriptionController@verifySubscription')->name('subscribe.confirm');
-    Route::get('/subscribe/management/confirm/{reference}', 'ManagementSubscriptionController@verifySubscription')->name('subscribe.confirm');
 
+    Route::get('/subscribe/management/confirm/{email}/{user_plan_id}/{reference}', 'ManagementSubscriptionController@verifySubscription')->name('subscribe.confirm');
 
     Route::get('/search/profiles', 'SearchController@list')->name('profiles');
     Route::get('/search/profiles/{category}', 'SearchController@list')->name('profiles.category');
