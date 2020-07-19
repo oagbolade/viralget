@@ -104,7 +104,7 @@ class ManagementsController extends Controller
         }
         
         try {
-            UserDetailsManagement::create([
+            $create_user = UserDetailsManagement::create([
                 'user_id' => $user->id,
                 'plan_id' => $plan_id,
                 'booking_type' => $bookingType,
@@ -119,7 +119,7 @@ class ManagementsController extends Controller
                 'brand_name' => $brand_name,
                 'brand_industry' => $brand_industry,
                 'campaign_objective' => $campaign_objective,
-                'expired' => 0,
+                'expired' => 'false',
                 'date' => $date,
                 'time' => $time,
             ]);
@@ -130,7 +130,7 @@ class ManagementsController extends Controller
             ], 500);
         }
 
-        return redirect()->intended(route('management.checkout', ['plan' => $plan_id, 'bookingType' => $bookingType, 'email' => $email]))
+        return redirect()->intended(route('management.checkout', ['plan' => $plan_id, 'bookingType' => $bookingType, 'email' => $email, 'user_plan_id' => $create_user->id,]))
             ->withSuccess('We have received your details, kindly proceed to make payments');
     }
 
