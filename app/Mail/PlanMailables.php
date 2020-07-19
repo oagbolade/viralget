@@ -28,7 +28,9 @@ class PlanMailables extends Mailable
      */
     public function build()
     {
-        return $this->from('example@example.com')
-            ->view('emails.orders.shipped');
+        $from = 'info@viralget.com.ng';
+
+        return $this->from($from)
+            ->view('emails.managementRequest');
     }
 }
