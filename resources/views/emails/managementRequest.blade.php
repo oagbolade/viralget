@@ -3,7 +3,7 @@
 @section('content')
 <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">
     <h3>Hello Viralget Rep,</h3>
-    <b>{{ $user_details->company_name }}</b> just paid for the {{ $plan_name }} plan. Kindly find more information about their plan below.
+    <b>{{ $user_details->company_name }}</b> just paid for the <b>{{ $plan_name }}</b> plan. Kindly find more information about their plan below.
 </p>
 <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">
     <h3>Name:</h3> {{ $user_details->name }} <br>
