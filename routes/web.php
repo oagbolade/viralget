@@ -35,6 +35,13 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Email Testing
+    Route::get('mailable', function () {
+        $data = [];
+
+        return new App\Mail\PlanMailables($data);
+    });
+
     Route::get('/search-page', 'SearchController@index')->name('search-page');
     Route::get('complete-signup', 'AuthController@signup')->name('login.signup');
     Route::post('complete-signup', 'AuthController@postSignup')->name('login.signup.post');
@@ -49,11 +56,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/subscribe/{plan}', 'SubscriptionController@subscribe')->name('subscribe');
     Route::get('/subscribe/confirm/{reference}', 'SubscriptionController@verifySubscription')->name('subscribe.confirm');
 
+    Route::get('/subscribe/management/confirm/{email}/{user_plan_id}/{reference}', 'ManagementSubscriptionController@verifySubscription')->name('subscribe.confirm');
+
+    Route::get('/management/hashtag', 'ManagementSearchController@hashtag')->name('profiles');
 
     Route::get('/search/profiles', 'SearchController@list')->name('profiles');
     Route::get('/search/profiles/{category}', 'SearchController@list')->name('profiles.category');
     Route::get('/search/profile/{handle}', 'SearchController@showProfile')->name('profile.show');
     Route::get('/hashtag/{q}', 'SearchController@showHashtag')->name('search.show');
+
+    Route::get('/management/report/hashtag/{id}', 'ManagementReportingController@index')->name('reporting.hashtag');
 
     Route::get('/report/hashtag/{id}', 'ReportingController@index')->name('reporting.hashtag');
     Route::get('/report/profile/{id}', 'ProfilingController@index')->name('reporting.profile');
