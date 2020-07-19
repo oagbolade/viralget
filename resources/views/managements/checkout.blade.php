@@ -119,7 +119,7 @@
          ]
       },
       callback: function(response) {
-          window.location = '/subscribe/management/confirm/'+ response.reference;
+          window.location = '/subscribe/management/confirm/{{ $email }}/{{ request()->user_plan_id }}/'+ response.reference;
       },
     });
     handler.openIframe();
