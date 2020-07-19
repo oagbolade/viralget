@@ -54,18 +54,6 @@
           <label><i class="fa fa-thumbs-up"></i></label> Run another trend
         </button>
       </div>
-
-      <div class="col-md-6 align-self-center">
-        <h5 class="float-right">
-          <button
-            type="button"
-            :class="planColor"
-            class="plan-dynamic btn btn-round"
-          >
-            {{ planSchema[planName] }}
-          </button>
-        </h5>
-      </div>
     </div>
 
     <!-- <div class="row" v-show="!loading && !displayError"> -->
@@ -91,6 +79,7 @@
               <th>Time</th>
               <th>Campaign Objective</th>
               <th>Plan</th>
+              <th>Paid</th>
               <th>Expired</th>
               <th>Created</th>
               <th>Actions</th>
@@ -118,11 +107,31 @@
                 {{ campaign.campaign_objective }}
               </td>
               <td>{{ campaign.trends_plan.name }}</td>
-              <td>{{ campaign.expired === 0 ? "No" : "Yes" }}</td>
+              <td>
+                <button
+                  class="btn"
+                  :class="[
+                    campaign.paid === 'false' ? 'btn-danger' : 'btn-success'
+                  ]"
+                >
+                  {{ campaign.paid === "false" ? "No" : "Yes" }}
+                </button>
+                <div v-if="campaign.paid === 'false'">
+                  <u @click="goToCheckout(campaign.booking_type, campaign.plan_id, campaign.email, campaign.id)"><a href="#">complete payment</a></u>
+                </div>
+              </td>
+              <td>{{ campaign.expired === "false" ? "No" : "Yes" }}</td>
               <td>{{ campaign.created_at }}</td>
               <td>
                 <button
-                  @click="viewCampaign(campaign.query)"
+                  @click="
+                    viewCampaign(
+                      campaign.user_query,
+                      campaign.trends_plan.id,
+                      campaign.expired,
+                      campaign.paid
+                    )
+                  "
                   type="button"
                   class="btn btn-label btn-success"
                 >
@@ -220,6 +229,10 @@ export default {
     this.getUserCampaigns();
   },
   methods: {
+    goToCheckout(booking_type, plan_id, email, user_plan_id){
+      const URL = `/checkout/${booking_type}/${plan_id}?email=${email}&user_plan_id=${user_plan_id}`
+      window.location = URL;
+    },
     formatCampaignDates(dates) {
       const jsonData = JSON.parse(dates);
       return {
@@ -267,9 +280,31 @@ export default {
       }
     },
 
-    viewCampaign(keyword) {
-        const URL = `management/hashtag?q=${encodeURIComponent(keyword)}&fromDate=&toDate=`;
-        window.location.href = URL;
+    viewCampaign(keyword, plan_id, expired, paid) {
+      if (expired === "true") {
+        Swal.fire(
+          "Oops!",
+          "It seems your trend plan has expired. Kindly checkout our pricing page" +
+            " and select a plan that best suits your needs",
+          "question"
+        );
+        return;
+      }
+
+      if (paid === "false") {
+        Swal.fire(
+          "Oops!",
+          "It seems you haven't completed your payment," +
+            " please click on the COMPLETE PAYMENT button to complete your payment",
+          "question"
+        );
+        return;
+      }
+
+      const URL = `/management/hashtag?q=${encodeURIComponent(
+        keyword
+      )}&fromDate=&toDate=&plan_id=${plan_id}`;
+      window.location.href = URL;
     },
 
     editCampaign(campaignId) {
