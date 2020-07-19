@@ -65,6 +65,25 @@ Vue.component(
     require("./components/campaigns/management/InfluencerManagement.vue").default
 );
 Vue.component(
+    "management-hashtag-loading",
+    require("./components/campaigns/management/HashtagLoadingComponent.vue").default
+);
+Vue.component(
+    "management-profile-loading",
+    require("./components/campaigns/management/ProfileLoadingComponent.vue")
+        .default
+);
+Vue.component(
+    "management-hashtag",
+    require("./components/campaigns/management/HashtagComponent.vue")
+        .default
+);
+Vue.component(
+    "management-profile",
+    require("./components/campaigns/management/ProfileComponent.vue")
+        .default
+);
+Vue.component(
     "view-campaign",
     require("./components/campaigns/ViewCampaign.vue").default
 );
