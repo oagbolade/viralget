@@ -37,8 +37,9 @@ class ManagementSearchController extends Controller
 
     function hashtag(){
         $q = str_replace('%23', '', strip_tags(request()->q));
+        $plan_id = request()->plan_id;
 
-        return view('managements.show')->with('q', $q)->with('is_hashtag', true)->withQ($q);        
+        return view('managements.show')->with(['q' => $q, 'plan_id' => $plan_id])->with('is_hashtag', true)->withQ($q);        
     }
 
 
