@@ -35,6 +35,13 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Email Testing
+    Route::get('mailable', function () {
+        $data = [];
+
+        return new App\Mail\PlanMailables($data);
+    });
+
     Route::get('/search-page', 'SearchController@index')->name('search-page');
     Route::get('complete-signup', 'AuthController@signup')->name('login.signup');
     Route::post('complete-signup', 'AuthController@postSignup')->name('login.signup.post');
