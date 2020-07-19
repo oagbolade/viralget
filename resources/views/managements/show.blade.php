@@ -6,7 +6,7 @@
       <div class="section bg-gray">
         <div class="container" style="margin-top: 100px; min-height: 100vh">
             @if(isset($is_hashtag))
-            <management-hashtag-loading q='{{ urlencode($q) }}'/>
+            <management-hashtag-loading q='{{ urlencode($q) }}' plan_id='{{ $plan_id }}'/>
             @else
             <management-profile-loading q='{{ $q }}' reload='{{(isset($reload)) ? $reload : false}}'/>
             @endif
