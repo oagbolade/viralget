@@ -51,7 +51,7 @@
           type="button"
           class="btn btn-round btn-primary"
         >
-          <label><i class="fa fa-thumbs-up"></i></label> UPGRADE PLAN
+          <label><i class="fa fa-thumbs-up"></i></label> Run another trend
         </button>
       </div>
 
@@ -239,7 +239,7 @@ export default {
       window.location.href = "/create-campaign";
     },
     goToSubscription() {
-      window.location.href = "/pricing";
+      window.location.href = "/pricing/trends";
     },
     async getUserCampaigns() {
       const URL = `/api/v1/campaign/trends/view`;
@@ -254,12 +254,7 @@ export default {
 
         if (response.data.status === 200) {
           this.campaigns = response.data.data;
-        //   this.planName = response.data.subscription[0].plan.name;
-        //   this.planColor = response.data.subscription[0].plan.color;
-        //   this.profilingCampaigns = response.data.profiling_data;
-        //   this.subscription = response.data.subscription[0];
           this.loading = false;
-          this.displayError = false;
         }
 
         if (response.data.status === 204) {
@@ -272,19 +267,9 @@ export default {
       }
     },
 
-    viewCampaign(keyword, fromDate, toDate) {
-      //   if (fromDate === null) {
-      //     fromDate = "";
-      //   }
-      //   if (toDate === null) {
-      //     toDate = "";
-      //   }
-      //   const formattedFromDate = this.formatCampaignDatesForTwitter(fromDate);
-      //   const formattedToDate = this.formatCampaignDatesForTwitter(toDate);
-      //   const URL = `/search/profiles?q=${encodeURIComponent(keyword)}&fromDate=${
-      //     formattedFromDate !== undefined ? formattedFromDate : ""
-      //   }&toDate=${formattedToDate !== undefined ? formattedToDate : ""}`;
-      //   window.location.href = URL;
+    viewCampaign(keyword) {
+        const URL = `management/hashtag?q=${encodeURIComponent(keyword)}&fromDate=&toDate=`;
+        window.location.href = URL;
     },
 
     editCampaign(campaignId) {
@@ -292,6 +277,7 @@ export default {
     },
 
     async confirmedDelete(campaignId) {
+      return;
       this.loading = true;
       const URL = `/api/v1/campaign/delete/${campaignId}`;
 
@@ -316,6 +302,7 @@ export default {
     },
 
     async deleteCampaign(campaignId) {
+      return;
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
