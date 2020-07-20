@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\TrendsPlan;
 use App\InfluencerManagementPlan;
 
-class PlanMailables extends Mailable
+class ManagementInvoiceMailables extends Mailable
 {
     use Queueable, SerializesModels;
     public $user_details;
@@ -33,10 +33,10 @@ class PlanMailables extends Mailable
     public function build()
     {
         $from = 'info@viralget.com.ng';
-        $subject = 'You have a new request';
+        $subject = 'Invoice from Viralget';
 
         return $this->from($from)
-            ->view('emails.managementRequest')
+            ->view('emails.managementInvoice')
             ->subject($subject)
             ->with([
                 'plan_name' => $this->getPlanDetails()['plan_name'],

@@ -12,6 +12,7 @@ use App\UserDetailsManagement;
 use App\Transactions;
 
 use App\Mail\PlanMailables;
+use App\Mail\ManagementInvoiceMailables;
 
 class ManagementSubscriptionController extends Controller
 {
@@ -68,7 +69,6 @@ class ManagementSubscriptionController extends Controller
 
             $response = $e->getResponse();
             $responseBodyAsString = json_decode($response->getBody());
-            // dd($responseBodyAsString);
             return redirect(route('pricing'))->withError('An error occured with your payment data. Please try again.');
         }
 
@@ -79,10 +79,15 @@ class ManagementSubscriptionController extends Controller
 
             $user_details = UserDetailsManagement::where(['id' => $user_plan_id, 'email' => $email]);
             $get_user_details = $user_details->first();
+
+            // Verify that plan from URL is legit by comparing with database
+
             $update = $user_details->update(['paid' => 'true']);
 
             $viralget_email = 'info@viralget.com.ng';
             Mail::to($viralget_email)->send(new PlanMailables($get_user_details));
+            Mail::to($email)->send(new ManagementInvoiceMailables($get_user_details));
+            // Send invoice
 
             // Store transactions records
             Transactions::create([

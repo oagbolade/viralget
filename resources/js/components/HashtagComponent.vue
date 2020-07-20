@@ -928,6 +928,7 @@ import VuePaginate from "vue-paginate";
 import moment from "moment";
 import LineChart from "../charts/LineChart.js";
 import PieChart from "../charts/PieChart.js";
+import Swal from "sweetalert2";
 
 import {
   Datepicker,
@@ -1148,7 +1149,6 @@ export default {
             this.text_percentage = `width: ${data.media_meta_data.text.percentage}%`;
             this.media_percentage = `width: ${data.media_meta_data.media.percentage}%`;
             this.report_type = res.data.report_type;
-            console.log(this.report_type);
 
             this.report_type_days = res.data.report_type_days;
             this.handle = res.data.handle;
@@ -1174,6 +1174,15 @@ export default {
         });
     },
     goTo() {
+      if (this.report_type === "starter" || this.report_type === "basic") {
+        Swal.fire(
+          "Sorry!",
+          "This feature is not available for your current subscription plan, please upgrade your subscription plan",
+          "question"
+        );
+        return;
+      }
+
       window.location = `/hashtag/${encodeURI(this.handle)}?fromDate=${
         this.selected_date_from
       }&toDate=${this.selected_date_to}`;
@@ -1245,8 +1254,8 @@ export default {
   margin: 10px;
 }
 
-.high-tweets{
-    height: 250px;
+.high-tweets {
+  height: 250px;
 }
 
 /* a:not([href]):not([tabindex]){

@@ -51,7 +51,8 @@
           type="button"
           class="btn btn-round btn-primary"
         >
-          <label><i class="fa fa-thumbs-up"></i></label> UPGRADE PLAN
+          <label><i class="fa fa-thumbs-up"></i></label> PROFILE MORE
+          INFLUENCERS
         </button>
       </div>
 
@@ -68,95 +69,127 @@
       </div>
     </div>
 
-    <!-- <div class="row" v-show="!loading && !displayError"> -->
-    <div class="row">
-      <div class="col-md-6">
-        <h3 id="block-2">Influencer Management</h3>
-        <h6 id="block-2">
-          Monitor hastag campaigns, generate reports and listen to what people
-          online are saying about your brand
-        </h6>
-      </div>
+    <div class="row" v-show="!loading && !displayError">
+      <div class="row">
+        <div class="col-md-6">
+          <h3 id="block-2">Influencer Management</h3>
+          <h6 id="block-2">
+            Monitor hastag campaigns, generate reports and listen to what people
+            online are saying about your brand
+          </h6>
+        </div>
 
-      <section
-        class="table-section bg-white col-md-12"
-        style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
-      >
-        <table class="table table-hover responsive">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Hashtag/Keyword</th>
-              <th>Trend Date</th>
-              <th>Time</th>
-              <th>Campaign Objective</th>
-              <th>Plan</th>
-              <th>Expired</th>
-              <th>Created</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+        <section
+          class="table-section bg-white col-md-12"
+          style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
+        >
+          <table class="table table-hover responsive">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Hashtag/Keyword</th>
+                <th>Influencers</th>
+                <th>Campaign Objective</th>
+                <th>Plan</th>
+                <th>Paid</th>
+                <th>Expired</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
 
-          <paginate
-            v-if="campaigns.length !== 0"
-            name="campaigns"
-            :list="campaigns"
-            :per="10"
-            tag="tbody"
-          >
-            <tr
-              v-for="(campaign, index) in paginated('campaigns')"
-              :key="index"
+            <paginate
+              v-if="campaigns.length !== 0"
+              name="campaigns"
+              :list="campaigns"
+              :per="10"
+              tag="tbody"
             >
-              <th scope="row">{{ index + 1 }}</th>
-              <td>
-                <strong>{{ makeCamelCase(campaign.user_query) }}</strong>
-              </td>
-              <td>{{ campaign.date }}</td>
-              <td>{{ campaign.time }}</td>
-              <td>
-                {{ campaign.campaign_objective }}
-              </td>
-              <td>{{ campaign.trends_plan.name }}</td>
-              <td>{{ campaign.expired === 0 ? "No" : "Yes" }}</td>
-              <td>{{ campaign.created_at }}</td>
-              <td>
-                <button
-                  @click="viewCampaign(campaign.query)"
-                  type="button"
-                  class="btn btn-label btn-success"
-                >
-                  <label><i class="fa fa-book"></i></label> View
-                </button>
-                <button
-                  @click="deleteCampaign(campaign.id)"
-                  type="button"
-                  class="btn btn-label btn-danger"
-                >
-                  <label><i class="fa fa-trash"></i></label> Delete
-                </button>
-              </td>
-            </tr>
-          </paginate>
+              <tr
+                v-for="(campaign, index) in paginated('campaigns')"
+                :key="index"
+              >
+                <th scope="row">{{ index + 1 }}</th>
+                <td>
+                  <strong>{{ makeCamelCase(campaign.user_query) }}</strong>
+                </td>
+                <td>
+                  <div
+                    v-for="(influencers, index) in JSON.parse(
+                      campaign.influencers
+                    )"
+                    :key="index"
+                  >
+                    <div>@{{ influencers }}</div>
+                  </div>
+                </td>
+                <td>
+                  {{ campaign.campaign_objective }}
+                </td>
+                <td>{{ campaign.influencer_management_plan.name }}</td>
+                <td>
+                  <button
+                    class="btn"
+                    :class="[
+                      campaign.paid === 'false' ? 'btn-danger' : 'btn-success'
+                    ]"
+                  >
+                    {{ campaign.paid === "false" ? "No" : "Yes" }}
+                  </button>
+                  <div v-if="campaign.paid === 'false'">
+                    <u
+                      @click="
+                        goToCheckout(
+                          campaign.booking_type,
+                          campaign.plan_id,
+                          campaign.email,
+                          campaign.id
+                        )
+                      "
+                      ><a href="#">complete payment</a></u
+                    >
+                  </div>
+                </td>
+                <td>{{ campaign.expired === "false" ? "No" : "Yes" }}</td>
+                <td>{{ campaign.created_at }}</td>
+                <td>
+                  <button
+                    @click="viewCampaign(campaign.user_query, campaign.influencer_management_plan.id, campaign.expired, campaign.paid)"
+                    type="button"
+                    class="btn btn-label btn-success"
+                  >
+                    <label><i class="fa fa-book"></i></label> View
+                  </button>
+                  <button
+                    @click="deleteCampaign(campaign.id)"
+                    type="button"
+                    class="btn btn-label btn-danger"
+                  >
+                    <label><i class="fa fa-trash"></i></label> Delete
+                  </button>
+                </td>
+              </tr>
+            </paginate>
 
-          <tbody v-else>
-            <td colspan="4"><h5>You have not created any reports</h5></td>
-          </tbody>
-        </table>
-        <paginate-links
-          :show-step-links="true"
-          :step-links="{
-            next: 'NEXT',
-            prev: 'PREV'
-          }"
-          for="campaigns"
-          :classes="{
-            ul: 'pagination',
-            'ul.paginate-links > li.number': 'page-item',
-            'ul.paginate-links > li.number > a': 'page-link'
-          }"
-        ></paginate-links>
-      </section>
+            <tbody v-else>
+              <td colspan="4"><h5>You have not created any reports</h5></td>
+            </tbody>
+          </table>
+          <paginate-links
+            :show-step-links="true"
+            :step-links="{
+              next: 'NEXT',
+              prev: 'PREV'
+            }"
+            for="campaigns"
+            :classes="{
+              ul: 'pagination',
+              'ul.paginate-links > li.number': 'page-item',
+              'ul.paginate-links > li.number > a': 'page-link'
+            }"
+          ></paginate-links>
+        </section>
+      </div>
     </div>
   </div>
 </template>
@@ -220,6 +253,10 @@ export default {
     this.getUserCampaigns();
   },
   methods: {
+    goToCheckout(booking_type, plan_id, email, user_plan_id) {
+      const URL = `/checkout/${booking_type}/${plan_id}?email=${email}&user_plan_id=${user_plan_id}`;
+      window.location = URL;
+    },
     formatCampaignDates(dates) {
       const jsonData = JSON.parse(dates);
       return {
@@ -242,7 +279,7 @@ export default {
       window.location.href = "/pricing";
     },
     async getUserCampaigns() {
-      const URL = `/api/v1/campaign/trends/view`;
+      const URL = `/api/v1/campaign/management/view`;
 
       try {
         let response = await axios.get(URL, {
@@ -254,12 +291,7 @@ export default {
 
         if (response.data.status === 200) {
           this.campaigns = response.data.data;
-        //   this.planName = response.data.subscription[0].plan.name;
-        //   this.planColor = response.data.subscription[0].plan.color;
-        //   this.profilingCampaigns = response.data.profiling_data;
-        //   this.subscription = response.data.subscription[0];
           this.loading = false;
-          this.displayError = false;
         }
 
         if (response.data.status === 204) {
@@ -272,19 +304,31 @@ export default {
       }
     },
 
-    viewCampaign(keyword, fromDate, toDate) {
-      //   if (fromDate === null) {
-      //     fromDate = "";
-      //   }
-      //   if (toDate === null) {
-      //     toDate = "";
-      //   }
-      //   const formattedFromDate = this.formatCampaignDatesForTwitter(fromDate);
-      //   const formattedToDate = this.formatCampaignDatesForTwitter(toDate);
-      //   const URL = `/search/profiles?q=${encodeURIComponent(keyword)}&fromDate=${
-      //     formattedFromDate !== undefined ? formattedFromDate : ""
-      //   }&toDate=${formattedToDate !== undefined ? formattedToDate : ""}`;
-      //   window.location.href = URL;
+    viewCampaign(keyword, plan_id, expired, paid) {
+      if (expired === "true") {
+        Swal.fire(
+          "Oops!",
+          "It seems your trend plan has expired. Kindly checkout our pricing page" +
+            " and select a plan that best suits your needs",
+          "question"
+        );
+        return;
+      }
+
+      if (paid === "false") {
+        Swal.fire(
+          "Oops!",
+          "It seems you haven't completed your payment," +
+            " please click on the COMPLETE PAYMENT button to complete your payment",
+          "question"
+        );
+        return;
+      }
+
+      const URL = `/management/hashtag?q=${encodeURIComponent(
+        keyword
+      )}&fromDate=&toDate=&plan_id=${plan_id}`;
+      window.location.href = URL;
     },
 
     editCampaign(campaignId) {
