@@ -29,6 +29,10 @@ Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
     Route::get('/management/profile', 'ManagementTwitterAPIController@getAllProfileData');
     Route::get('/management/hashtag', 'ManagementTwitterAPIController@getHashtagTweets');
 
+    // Download invoice
+    Route::get('/management/invoice/{name}/{company_name}/{campaign_objective}/{booking_type}/{user_query}/{plan_name}/{amount}', 'ManagementInvoiceController@show');
+
+
     Route::get('/trends', 'TwitterAPIController@trending');
     Route::get('/list', 'SearchController@list');
     Route::get('/list/filter', 'SearchPageController@list');
