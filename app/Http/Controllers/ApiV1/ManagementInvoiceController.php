@@ -3,6 +3,10 @@ namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
 
+ini_set("memory_limit", -1);
+
+set_time_limit(0);
+
 use LaravelDaily\Invoices\Invoice;
 use LaravelDaily\Invoices\Classes\Party;
 use LaravelDaily\Invoices\Classes\InvoiceItem;
