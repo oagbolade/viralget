@@ -33,9 +33,12 @@ class PlanMailables extends Mailable
     public function build()
     {
         $from = 'info@viralget.com.ng';
+        $subject = 'You have a new request';
 
         return $this->from($from)
-            ->view('emails.managementRequest')->with([
+            ->view('emails.managementRequest')
+            ->subject($subject)
+            ->with([
                 'plan_name' => $this->getPlanDetails()['plan_name'],
                 'amount' => $this->getPlanDetails()['amount'],
             ]);

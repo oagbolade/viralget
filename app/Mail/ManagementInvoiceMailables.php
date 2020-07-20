@@ -33,9 +33,12 @@ class ManagementInvoiceMailables extends Mailable
     public function build()
     {
         $from = 'info@viralget.com.ng';
+        $subject = 'Invoice from Viralget';
 
         return $this->from($from)
-            ->view('emails.managementInvoice')->with([
+            ->view('emails.managementInvoice')
+            ->subject($subject)
+            ->with([
                 'plan_name' => $this->getPlanDetails()['plan_name'],
                 'amount' => $this->getPlanDetails()['amount'],
             ]);
