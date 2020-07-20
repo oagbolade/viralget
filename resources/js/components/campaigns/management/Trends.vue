@@ -59,7 +59,7 @@
     <!-- <div class="row" v-show="!loading && !displayError"> -->
     <div class="row">
       <div class="col-md-6">
-        <h3 id="block-2">Reports</h3>
+        <h3 id="block-2">Trends</h3>
         <h6 id="block-2">
           Monitor hastag campaigns, generate reports and listen to what people
           online are saying about your brand
