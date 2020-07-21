@@ -85,7 +85,7 @@ export default {
           if (res.data) {
             let data = res.data;
             this.displayError = false;
-            window.location = "/report/profile/" + res.id;
+            window.location = "/management/report/profile/" + res.id;
           } else {
             this.displayError = true;
             this.loading = false;
