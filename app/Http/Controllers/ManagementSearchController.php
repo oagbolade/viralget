@@ -41,6 +41,15 @@ class ManagementSearchController extends Controller
 
         return view('managements.show')->with(['q' => $q, 'plan_id' => $plan_id])->with('is_hashtag', true)->withQ($q);        
     }
+    
+    function profile(){
+        $replace = ['@', '%23', ' '];
+        $username = str_replace($replace, '', strip_tags(request()->q));
+        $keyword = str_replace('%23', '', strip_tags(request()->keyword));
+        $plan_id = request()->plan_id;
+
+        return view('managements.show')->with(['q' => $username, 'keyword' => $keyword, 'plan_id' => $plan_id])->withQ($username);        
+    }
 
 
 

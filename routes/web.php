@@ -58,7 +58,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/subscribe/management/confirm/{email}/{user_plan_id}/{reference}', 'ManagementSubscriptionController@verifySubscription')->name('subscribe.confirm');
 
-    Route::get('/management/hashtag', 'ManagementSearchController@hashtag')->name('profiles');
+    Route::get('/management/hashtag', 'ManagementSearchController@hashtag')->name('profiles.hashtag');
+    Route::get('/management/profile', 'ManagementSearchController@profile')->name('profiles.profiling');
 
     Route::get('/search/profiles', 'SearchController@list')->name('profiles');
     Route::get('/search/profiles/{category}', 'SearchController@list')->name('profiles.category');
@@ -66,6 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/hashtag/{q}', 'SearchController@showHashtag')->name('search.show');
 
     Route::get('/management/report/hashtag/{id}', 'ManagementReportingController@index')->name('reporting.hashtag');
+    Route::get('/management/report/profile/{id}', 'ManagementReportingController@index')->name('reporting.profile');
 
     Route::get('/report/hashtag/{id}', 'ReportingController@index')->name('reporting.hashtag');
     Route::get('/report/profile/{id}', 'ProfilingController@index')->name('reporting.profile');
