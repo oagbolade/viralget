@@ -43,6 +43,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
     Route::get('/misc/states', 'SearchController@getStates');
 
     Route::get('/management/report/hashtag/{id}', 'ManagementShowDataController@showReportingHistory');
+    Route::get('/management/report/profile/{id}', 'ManagementShowDataController@showProfilingHistory');
 
     Route::get('/report/hashtag/{id}', 'ShowDataController@showReportingHistory');
     Route::get('/report/profile/{id}', 'ShowDataController@showProfilingHistory');
