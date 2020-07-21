@@ -43,7 +43,7 @@
 
         <div class="row" v-show="!loading && !displayError">
             <h6 id="block-2" class="block-number">
-                24 hours report for:
+                {{ report_type_days }} days report for:
                 <strong>{{ decodeURIComponent(handle) }}</strong>
                 <span v-show="report_type_days !== '30'">
                     <a href="/pricing"> | Upgrade Plan</a></span
