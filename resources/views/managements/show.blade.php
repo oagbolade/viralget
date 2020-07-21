@@ -8,7 +8,7 @@
             @if(isset($is_hashtag))
             <management-hashtag-loading q='{{ urlencode($q) }}' plan_id='{{ $plan_id }}'/>
             @else
-            <management-profile-loading q='{{ $q }}' reload='{{(isset($reload)) ? $reload : false}}'/>
+            <management-profile-loading q='{{ $q }}' keyword='{{ $keyword }}' plan_id='{{ $plan_id }}' reload='{{(isset($reload)) ? $reload : false}}'/>
             @endif
         </div>
       </div>

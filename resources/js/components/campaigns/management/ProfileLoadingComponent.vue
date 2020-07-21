@@ -42,7 +42,7 @@ import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
-  props: ["q", "reload"],
+  props: ["q", "keyword", "plan_id", "reload"],
   components: { Loading },
   data() {
     return {
@@ -75,7 +75,7 @@ export default {
     getProfile: function() {
       this.loading = true;
       let $this = this;
-      fetch(`/api/v1/profile?q=${this.q}&reload=${this.reload}`, {
+      fetch(`/api/v1/management/profile?q=${this.q}&keyword=${this.keyword}&plan_id=${this.plan_id}&reload=${this.reload}`, {
         headers: {
           Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
         }
@@ -85,44 +85,16 @@ export default {
           if (res.data) {
             let data = res.data;
             this.displayError = false;
-            window.location = "/report/profile/" + res.id;
+            window.location = "/management/report/profile/" + res.id;
           } else {
             this.displayError = true;
             this.loading = false;
-            // alert('Error retrieving profile data. Please try again');
-            //                this.getProfile();
           }
         })
         .catch(err => {
           this.displayError = true;
           this.loading = false;
         });
-
-      // axios.get(`/api/v1/profile?q=${this.q}`)
-      //     .then((res) => {
-      //         let data = res.data.data;
-      //         this.followers = data.profile.followers_count;
-      //         this.following = data.profile.friends_count;
-      //         this.totalTweets = data.profile.statuses_count;
-      //         this.about = data.profile.description;
-      //         this.isVerified = data.profile.verified;
-      //         this.name = data.profile.name;
-      //         this.avatar = data.profile.profile_image_url;
-      //         this.loading = false;
-      //         this.tweets = data.tweets;
-      //         this.media_meta = data.media_meta_data;
-      //         this.engagement_rate = data.engagement_rate;
-      //         this.averageRetweets = data.avr_retweets;
-      //         this.averageLikes = data.avr_likes;
-      //         this.category = {
-      //             color: data.category.color,
-      //             name: data.category.name
-      //         }
-      //     })
-      //     .catch((err) => {
-      //         console.log(err)
-      //         this.loading = false;
-      //     })
     },
     numberFormat: function(number) {
       var format = 0;
