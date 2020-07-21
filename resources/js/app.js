@@ -10,6 +10,12 @@ window.Vue = require("vue");
 
 import VueToastr from "vue-toastr";
 import VueSweetalert2 from "vue-sweetalert2";
+import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
+
+// Install BootstrapVue
+Vue.use(BootstrapVue);
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin);
 
 
 
@@ -17,6 +23,7 @@ import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import VueSidebarMenu from "vue-sidebar-menu";
 import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
 
 Vue.use(VueSidebarMenu);
 Vue.use(VueSweetalert2);
