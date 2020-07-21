@@ -45,7 +45,7 @@
     </div>
 
     <div class="row">
-      <div v-if="planName !== 'enterprise'" class="col-md-6">
+      <div class="col-md-6">
         <button
           @click="goToSubscription"
           type="button"
