@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\ApiV1;
 
+ini_set("memory_limit", -1);
+
+set_time_limit(0);
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Abraham\TwitterOAuth\TwitterOAuth;
@@ -15,10 +19,12 @@ use App\User;
 use App\Subscription;
 use App\TrendsPlan;
 use App\ManagementReportingHistory;
+use App\ManagementProfilingHistory;
 use App\ProfilingHistory;
 use App\Account;
 
 use App\Http\Controllers\ApiV1\PremiumTwitterAPIController;
+use App\InfluencerManagementPlan;
 use Exception;
 
 class ManagementTwitterAPIController extends Controller
@@ -231,7 +237,7 @@ class ManagementTwitterAPIController extends Controller
 
         return $recent_tweets;
     }
-    
+
     function getMostRecentReplies($tweets)
     {
         $recent_tweets = [];
@@ -317,24 +323,19 @@ class ManagementTwitterAPIController extends Controller
 
     function getAllProfileData()
     {
-
         $user = $this->authenticate();
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthenticated user']);
 
         $handle = request()->q;
-
-        if (request()->has('plan')) {
-            $package = Subscription::where('name', request()->plan)->first();
-        } else {
-            $package = $user->subscription->plan;
-        }
-
+        $keyword = request()->keyword;
 
         if (!$handle) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
 
+        $plan_id = request()->plan_id;
+        $plan = InfluencerManagementPlan::where(['id' => $plan_id])->first();
 
         $data = [];
 
@@ -348,17 +349,12 @@ class ManagementTwitterAPIController extends Controller
         if ($profileData) {
             $data['profile'] = $profileData;
         }
-        $userTweets = $this->getUserTweets($handle);
 
-        if ($package->name == 'basic' || $package->name == 'premiumBusiness' || $package->name == 'premiumLite' || $package->name == 'enterprise') {
-            $premiumData = new PremiumTwitterAPIController;
-            $userTweets = $premiumData->getAllProfileData($handle, $user);
-        }
+        $userTweets = $this->getUserTweets($handle, $keyword);
 
         if ($userTweets) {
             $data['recent_tweets'] = array_slice($userTweets, 0, 30);
         }
-
 
         $data['date_to'] = \Carbon\Carbon::now()->toDayDateTimeString();
 
@@ -387,37 +383,33 @@ class ManagementTwitterAPIController extends Controller
         $data['media_meta_data'] = $this->getTweetsMedia($userTweets);
 
         if (request()->reload == true) {
-            Subscription::where('user_id', $user->id)->decrement('profiling_balance', 1);
-
             ProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->update([
                 'report_data' => json_encode($data),
-                'package' => $package->id,
+                // 'package' => $package->id,
             ]);
         }
 
-        $profile = ProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
+        $report = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
+        dd($report);
 
-        if (!$profile) {
-            Subscription::where('user_id', $user->id)->decrement('profiling_balance', 1);
-
+        if (!$report) {
             try {
-                $profile = ProfilingHistory::create([
+                $report = ManagementProfilingHistory::create([
                     'user_id' => $user->id,
                     'handle' => $handle,
+                    'keyword' => $keyword,
                     'report_data' => json_encode($data),
-                    'package' => $package->id,
+                    'package' => $plan->id
                 ]);
             } catch (Exception $e) {
                 return response([
                     "status" => 500,
-                    "message" => "failed to get campaigns " . $e,
+                    "message" => "failed to get influencer profile " . $e->getMessage(),
                 ], 500);
             }
         }
 
-        Account::where('handle', 'LIKE', "%$handle%")->update(['er' => $data['engagement_rate']]);
-
-        return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
+        return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
     }
 
     function getProfileHighestRetweets($tweets, $isHashtag = false)
@@ -450,9 +442,7 @@ class ManagementTwitterAPIController extends Controller
 
     function getEngagementData($profile, $tweets)
     {
-
         $total_tweets = count($tweets);
-
 
         $likes = 0;
         $retweets = 0;
@@ -471,7 +461,6 @@ class ManagementTwitterAPIController extends Controller
             $quotes += isset($tweet->quote_count) ? $tweet->quote_count : 0;
             $replies += isset($tweet->reply_count) ? $tweet->reply_count : 0;
         }
-
 
         $obj = new \stdClass;
 
@@ -510,8 +499,6 @@ class ManagementTwitterAPIController extends Controller
             $quotes += isset($tweet->quote_count) ? $tweet->quote_count : 0;
             $replies += isset($tweet->reply_count) ? $tweet->reply_count : 0;
         }
-
-
 
         $er = round((float) ((($likes + $retweets + $replies + $quotes) / ($reach)) * 1000), 2);
 
@@ -571,33 +558,67 @@ class ManagementTwitterAPIController extends Controller
 
     function getUserProfile($value, $search_by = 'screen_name')
     {
-        //        $this->connect();
-
-        //        $profile = $this->connection->get("users/show", [$search_by => $value]);
         $profile = $this->guzzleClient('users/show', [$search_by => $value]);
 
         if (isset($profile->error)) {
             return;
         }
 
-
         return $profile;
     }
 
 
-    function getUserTweets($handle)
+    function getUserTweets($handle, $keyword)
     {
-        // $this->connect();
+        $count = 3000;
 
+        $is_searching = true;
+        $most_recent_tweets = [];
+        $filtered_tweets = [];
 
-        $tweets = $this->guzzleClient('statuses/user_timeline', ['screen_name' => $handle, 'count' => 500, 'include_rts' => false, 'exclude_replies' => true]);
-        //'count' => 100, 'exclude_replies' => true,
-        // $tweets = $this->connection->get("statuses/user_timeline", ['screen_name' => $handle, 'count' => 100, 'exclude_replies'=> true]);
-        if (isset($tweets->error)) {
-            return;
+        $initialQuery = [
+            'screen_name' => $handle,
+            'count' => 200,
+            "tweet_mode" => "extended",
+            'include_rts' => false,
+            'exclude_replies' => true,
+        ];
+
+        $max_id = 0;
+
+        while ($is_searching) {
+            try {
+                $this->connect();
+                $influencerTweets = $this->connection->get('statuses/user_timeline', $initialQuery);
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
+
+            if (isset($influencerTweets->errors)) {
+                return;
+            }
+
+            if (count($influencerTweets) > 0) {
+                $get_last_item = count($influencerTweets) - 1;
+                $max_id = $influencerTweets[$get_last_item]->id;
+
+                foreach ($influencerTweets as $tweets) {
+                    if (strpos($tweets->full_text, $keyword) !== false) {
+                        $filtered_tweets[] = $tweets;
+                    }
+
+                    $most_recent_tweets[] = $tweets;
+                }
+            }
+
+            if (count($most_recent_tweets) >= $count || count($influencerTweets) === 0) {
+                $is_searching = false;
+            }
+
+            $initialQuery["max_id"] = $max_id;
         }
 
-        return $tweets;
+        return $filtered_tweets;
     }
 
 
@@ -855,7 +876,7 @@ class ManagementTwitterAPIController extends Controller
         $reversed = array_unique(array_reverse($accounts));
 
         $count = 1;
-        
+
         switch ($user->subscription->plan->name) {
             case ('premiumLite'):
                 $account_limit = 15;
