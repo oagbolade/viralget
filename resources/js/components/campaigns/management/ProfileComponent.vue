@@ -228,7 +228,7 @@
                             ><br /><small>{{ retweet.user.name }}</small>
                           </div>
                         </div>
-                        <p>{{ retweet.text }}</p>
+                        <p>{{ retweet.full_text }}</p>
                         <p>
                           <small>
                             <strong
@@ -293,7 +293,7 @@
                             ><br /><small>{{ tweet.user.name }}</small>
                           </div>
                         </div>
-                        <p>{{ tweet.text }}</p>
+                        <p>{{ tweet.full_text }}</p>
                         <p>
                           <small>
                             <strong
@@ -473,7 +473,7 @@ export default {
     getProfile: function() {
       this.loading = true;
       let $this = this;
-      fetch(`/api/v1/report/profile/${this.id}`, {
+      fetch(`/api/v1/management/report/profile/${this.id}`, {
         headers: {
           Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
         }
@@ -482,6 +482,7 @@ export default {
         .then(res => {
           if (res.data) {
             let data = JSON.parse(res.data.data);
+            console.log(data)
             this.total_engagements = data.total_engagements;
             this.impressions = data.impressions;
             this.reach = data.reach;
