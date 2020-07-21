@@ -334,6 +334,20 @@ class ManagementTwitterAPIController extends Controller
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
 
+        $profile = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
+
+
+        if ($profile){
+            $data['keyword'] = $profile->keyword;
+            $data['report_type'] = $profile->plan->name;
+            $data['report_type_days'] = $profile->plan->days;
+            $data['data'] = json_decode(json_encode($profile->report_data));
+            $data['handle'] = $profile->handle;
+
+            return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
+        }
+
+
         $plan_id = request()->plan_id;
         $plan = InfluencerManagementPlan::where(['id' => $plan_id])->first();
 
@@ -390,7 +404,6 @@ class ManagementTwitterAPIController extends Controller
         }
 
         $report = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
-        dd($report);
 
         if (!$report) {
             try {
@@ -570,7 +583,7 @@ class ManagementTwitterAPIController extends Controller
 
     function getUserTweets($handle, $keyword)
     {
-        $count = 3000;
+        $count = 600;
 
         $is_searching = true;
         $most_recent_tweets = [];
