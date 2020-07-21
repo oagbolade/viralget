@@ -14,6 +14,7 @@ use GuzzleHttp\Subscriber\Oauth\Oauth1;
 use App\User;
 use App\Subscription;
 use App\ManagementReportingHistory;
+use App\ManagementProfilingHistory;
 use App\ProfilingHistory;
 use App\Influencers;
 
@@ -35,16 +36,17 @@ class ManagementShowDataController extends Controller
 
         $id = request()->id;
 
-        $profile = ProfilingHistory::find($id);
+        $profile = ManagementProfilingHistory::find($id);
 
         if(!$profile) return response(['status' => 'error', 'message' => 'Data not found']);
 
-        $data['report_type'] = $user->subscription->plan->name;
-        $data['report_type_days'] = $user->subscription->plan->days;
+        $data['keyword'] = $profile->keyword;
+        $data['report_type'] = $profile->plan->name;
+        $data['report_type_days'] = $profile->plan->days;
         $data['data'] = json_decode(json_encode($profile->report_data));
         $data['handle'] = $profile->handle;
 
-        $profile_data = json_decode($profile->report_data);
+        // $profile_data = json_decode($profile->report_data);
         //Temporary hack to update er
         // Coming soon
         // if($profile_data) {
