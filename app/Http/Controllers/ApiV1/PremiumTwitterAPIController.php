@@ -110,18 +110,17 @@ class PremiumTwitterAPIController extends Controller
 
     function getUserTweets($handle, $user)
     {
+        $user_subscription = $user->subscription->plan;
 
-        $count = ($user->subscription->plan->name == 'Premium') ? 250 : 500;
-
+        $count = $user_subscription->tweets;
+        
         $is_searching = true;
-        $one_day = date('U', strtotime('-24 hours'));
-        $seven_days = date('U', strtotime('-7 days'));
-        $thirty_days = date('U', strtotime('-30 days'));
+        $days = date("U", strtotime('-' . $user_subscription->days . ' days'));
         $tweets_30_days = [];
 
         $initialQuery = [
             'screen_name' => $handle,
-            'count' => 100,
+            'count' => 200,
             'include_rts' => false,
             'exclude_replies' => true,
         ];
@@ -145,7 +144,7 @@ class PremiumTwitterAPIController extends Controller
 
                 foreach ($influencerTweets as $tweets) {
                     // Get by 30  days
-                    if ($this->getTwitterTimeStamp($tweets->created_at) >= $thirty_days) {
+                    if ($this->getTwitterTimeStamp($tweets->created_at) >= $days) {
                         $tweets_30_days[] = $tweets;
                     }
                 }
@@ -157,7 +156,6 @@ class PremiumTwitterAPIController extends Controller
 
             $initialQuery["max_id"] = $max_id - 1;
         }
-
         return $tweets_30_days;
     }
 
@@ -170,17 +168,15 @@ class PremiumTwitterAPIController extends Controller
 
     function getHashtagTweets($package, $query, $request)
     {
+        $days = date("YmdHi", strtotime('-' . $package->days . ' days'));
+        $tweet_cap = $package->tweets;
+        
         $now = date("YmdH00");
-        $one_day = date("YmdHi", strtotime('-24 hours'));
-        $seven_days = date("YmdHi", strtotime('-7 days'));
-        $thirty_days = date('YmdHi', strtotime('-30 days'));
-
-        $tweet_cap = ($package->name == 'Premium') ? 2000 : 3000;
-
-        $fromDate = $thirty_days;
+        
+        $fromDate = $days;
         $toDate = $now;
 
-        if (request()->fromDate !== null && request()->toDate !== null) {
+        if (request()->fromDate !== null && request()->toDate !== null && $package->tweets !== 'starter' && $package->tweets !== 'basic') {
             $fromDate = request()->fromDate;
             $toDate = request()->toDate;
         }
@@ -190,8 +186,7 @@ class PremiumTwitterAPIController extends Controller
         $searching = true;
         $tweets_array = [];
 
-        // Temporary
-        $tweet_cap = 3000;
+        // $tweet_cap = 500;
         $count = 500;
 
         while ($searching) {

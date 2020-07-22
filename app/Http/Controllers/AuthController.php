@@ -10,77 +10,97 @@ use Validator;
 use Socialite;
 use App\User;
 use App\UserDetails;
+use Abraham\TwitterOAuth\TwitterOAuth;
+use Cookie;
+use Exception;
 
 class AuthController extends Controller
 {
-    //
+    private $_connection;
 
-    public function login() {
+    function __construct()
+    {
+        $this->_connection = new TwitterOAuth(
+            env('TWITTER_CONSUMER_KEY'),
+            env('TWITTER_CONSUMER_SECRET'),
+            env('TWITTER_ACCESS_TOKEN'),
+            env('TWITTER_TOKEN_SECRET')
+        );
+    }
+
+    public function login()
+    {
         return view('auth.login');
     }
 
-    public function logout() {
+    public function logout()
+    {
         Auth::logout();
         \Session::flush();
         return redirect('/');
     }
 
-
     public function redirectToProvider()
     {
         try {
-            // $oauth_token = env('TWITTER_ACCESS_TOKEN');
-            // $oauth_token_secret = env('TWITTER_ACCESS_TOKEN_SECRET');
-
-            // return Socialite::driver('twitter')->userFromTokenAndSecret($oauth_token, $oauth_token_secret);
-            return Socialite::driver('twitter')->redirect();
+            return Socialite::driver('google')->redirect();
         } catch (\Exception $e) {
             return redirect(route('login'))->withError('Error authenticating you at the moment. Please try again.');
         }
     }
-
-    public function handleProviderCallback()
+    
+    public function handleProviderCallback(Request $request)
     {
-        // die('reached callback function');
         try {
-            $userSocial = Socialite::driver('twitter')->user();
+            $get_user = Socialite::driver('google')->stateless()->user();
         } catch (\Exception $e) {
             return redirect(route('login'))->withError('An error occured. Please try again.');
         }
-        $user =  User::updateOrCreate(
-                        ['twitter_id' => $userSocial->id],
-                        [
-                            'token' => $userSocial->token,
-                            'secret' => $userSocial->tokenSecret,
-                            'twitter_handle' => $userSocial->getNickname(),
-                            'email' => $userSocial->getEmail() ?? $userSocial->getNickname()."@viralget.com.ng",
-                            'name' => $userSocial->getName(),
-                            'password' => $userSocial->tokenSecret,
-                        ]
-                    );
-        if(!$user->api_token) {
+
+        $token =  json_encode($get_user->token);
+        $avatar =  json_encode($get_user->avatar);
+
+        try {
+            $user =  User::updateOrCreate(
+                ['email' => $get_user['email']],
+                [
+                    'twitter_id' => $get_user['sub'],
+                    'name' => $get_user['name'],
+                    'password' => $token,
+                    'avatar' => $avatar,
+                    'token' => $token,
+                    'secret' => $token,
+                ]
+            );
+        } catch (\Exception $e) {
+            return redirect(route('login'))->withError('An error occured. Please try again.');
+        }
+
+        if (!$user->api_token) {
             $user->update(['api_token' => \str_random(80)]);
         }
 
         Auth::login($user);
 
-        if($user->subscription) {
-           return redirect()->intended('campaigns');
+        // return $user;
+        if ($user->subscription) {
+            return redirect()->intended('campaigns');
         } else {
             return redirect()->intended(route('pricing'));
         }
-        // $user->token;
     }
 
-
-    public function signup() {
-        if(Auth()->user()->details) {
-            return redirect(route('campaigns.view'));
+    public function signup()
+    {
+        if (Auth()->user()->details) {
+            return redirect()->intended('campaigns');
         }
+
         return view('auth.signup');
     }
 
-    function postSignup() {
+    function postSignup()
+    {
 
         $user = Auth()->user();
 
@@ -93,8 +113,8 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
 
         UserDetails::create([
@@ -107,7 +127,6 @@ class AuthController extends Controller
             'address' => request()->address,
             'objective' => request()->objective,
         ]);
-
 
         return redirect()->intended(route('pricing'))->withSuccess('Profile successfully updated! You can now select a pricing plan to continue...');
     }

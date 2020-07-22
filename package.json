@@ -12,6 +12,7 @@
     "devDependencies": {
         "axios": "^0.18.0",
         "bootstrap": "^4.0.0",
+        "bootstrap-vue": "^2.15.0",
         "cross-env": "^5.1",
         "jquery": "^3.2",
         "laravel-mix": "^4.0.7",
@@ -22,8 +23,7 @@
         "sass-loader": "^7.1.0",
         "vue": "^2.6.6",
         "vue-sweetalert2": "^3.0.6",
-        "vue-template-compiler": "^2.6.6",
-        "vuejs-dialog": "^1.4.1"
+        "vue-template-compiler": "^2.6.6"
     },
     "dependencies": {
         "@livelybone/vue-datepicker": "^3.1.0",
@@ -37,6 +37,7 @@
         "vue-loading-overlay": "^3.3.2",
         "vue-moment": "^4.0.0",
         "vue-paginate": "^3.6.0",
+        "vue-sidebar-menu": "^4.6.1",
         "vue-toastr": "^2.1.2",
         "vuejs-datatables-sui": "0.0.3",
         "vuetify-daterange-picker": "^3.1.6"
