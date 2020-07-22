@@ -7,12 +7,8 @@ namespace App\Http\Controllers\ApiV1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\ProfilingHistory;
-use App\ReportingHistory;
-use App\UserDetailsManagement;
-
-use App\Subscription;
-
+use App\HashtagCampaigns;
+use App\ProfilingCampaigns;
 use Exception;
 
 class CampaignController extends Controller
@@ -26,79 +22,35 @@ class CampaignController extends Controller
         return $user;
     }
 
-    function managementView()
-    {
-        $user = $this->authenticate();
-
-        if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-
-        $campaign_details = new UserDetailsManagement;
-        
-        try {
-            $campaign_details = UserDetailsManagement::with('influencerManagementPlan')->where(['user_id' => $user->id, 'booking_type' => 'influencer_management'])->orderBy('id', 'desc')->get();
-
-            return response([
-                "status" => 200,
-                "message" => "successfull",
-                "data" => $campaign_details,
-            ], 200);
-
-        } catch (Exception $e) {
-            return response([
-                "status" => 500,
-                "message" => "failed to get management campaigns " . $e,
-            ], 500);
-        }
-    }
-    
-    function trendsView()
-    {
-        $user = $this->authenticate();
-
-        if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-
-        $campaign_details = new UserDetailsManagement;
-        
-        try {
-            $campaign_details = UserDetailsManagement::with('trendsPlan')->where(['user_id' => $user->id, 'booking_type' => 'trends'])->orderBy('id', 'desc')->get();
-            
-            return response([
-                "status" => 200,
-                "message" => "successfull",
-                "data" => $campaign_details,
-            ], 200);
-
-        } catch (Exception $e) {
-            return response([
-                "status" => 500,
-                "message" => "failed to get trends campaigns " . $e,
-            ], 500);
-        }
-    }
-    
     function view()
     {
+        $campaigns = new HashtagCampaigns;
+
+        if(isset(request()->handle)){
+            $campaigns = new ProfilingCampaigns;
+        }
+
         $user = $this->authenticate();
-        $hashtag_campaigns = new ReportingHistory;
-        
-        $profiling_campaigns = new ProfilingHistory;
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         try {
             // Add pagination
-            $hashtag_campaigns = $hashtag_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
-            $profiling_campaigns = $profiling_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
-            $subscription = Subscription::where('user_id', $user->id)->with('plan')->get();
+            $campaigns = $campaigns::where('user_id', $user->id)->get();
+
+            if (count($campaigns) > 0) {
+                return response([
+                    "status" => 200,
+                    "message" => "successfull",
+                    "data" => $campaigns
+                ], 200);
+            }
 
             return response([
-                "status" => 200,
-                "message" => "successfull",
-                "data" => $hashtag_campaigns,
-                "profiling_data" => $profiling_campaigns,
-                'subscription' => $subscription,
+                "status" => 204,
+                "message" => "no campaigns found for this user",
+                "data" => []
             ], 200);
-
         } catch (Exception $e) {
             return response([
                 "status" => 500,
@@ -107,11 +59,10 @@ class CampaignController extends Controller
         }
     }
 
-    function create()
-    {
-        if (isset(request()->handle)) {
+    function create(){
+        if(isset(request()->handle)){
             return $this->createProfiling();
-        } else {
+        }else{
             return $this->createKeyword();
         }
     }
@@ -121,33 +72,24 @@ class CampaignController extends Controller
         $user = $this->authenticate();
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-
+        
         $keywords = request()->keywords;
         $dates = json_encode(request()->dates);
         $description = request()->description;
         $user_id = $user->id;
 
-        $campaign = new ReportingHistory;
-        $subscription = Subscription::where('user_id', $user->id)->first();
+        $campaign = new HashtagCampaigns;
 
-        if($campaign::where(['query' => request()->keywords, 'user_id' => $user->id])->first()){
-            return response([
-                "message" => "query already exists for this user",
-                "status" => 400
-            ], 400);
-        }
-
-        $campaign->query = $keywords;
+        $campaign->keywords = $keywords;
         $campaign->dates = $dates;
         $campaign->description = $description;
         $campaign->user_id = $user_id;
-        $campaign->package = $subscription->plan_id;
 
         try {
             $campaign->save();
         } catch (Exception $e) {
             return response([
-                "message" => "failed to create new report" . $e,
+                "message" => "faileld to create new campaign" . $e,
                 "status" => 400
             ], 500);
         }
@@ -163,37 +105,30 @@ class CampaignController extends Controller
             "data" => $data
         ], 200);
     }
-
+    
     function createProfiling()
     {
         $user = $this->authenticate();
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-
+        
         $handle = request()->handle;
+        $dates = json_encode(request()->dates);
         $description = request()->description;
         $user_id = $user->id;
 
-        $subscription = Subscription::where('user_id', $user->id)->first();
-        $create_campaign = new ProfilingHistory;
+        $campaign = new ProfilingCampaigns;
 
-        if ($create_campaign::where(['handle' => request()->handle, 'user_id' => $user->id])->first()) {
-            return response([
-                "message" => "query already exists for this user",
-                "status" => 400
-            ], 400);
-        }
-
-        $create_campaign->handle = $handle;
-        $create_campaign->description = $description;
-        $create_campaign->user_id = $user_id;
-        $create_campaign->package = $subscription->plan_id;
+        $campaign->handle = $handle;
+        $campaign->dates = $dates;
+        $campaign->description = $description;
+        $campaign->user_id = $user_id;
 
         try {
-            $create_campaign->save();
+            $campaign->save();
         } catch (Exception $e) {
             return response([
-                "message" => "failed to create new user profiling" . $e,
+                "message" => "faileld to create new profiling campaign" . $e,
                 "status" => 400
             ], 500);
         }
@@ -212,16 +147,16 @@ class CampaignController extends Controller
 
     function delete()
     {
-        $campaign = new ReportingHistory;
+        $campaign = new HashtagCampaigns;
 
-        if (isset(request()->handle)) {
-            $campaign = new ProfilingHistory;
+        if(isset(request()->handle)){
+            $campaign = new ProfilingCampaigns;
         }
         $campaign_id = request()->campaignId;
 
         try {
             $campaign = $campaign->where('id', $campaign_id)->delete();
-
+            
             return response([
                 "status" => 200,
                 "message" => "successfull",
