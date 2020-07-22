@@ -10,21 +10,17 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Illuminate\Support\Arr;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 use App\User;
-use App\Subscription;
 use App\TrendsPlan;
 use App\ManagementReportingHistory;
 use App\ManagementProfilingHistory;
 use App\SummaryHistory;
 use App\ProfilingHistory;
-use App\Account;
 
-use App\Http\Controllers\ApiV1\PremiumTwitterAPIController;
 use App\InfluencerManagementPlan;
 use Exception;
 
@@ -68,26 +64,16 @@ class ManagementTwitterAPIController extends Controller
         // Check if expired
         // Check if paid
 
+        $report = ManagementReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
 
-        // If already cached, no need to proceed
-        // COMING SOON
-        // $report = ManagementReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
+        if($report) {
+            $data['report_type'] = $report->plan->name;
+            $data['report_type_days'] = $report->plan->days;
+            $data['data'] = json_decode(json_encode($report->report_data));
+            $data['handle'] = $report->query;
 
-        // if($report && $report->report_data !== null) {
-        //     try {
-        //         ManagementReportingHistory::where(['user_id' => $user->id, 'query' => $query])->update([
-        //             'user_id' => $user->id,
-        //             'query' => $query,
-        //             'report_data' => json_encode($data),
-        //             'package' => $package->id
-        //         ]);
-        //     } catch (Exception $e) {
-        //         return response([
-        //             "status" => 500,
-        //             "message" => "failed to get report " . $e->getMessage(),
-        //         ], 500);
-        //     }
-        // }
+            return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+        }
 
         $tweets = $this->getManagementHashtagTweets($query);
 
@@ -384,6 +370,8 @@ class ManagementTwitterAPIController extends Controller
 
         $data['total_engagements'] = $this->getSummaryEngagements($all_influencer_tweets)['total_engagements'];
 
+        $data['campaign_value'] = ($impressions / 1000) * 80;
+
         $report = SummaryHistory::where(['user_id' => $user->id, 'influencers' => $influencers])->first();
 
         if (!$report) {
@@ -424,6 +412,7 @@ class ManagementTwitterAPIController extends Controller
             'total_tweets' => $total_tweets,
             'total_likes' => $total_likes,
             'total_engagements' => $total_engagements,
+            'total_retweets' => $total_retweets,
         ];
     }
 

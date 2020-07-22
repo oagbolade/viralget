@@ -93,26 +93,16 @@ class TwitterAPIController extends Controller
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
 
+        $report = ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
 
-        // If already cached, no need to proceed
-        // COMING SOON
-        // $report = ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
+        if ($report) {
+            $data['report_type'] = $report->plan->name;
+            $data['report_type_days'] = $report->plan->days;
+            $data['data'] = json_decode(json_encode($report->report_data));
+            $data['handle'] = $report->query;
 
-        // if($report && $report->report_data !== null) {
-        //     try {
-        //         ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->update([
-        //             'user_id' => $user->id,
-        //             'query' => $query,
-        //             'report_data' => json_encode($data),
-        //             'package' => $package->id
-        //         ]);
-        //     } catch (Exception $e) {
-        //         return response([
-        //             "status" => 500,
-        //             "message" => "failed to get report " . $e->getMessage(),
-        //         ], 500);
-        //     }
-        // }
+            return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+        }
 
         $no_of_tweets = 100;
 
