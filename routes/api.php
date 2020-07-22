@@ -26,6 +26,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
     Route::get('/profile', 'TwitterAPIController@getAllProfileData');
     Route::get('/hashtag', 'TwitterAPIController@getHashtagTweets');
 
+    Route::get('/management/profile/summary', 'ManagementTwitterAPIController@getCampaignSummary');
     Route::get('/management/profile', 'ManagementTwitterAPIController@getAllProfileData');
     Route::get('/management/hashtag', 'ManagementTwitterAPIController@getHashtagTweets');
 
@@ -44,6 +45,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
 
     Route::get('/management/report/hashtag/{id}', 'ManagementShowDataController@showReportingHistory');
     Route::get('/management/report/profile/{id}', 'ManagementShowDataController@showProfilingHistory');
+    Route::get('/management/report/profile/summary/{id}', 'ManagementShowDataController@showSummaryHistory');
 
     Route::get('/report/hashtag/{id}', 'ShowDataController@showReportingHistory');
     Route::get('/report/profile/{id}', 'ShowDataController@showProfilingHistory');

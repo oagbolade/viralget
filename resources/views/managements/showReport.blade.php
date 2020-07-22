@@ -2,20 +2,22 @@
 
 @section('content')
 
-   <main class="main-content" id="app">
-      <div class="section bg-gray">
-        <div class="container" style="margin-top: 100px; min-height: 100vh">
-            @include('layouts.partials.status')
+<main class="main-content" id="app">
+  <div class="section bg-gray">
+    <div class="container" style="margin-top: 100px; min-height: 100vh">
+      @include('layouts.partials.status')
+      @if (isset($summary))
+      <profiling-summary id='{{ $id }}' />
+      @endif
+      @if(isset($is_reporting))
+      <management-hashtag id='{{ $id }}' />
+      @else
+      <management-profile id='{{ $id }}' />
+      @endif
+    </div>
+  </div>
 
-            @if(isset($is_reporting))
-            <management-hashtag  id='{{ $id }}'/>
-            @else
-            <management-profile id='{{ $id }}'/>
-            @endif
-        </div>
-      </div>
-
-     </main><!-- /.main-content -->
+</main><!-- /.main-content -->
 
 @endsection
 
