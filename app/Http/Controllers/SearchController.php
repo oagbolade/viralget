@@ -89,21 +89,16 @@ class SearchController extends Controller
             }
 
             switch ($user->subscription->plan->name) {
-                case 'enterprise':
-                    $proceed = (in_array($subscription->name, ['starter', 'basic', 'premiumLite', 'premiumBusiness', 'enterprise'])) ? true : false;
+                case 'Enterprise':
+                    $proceed = (in_array($subscription->name, ['Free', 'Premium', 'Enterprise'])) ? true : false;
                     break;
-                case 'premiumBusiness':
-                    $proceed = (in_array($subscription->name, ['starter', 'basic', 'premiumLite', 'premiumBusiness'])) ? true : false;
+                case 'Premium':
+                    $proceed = (in_array($subscription->name, ['Free', 'Premium'])) ? true : false;
                     break;
-                case 'premiumLite':
-                    $proceed = (in_array($subscription->name, ['starter', 'basic', 'premiumLite'])) ? true : false;
+                case 'Free':
+                    $proceed = ($subscription->name == 'Free') ? true : false;
                     break;
-                case 'basic':
-                    $proceed = (in_array($subscription->name, ['starter', 'basic'])) ? true : false;
-                    break;
-                case 'starter':
-                    $proceed = (in_array($subscription->name, ['starter'])) ? true : false;
-                    break;
+
                 default:
                     $proceed = false;
                     break;
@@ -137,24 +132,28 @@ class SearchController extends Controller
             return redirect(route('pricing'))->withError('You have reached your profiling balance limit. Please choose a subscription package to continue.');
         }
         
-        $profileExists = ProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->oldest()->first();
+        // if it exists for this user, dont decrement subscription
+        Subscription::where('user_id', $user->id)->decrement('profiling_balance', 1);
 
-        if($profileExists && !request()->reloadData && $profileExists->report_data === null) {
-            return view('profiles.show')->with(['q' => $handle, 'reload' => true]);
-        }
-        
-        if($profileExists && !request()->reloadData && $profileExists->report_data !== null) {
+        $profileExists = ProfilingHistory::where('handle', $handle)->oldest()->first();
+
+        if($profileExists && !request()->reloadData) {
             return redirect(route('reporting.profile', ['id' => $profileExists->id]));
-        }
-
-        if($profileExists && request()->reloadData){
-            return view('profiles.show')->with(['q' => $handle, 'reload' => true]);
         }
 
         return view('profiles.show')->with('q', $handle);
     }
 
     function search() {
+        // $connection = new TwitterOAuth(env('CONSUMER_KEY'), env('CONSUMER_SECRET'), env('ACCESS_TOKEN'), env('TOKEN_SECRET'));
+        // $trends = $connection->get("trends/place", ['id' => '23424908']);
+
+        // if($trends[0]->trends) {
+        //     $trends = $trends[0]->trends;
+        // } else {
+        //     $trends = [];
+        // }
+
         $trends = [];
         return view('pages.search')->withTrends($trends)->withIsDarkBg(true);
     }
