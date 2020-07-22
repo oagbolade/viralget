@@ -91,6 +91,11 @@ Vue.component(
         .default
 );
 Vue.component(
+    "profiling-summary",
+    require("./components/campaigns/management/ProfilingSummaryComponent.vue")
+        .default
+);
+Vue.component(
     "view-campaign",
     require("./components/campaigns/ViewCampaign.vue").default
 );
