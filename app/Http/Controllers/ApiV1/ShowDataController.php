@@ -15,7 +15,7 @@ use App\User;
 use App\Subscription;
 use App\ReportingHistory;
 use App\ProfilingHistory;
-use App\Influencers;
+use App\Account;
 
 class ShowDataController extends Controller
 {
@@ -46,10 +46,9 @@ class ShowDataController extends Controller
 
         $profile_data = json_decode($profile->report_data);
         //Temporary hack to update er
-        // Coming soon
-        // if($profile_data) {
-        //     Influencers::where('handle','LIKE', "%$profile->handle%")->update(['er' => $profile_data->engagement_rate]);
-        // }
+        if($profile_data) {
+            Account::where('handle','LIKE', "%$profile->handle%")->update(['er' => $profile_data->engagement_rate]);
+        }
 
         return response(['status' => 'success', 'data' => $data]);
     }

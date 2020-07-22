@@ -9,24 +9,21 @@ require("./bootstrap");
 window.Vue = require("vue");
 
 import VueToastr from "vue-toastr";
+import VuejsDialog from "vuejs-dialog";
 import VueSweetalert2 from "vue-sweetalert2";
-import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
-
-// Install BootstrapVue
-Vue.use(BootstrapVue);
-// Optionally install the BootstrapVue icon components plugin
-Vue.use(IconsPlugin);
 
 
+Vue.use(VueSweetalert2);
+
+import VuejsDialogMixin from "vuejs-dialog/dist/vuejs-dialog-mixin.min.js"; // only needed in custom components
 
 // If you don't need the styles, do not connect
 import "sweetalert2/dist/sweetalert2.min.css";
-import VueSidebarMenu from "vue-sidebar-menu";
-import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
 
-Vue.use(VueSidebarMenu);
-Vue.use(VueSweetalert2);
+// include the default style
+import "vuejs-dialog/dist/vuejs-dialog.min.css";
+
+Vue.use(VuejsDialog);
 Vue.use(VueToastr);
 
 /**
@@ -62,39 +59,17 @@ Vue.component(
     require("./components/PaginationComponent.vue").default
 );
 
+// For search page
+Vue.component(
+    "search-page-result",
+    require("./components/search/SearchResultComponent.vue").default
+);
+Vue.component(
+    "search-page-profile",
+    require("./components/search/SearchProfileComponent.vue").default
+);
+
 // For campaign pages
-Vue.component(
-    "trends-campaign",
-    require("./components/campaigns/management/Trends.vue").default
-);
-Vue.component(
-    "influencer-management-campaign",
-    require("./components/campaigns/management/InfluencerManagement.vue").default
-);
-Vue.component(
-    "management-hashtag-loading",
-    require("./components/campaigns/management/HashtagLoadingComponent.vue").default
-);
-Vue.component(
-    "management-profile-loading",
-    require("./components/campaigns/management/ProfileLoadingComponent.vue")
-        .default
-);
-Vue.component(
-    "management-hashtag",
-    require("./components/campaigns/management/HashtagComponent.vue")
-        .default
-);
-Vue.component(
-    "management-profile",
-    require("./components/campaigns/management/ProfileComponent.vue")
-        .default
-);
-Vue.component(
-    "profiling-summary",
-    require("./components/campaigns/management/ProfilingSummaryComponent.vue")
-        .default
-);
 Vue.component(
     "view-campaign",
     require("./components/campaigns/ViewCampaign.vue").default
@@ -106,8 +81,8 @@ Vue.component(
 
 
 Vue.component(
-    "profiling-history",
-    require("./components/profiling//ProfiingHistory.vue").default
+    "reporting-history",
+    require("./components/profiling/ReportingHistory.vue").default
 );
 
 // Vue.component('pagination', require('laravel-vue-pagination').default);

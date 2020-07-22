@@ -30,11 +30,13 @@ class SubscriptionController extends Controller
             ]);            
 
             return redirect(route('campaigns.view'))->withSuccess("Congratulations! Your $plan->name subscription is active");
+            // return redirect(route('dashboard'))->withSuccess("Congratulations! Your $plan->name subscription is active");
         }
 
         if(!$user->details) {
             return redirect()->intended(route('login.signup'));
         }
+
 
         return view('pages.checkout')
                 ->withPlan($plan)
@@ -84,7 +86,7 @@ class SubscriptionController extends Controller
                 'profiling_balance' => $plan->profiling_limit,
             ]);
                 
-            return redirect(route('campaigns.view'))->withSuccess("Congratulations! Your $plan->name subsciption is active");
+            return redirect(route('dashboard'))->withSuccess("Congratulations! Your $plan->name subsciption is active");
         } else {
             return redirect(route('subscribe', ['plan', \strtolower($plan->name)]))->withError('An error occured with your payment data');
         }

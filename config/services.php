@@ -49,10 +49,4 @@ return [
         'client_secret' => env('TWITTER_CONSUMER_SECRET'),
         'redirect' => env('TWITTER_CALLBACK'),
     ],
-    
-    'google' => [
-        'client_id' => env('GOOGLE_CONSUMER_ID'),
-        'client_secret' => env('GOOGLE_CONSUMER_SECRET'),
-        'redirect' => env('GOOGLE_CALLBACK'),
-    ],
 ];

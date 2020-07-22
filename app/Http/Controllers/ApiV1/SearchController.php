@@ -5,9 +5,7 @@ namespace App\Http\Controllers\ApiV1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Account;
-use App\Influencers;
 use App\Category;
-use App\FilterCategories;
 use App\Keyword;
 use App\States;
 use App\User;
@@ -142,15 +140,9 @@ class SearchController extends Controller
     }
 
     public function getCategories() {
-        $categories = Category::get();
+        $states = Category::get();
 
-        return response($categories);
-    }
-    
-    public function getFilterCategories() {
-        $filter_categories = FilterCategories::get();
-
-        return response($filter_categories);
+        return response($states);
     }
 
 
@@ -159,7 +151,7 @@ class SearchController extends Controller
 
         if(!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
-        $handle = Influencers::where('handle', 'like', '%'.request()->handle.'%')->first();
+        $handle = Account::where('handle', 'like', '%'.request()->handle.'%')->first();
         // Add option to also check influencers table
 
         if(!$handle) return response(['status' => 'error', 'message' => 'User handle not found']);
