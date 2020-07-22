@@ -347,46 +347,26 @@ class ManagementTwitterAPIController extends Controller
             $userTweets[$handle] = $this->getUserTweets($handle, $keyword);
         }
 
-        $retweets = [];
         $all_influencer_tweets = [];
         $engagementRate = 0;
         $impressions = 0;
         $reach = 0;
-        $total_engagements = 0;
-        $total_posts = 0;
-        $avr_likes = 0;
-        $avr_retweets = 0;
-        $media_meta_data = [];
 
         foreach ($userTweets as $tweets) {
-            foreach($tweets as $tweet){
+
+            foreach ($tweets as $tweet) {
                 array_push($all_influencer_tweets, $tweet);
-                // array_push($retweets, $this->getProfileHighestRetweets($tweets));
-                // array_push($media_meta_data, $this->getTweetsMedia($tweets));
             }
 
             $engagement = $this->getEngagementData($tweets[0]->user, $tweets);
-
-            $engagementRate += (int)$engagement->er ?? 0;
-
-            $impressions += (int)$engagement->impressions ?? 0;
-
-            $reach += (int)$engagement->reach ?? 0;
-
-            $total_engagements += (int)$engagement->total_engagements ?? 0;
-
-            $total_posts += count($tweets);
-
-            $avr_likes += (int)$engagement->avrLikes ?? 0;
-
-            $avr_retweets += (int)$engagement->avrRetweets ?? 0;
+            $engagementRate += (int) $engagement->er ?? 0;
+            $impressions += (int) $engagement->impressions ?? 0;
+            $reach += (int) $engagement->reach ?? 0;
         }
 
         $data['date_to'] = \Carbon\Carbon::now()->toDayDateTimeString();
 
         $data['date_from'] = \Carbon\Carbon::now()->subDays(30)->toDayDateTimeString();
-
-        $data['retweets'] =  $retweets;
 
         $engagement = $this->getEngagementData($tweets[0]->user, $tweets);
 
@@ -396,18 +376,14 @@ class ManagementTwitterAPIController extends Controller
 
         $data['reach'] = $reach;
 
-        $data['total_engagements'] = $total_engagements;
+        $data['total_tweets'] = $this->getSummaryEngagements($all_influencer_tweets)['total_tweets'];
 
-        $data['total_posts'] = $total_posts;
+        $data['total_retweets'] = $this->getSummaryEngagements($all_influencer_tweets)['total_retweets'];
 
-        $data['avr_likes'] = $avr_likes;
+        $data['total_likes'] = $this->getSummaryEngagements($all_influencer_tweets)['total_likes'];
 
-        $data['avr_retweets'] = $avr_retweets;
+        $data['total_engagements'] = $this->getSummaryEngagements($all_influencer_tweets)['total_engagements'];
 
-        $data['media_meta_data'] = $media_meta_data;
-        // tweets
-        // retweets
-        // replies
         $report = SummaryHistory::where(['user_id' => $user->id, 'influencers' => $influencers])->first();
 
         if (!$report) {
@@ -423,12 +399,32 @@ class ManagementTwitterAPIController extends Controller
                 dd($e->getMessage());
                 return response([
                     "status" => 500,
-                    "message" => "failed to get influencer profile " . $e->getMessage(),
+                    "message" => "failed to get influencers profile " . $e->getMessage(),
                 ], 500);
             }
         }
 
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+    }
+
+    function getSummaryEngagements($tweets)
+    {
+        $total_tweets = count($tweets);
+        $total_retweets = 0;
+        $total_likes = 0;
+
+        foreach ($tweets as $tweet) {
+            $total_likes += $tweet->favorite_count;
+            $total_retweets += $tweet->retweet_count;
+        }
+
+        $total_engagements = $total_likes + $total_retweets;
+
+        return [
+            'total_tweets' => $total_tweets,
+            'total_likes' => $total_likes,
+            'total_engagements' => $total_engagements,
+        ];
     }
 
     function getAllProfileData()
