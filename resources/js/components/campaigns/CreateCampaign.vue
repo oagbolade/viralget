@@ -16,7 +16,7 @@
         <span class="icon-sad lg-error-icon"></span>
         <h1>Oops!</h1>
         <h3>
-          Unfortunately, we're unable to create your campaign at the moment.
+          {{errorMessage}}
         </h3>
         <h5>Please try again in few minutes</h5>
 
@@ -35,7 +35,9 @@
           Enter {{ isHandle === true ? "User Handle" : "Keyword" }}
         </h3>
         <h6 v-if="isHandle" id="block-2">Enter a profile to monitor</h6>
-        <h6 v-else id="block-2">Enter brand, competitor or #hashtag to monitor</h6>
+        <h6 v-else id="block-2">
+          Enter brand, competitor or #hashtag to monitor
+        </h6>
       </div>
 
       <section
@@ -48,8 +50,9 @@
               <input
                 class="form-control"
                 type="text"
+                v-on:blur="handleBlur(form.handle, true)"
                 v-model="form.handle"
-                placeholder="e.g viralget, viral get, #viralget"
+                placeholder="e.g @viralget"
               />
             </div>
 
@@ -58,6 +61,7 @@
                 class="form-control"
                 type="text"
                 v-model="form.keywords"
+                v-on:blur="handleBlur(form.keywords)"
                 placeholder="e.g viralget, viral get, #viralget"
               />
             </div>
@@ -87,7 +91,7 @@
                 type="button"
                 class="btn btn-round btn-success"
               >
-                Create Campaign
+                {{ (isHandle) ? 'Create User Profiling' : 'Create Campaign' }}
               </button>
             </div>
           </form>
@@ -110,9 +114,11 @@ export default {
   components: { Loading },
   data() {
     return {
+      errorMessage: "Unfortunately, we're unable to create your campaign at the moment.",
       loading: false,
       displayError: false,
       isHandle: false,
+      Toast: null,
       form: {
         keywords: "",
         handle: "",
@@ -124,7 +130,19 @@ export default {
       }
     };
   },
-  mounted: function() {},
+  mounted: function() {
+    this.Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      onOpen: toast => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      }
+    });
+  },
   created: function() {
     this.checkCampaignType();
   },
@@ -225,8 +243,10 @@ export default {
         }
       };
 
+      const removeSymbol = this.form.handle.replace("@", "");
+
       const data = {
-        handle: this.form.handle,
+        handle: removeSymbol,
         dates: {
           from: this.form.dates.from,
           to: this.form.dates.to
@@ -250,7 +270,31 @@ export default {
     moment,
     onChange(date, dateString) {
       this.form.dates.from = `${date[0].format("YYYY-MM-DD-HH:MM")}`;
-      this.form.dates.to = `${date[1].subtract(1, 'hours').format("YYYY-MM-DD-HH:MM")}`;
+      this.form.dates.to = `${date[1]
+        .subtract(1.5, "hours")
+        .format("YYYY-MM-DD-HH:MM")}`;
+    },
+    handleBlur(search, handle = false) {
+      console.log(search);
+      if(handle === true){
+        const getSymbol = search.trim().split("")[0];
+  
+        if (getSymbol === "@") {
+          this.Toast.fire({
+            icon: "success",
+            title: "Looks good!"
+          });
+        }
+        return;
+      }
+
+      if (search.trim() !== "") {
+        this.Toast.fire({
+            icon: "success",
+            title: "Looks good!"
+          });
+        return;
+      }
     },
     disabledDate(current) {
       return current && current > moment().endOf("day");

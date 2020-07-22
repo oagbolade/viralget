@@ -85,26 +85,22 @@ class TwitterCronHandler extends Controller
         $next = "";
         $searching = true;
 
-        $northen_influencers = [];
-
         while ($searching) {
             if ($page === 0) {
                 $this->_temporary_parameters = [
                     "query" => "place_country: NG (tech OR coding OR software OR developer OR computer OR programming OR technology OR data science OR artificial intelligence OR software engineer) -discount -promo -cash -sale -game -bet",
-                    // "query" => "place_country: NG profile_region: kaduna",
                     "maxResults" => 500,
                 ];
             } else {
                 $this->_temporary_parameters = [
                     "query" => "place_country: NG (tech OR coding OR software OR developer OR computer OR programming OR technology OR data science OR artificial intelligence OR software engineer) -discount -promo -cash -sale -game -bet",
-                    // "query" => "place_country: NG profile_region: kaduna",
                     "maxResults" => 500,
                     "next" => $next
                 ];
             }
 
             // For testing // End by pages
-            if ($page === 2) {
+            if ($page === 1) {
                 $searching = false;
                 return json_encode('done');
             }
@@ -116,15 +112,7 @@ class TwitterCronHandler extends Controller
             } catch (\Exception $e) {
                 return $e->getMessage();
             }
-
-            // Get northern Influencers
-            // if (isset($tweets->results)) {
-            //     foreach ($tweets->results as $status) {
-            //         if ($this->checkFollowers($status->user->followers_count)) {
-            //             $northen_influencers[] = $status->user->screen_name;
-            //         }
-            //     }
-            // }
+            return json_encode($tweets);
 
             if (isset($tweets->results)) {
                 foreach ($tweets->results as $status) {

@@ -44,7 +44,9 @@ class HomeController extends Controller
 
 
     function faqs() {
-        return view('pages.faqs');
+        return view('home');
+        // Disabled faq page for now
+        // return view('pages.faqs');
     }
 
     function terms() {
@@ -58,6 +60,16 @@ class HomeController extends Controller
     function pricing() {
         $user = Auth()->user();
         return view('pages.pricing')->withUser($user);
+    }
+    
+    function management() {
+        $user = Auth()->user();
+        return view('pricing.influencerManagement')->withUser($user);
+    }
+    
+    function trends() {
+        $user = Auth()->user();
+        return view('pricing.trends')->withUser($user);
     }
 
 
