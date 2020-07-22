@@ -2,21 +2,13 @@
 
 namespace App\Http\Controllers\ApiV1;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Abraham\TwitterOAuth\TwitterOAuth;
-use Illuminate\Support\Arr;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 use App\User;
 use App\Subscription;
 use App\ManagementReportingHistory;
 use App\ManagementProfilingHistory;
-use App\ProfilingHistory;
-use App\Influencers;
+use App\SummaryHistory;
 
 class ManagementShowDataController extends Controller
 {
@@ -30,6 +22,22 @@ class ManagementShowDataController extends Controller
         return $user;
     }
 
+    public function showSummaryHistory() {
+        $id = request()->id;
+
+        $profile_summary = SummaryHistory::find($id);
+
+        if(!$profile_summary) return response(['status' => 'error', 'message' => 'Data not found']);
+
+        $data['keyword'] = $profile_summary->keyword;
+        $data['report_type'] = $profile_summary->plan->name;
+        $data['report_type_days'] = $profile_summary->plan->days;
+        $data['data'] = json_decode(json_encode($profile_summary->report_data));
+        $data['influencers'] = $profile_summary->influencers;
+
+        return response(['status' => 'success', 'data' => $data]);
+    }
+    
     public function showProfilingHistory() {
 
         $user = $this->authenticate();

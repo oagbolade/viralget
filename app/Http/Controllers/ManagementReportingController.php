@@ -21,4 +21,10 @@ class ManagementReportingController extends Controller
 
         return view('managements.showReport')->withId($id);
     }
+    
+    function profilingSummary() {
+        $id = request()->id;
+
+        return view('managements.showReport')->withId($id)->with('summary', true);
+    }
 }
