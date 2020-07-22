@@ -470,7 +470,7 @@ export default {
             this.reach = data.reach;
             this.total_engagements = total_engagements;
             this.ad_recall = (total_engagements / reach) * 100;
-            this.campaign_value = 1000;
+            this.campaign_value = data.campaign_value;
             this.engagement_rate = data.engagement_rate;
             this.likes = data.total_likes;
             this.retweets = data.total_retweets;
