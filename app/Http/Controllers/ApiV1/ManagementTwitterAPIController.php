@@ -20,6 +20,7 @@ use App\Subscription;
 use App\TrendsPlan;
 use App\ManagementReportingHistory;
 use App\ManagementProfilingHistory;
+use App\SummaryHistory;
 use App\ProfilingHistory;
 use App\Account;
 
@@ -320,6 +321,115 @@ class ManagementTwitterAPIController extends Controller
         return $impressions;
     }
 
+    public function getCampaignSummary()
+    {
+        $user = $this->authenticate();
+
+        $influencers = request()->influencers;
+        $influencers_array = json_decode($influencers);
+        $keyword = request()->keyword;
+        $plan_id = request()->plan_id;
+
+        $report = SummaryHistory::where(['user_id' => $user->id, 'influencers' => $influencers])->first();
+
+        if ($report) {
+            $data['keyword'] = $report->keyword;
+            $data['report_type'] = $report->plan->name;
+            $data['report_type_days'] = $report->plan->days;
+            $data['data'] = json_decode(json_encode($report->report_data));
+            $data['influencers'] = $report->influencers;
+
+            return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+        }
+
+        $userTweets = [];
+        foreach ($influencers_array as $handle) {
+            $userTweets[$handle] = $this->getUserTweets($handle, $keyword);
+        }
+
+        $retweets = [];
+        $all_influencer_tweets = [];
+        $engagementRate = 0;
+        $impressions = 0;
+        $reach = 0;
+        $total_engagements = 0;
+        $total_posts = 0;
+        $avr_likes = 0;
+        $avr_retweets = 0;
+        $media_meta_data = [];
+
+        foreach ($userTweets as $tweets) {
+            foreach($tweets as $tweet){
+                array_push($all_influencer_tweets, $tweet);
+                // array_push($retweets, $this->getProfileHighestRetweets($tweets));
+                // array_push($media_meta_data, $this->getTweetsMedia($tweets));
+            }
+
+            $engagement = $this->getEngagementData($tweets[0]->user, $tweets);
+
+            $engagementRate += (int)$engagement->er ?? 0;
+
+            $impressions += (int)$engagement->impressions ?? 0;
+
+            $reach += (int)$engagement->reach ?? 0;
+
+            $total_engagements += (int)$engagement->total_engagements ?? 0;
+
+            $total_posts += count($tweets);
+
+            $avr_likes += (int)$engagement->avrLikes ?? 0;
+
+            $avr_retweets += (int)$engagement->avrRetweets ?? 0;
+        }
+
+        $data['date_to'] = \Carbon\Carbon::now()->toDayDateTimeString();
+
+        $data['date_from'] = \Carbon\Carbon::now()->subDays(30)->toDayDateTimeString();
+
+        $data['retweets'] =  $retweets;
+
+        $engagement = $this->getEngagementData($tweets[0]->user, $tweets);
+
+        $data['engagement_rate'] = $engagementRate;
+
+        $data['impressions'] = $impressions;
+
+        $data['reach'] = $reach;
+
+        $data['total_engagements'] = $total_engagements;
+
+        $data['total_posts'] = $total_posts;
+
+        $data['avr_likes'] = $avr_likes;
+
+        $data['avr_retweets'] = $avr_retweets;
+
+        $data['media_meta_data'] = $media_meta_data;
+        // tweets
+        // retweets
+        // replies
+        $report = SummaryHistory::where(['user_id' => $user->id, 'influencers' => $influencers])->first();
+
+        if (!$report) {
+            try {
+                $report = SummaryHistory::create([
+                    'user_id' => $user->id,
+                    'influencers' => $influencers,
+                    'keyword' => $keyword,
+                    'report_data' => json_encode($data),
+                    'package' => $plan_id
+                ]);
+            } catch (Exception $e) {
+                dd($e->getMessage());
+                return response([
+                    "status" => 500,
+                    "message" => "failed to get influencer profile " . $e->getMessage(),
+                ], 500);
+            }
+        }
+
+        return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+    }
 
     function getAllProfileData()
     {
@@ -336,8 +446,7 @@ class ManagementTwitterAPIController extends Controller
 
         $profile = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
 
-
-        if ($profile){
+        if ($profile) {
             $data['keyword'] = $profile->keyword;
             $data['report_type'] = $profile->plan->name;
             $data['report_type_days'] = $profile->plan->days;
@@ -347,14 +456,12 @@ class ManagementTwitterAPIController extends Controller
             return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
         }
 
-
         $plan_id = request()->plan_id;
         $plan = InfluencerManagementPlan::where(['id' => $plan_id])->first();
 
         $data = [];
 
         $profileData = $this->getUserProfile($handle);
-
 
         if (!$profileData) {
             return response(['status' => 'error', 'message' => 'Error retrieving user profile'], 403);
