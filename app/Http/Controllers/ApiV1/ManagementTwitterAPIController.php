@@ -307,26 +307,32 @@ class ManagementTwitterAPIController extends Controller
         return $impressions;
     }
 
-    public function getCampaignSummary()
+    public function getCampaignSummary($user_id = '', $influencers = [], $keyword = '', $plan_id = '')
     {
-        $user = $this->authenticate();
+        if (trim($user_id) == '') {
+            $user = $this->authenticate();
+            $user_id = $user->id;
+            $influencers = request()->influencers;
+            $keyword = request()->keyword;
+            $plan_id = request()->plan_id;
 
-        $influencers = request()->influencers;
-        $influencers_array = json_decode($influencers);
-        $keyword = request()->keyword;
-        $plan_id = request()->plan_id;
-
-        $report = SummaryHistory::where(['user_id' => $user->id, 'influencers' => $influencers])->first();
-
-        if ($report) {
-            $data['keyword'] = $report->keyword;
-            $data['report_type'] = $report->plan->name;
-            $data['report_type_days'] = $report->plan->days;
-            $data['data'] = json_decode(json_encode($report->report_data));
-            $data['influencers'] = $report->influencers;
-
-            return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+            $influencers_array = json_decode($influencers);
+            
+            $report = SummaryHistory::where(['user_id' => $user_id, 'influencers' => $influencers])->first();
+    
+            if ($report) {
+                $data['keyword'] = $report->keyword;
+                $data['report_type'] = $report->plan->name;
+                $data['report_type_days'] = $report->plan->days;
+                $data['data'] = json_decode(json_encode($report->report_data));
+                $data['influencers'] = $report->influencers;
+    
+                return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+            }
         }
+
+        $influencers_array = json_decode($influencers);
+
 
         $userTweets = [];
         foreach ($influencers_array as $handle) {
@@ -372,12 +378,12 @@ class ManagementTwitterAPIController extends Controller
 
         $data['campaign_value'] = ($impressions / 1000) * 80;
 
-        $report = SummaryHistory::where(['user_id' => $user->id, 'influencers' => $influencers])->first();
+        $report = SummaryHistory::where(['user_id' => $user_id, 'influencers' => $influencers])->first();
 
         if (!$report) {
             try {
                 $report = SummaryHistory::create([
-                    'user_id' => $user->id,
+                    'user_id' => $user_id,
                     'influencers' => $influencers,
                     'keyword' => $keyword,
                     'report_data' => json_encode($data),
@@ -390,6 +396,12 @@ class ManagementTwitterAPIController extends Controller
                     "message" => "failed to get influencers profile " . $e->getMessage(),
                 ], 500);
             }
+        }else{
+            $report = SummaryHistory::where(['user_id' => $user_id, 'influencers' => $influencers])->update([
+                'report_data' => json_encode($data),
+            ]);
+            
+            return 'done';
         }
 
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);

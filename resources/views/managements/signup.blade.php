@@ -136,6 +136,10 @@
       showDropdowns: true,
       minDate: moment().add(2, 'days'),
       minYear: moment().year(),
+      locale: {
+      format: 'YYYY-MM-DD',
+      "separator": " - ",
+      }
     }, function(start, end, label) {
       console.log('start', start.format('YYYY-MM-DD'))
     });
