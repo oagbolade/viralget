@@ -234,4 +234,26 @@ class CampaignController extends Controller
             ], 500);
         }
     }
+    
+    function deleteManagement()
+    {
+        $campaign = new UserDetailsManagement;
+
+        $campaign_id = request()->campaignId;
+
+        try {
+            $campaign = $campaign->where('id', $campaign_id)->delete();
+
+            return response([
+                "status" => 200,
+                "message" => "successfull",
+                "data" => $campaign_id
+            ], 200);
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to delete campaign " . $e,
+            ], 500);
+        }
+    }
 }

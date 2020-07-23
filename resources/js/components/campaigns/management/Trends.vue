@@ -117,7 +117,17 @@
                   {{ campaign.paid === "false" ? "No" : "Yes" }}
                 </button>
                 <div v-if="campaign.paid === 'false'">
-                  <u @click="goToCheckout(campaign.booking_type, campaign.plan_id, campaign.email, campaign.id)"><a href="#">complete payment</a></u>
+                  <u
+                    @click="
+                      goToCheckout(
+                        campaign.booking_type,
+                        campaign.plan_id,
+                        campaign.email,
+                        campaign.id
+                      )
+                    "
+                    ><a href="#">complete payment</a></u
+                  >
                 </div>
               </td>
               <td>{{ campaign.expired === "false" ? "No" : "Yes" }}</td>
@@ -125,12 +135,14 @@
               <td>
                 <button
                   @click="
-                    viewCampaign(
-                      campaign.user_query,
-                      campaign.trends_plan.id,
-                      campaign.expired,
-                      campaign.paid
-                    )
+                    viewCampaign({
+                      time: campaign.time,
+                      date: campaign.date,
+                      keyword: campaign.user_query,
+                      plan_id: campaign.plan_id,
+                      expired: campaign.expired,
+                      paid: campaign.paid
+                    })
                   "
                   type="button"
                   class="btn btn-label btn-success"
@@ -224,13 +236,26 @@ export default {
       displayError: false
     };
   },
-  mounted: function() {},
+  mounted: function() {
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 1600) {
+        this.collapsed = true;
+      }
+      
+      if(window.innerWidth > 1600){
+        this.collapsed = false;
+      }
+    });
+  },
   created: function() {
     this.getUserCampaigns();
   },
   methods: {
-    goToCheckout(booking_type, plan_id, email, user_plan_id){
-      const URL = `/checkout/${booking_type}/${plan_id}?email=${email}&user_plan_id=${user_plan_id}`
+    refreshData(){
+
+    },
+    goToCheckout(booking_type, plan_id, email, user_plan_id) {
+      const URL = `/checkout/${booking_type}/${plan_id}?email=${email}&user_plan_id=${user_plan_id}`;
       window.location = URL;
     },
     formatCampaignDates(dates) {
@@ -280,8 +305,33 @@ export default {
       }
     },
 
-    viewCampaign(keyword, plan_id, expired, paid) {
-      if (expired === "true") {
+    viewCampaign(data) {
+      let user_date = moment(data.date);
+      let now = moment();
+      let viewDate = moment(data.date)
+        .add(1, "d")
+        .format("DD-MM-YYYY");
+
+      if (data.paid === "false") {
+        Swal.fire(
+          "Oops!",
+          "It seems you haven't completed your payment," +
+            " please click on the COMPLETE PAYMENT button to complete your payment",
+          "question"
+        );
+        return;
+      }
+      
+      if (now.diff(user_date, "days") < 1) {
+        Swal.fire(
+          "Sorry!",
+          `You can start viewing reports 24hrs after your selected trend date. Please check in again on ${viewDate}`,
+          "question"
+        );
+        return;
+      }
+
+      if (data.expired === "true") {
         Swal.fire(
           "Oops!",
           "It seems your trend plan has expired. Kindly checkout our pricing page" +
@@ -291,19 +341,9 @@ export default {
         return;
       }
 
-      if (paid === "false") {
-        Swal.fire(
-          "Oops!",
-          "It seems you haven't completed your payment," +
-            " please click on the COMPLETE PAYMENT button to complete your payment",
-          "question"
-        );
-        return;
-      }
-
       const URL = `/management/hashtag?q=${encodeURIComponent(
-        keyword
-      )}&fromDate=&toDate=&plan_id=${plan_id}`;
+        data.keyword
+      )}&fromDate=&toDate=&plan_id=${data.plan_id}`;
       window.location.href = URL;
     },
 
@@ -312,9 +352,8 @@ export default {
     },
 
     async confirmedDelete(campaignId) {
-      return;
       this.loading = true;
-      const URL = `/api/v1/campaign/delete/${campaignId}`;
+      const URL = `/api/v1/management/campaign/delete/${campaignId}`;
 
       try {
         let response = await axios.delete(URL, {
@@ -337,7 +376,6 @@ export default {
     },
 
     async deleteCampaign(campaignId) {
-      return;
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -399,6 +437,10 @@ th {
 .vsm--item,
 .v-sidebar-menu {
   padding-top: 50px;
+}
+
+.v-sidebar-menu {
+  width: 250px;
 }
 </style>
 

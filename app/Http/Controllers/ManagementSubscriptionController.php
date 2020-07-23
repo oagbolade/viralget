@@ -98,7 +98,7 @@ class ManagementSubscriptionController extends Controller
             ]);
 
             if ($get_user_details->booking_type == 'influencer_management') {
-                return redirect(route('campaigns.trends'))->withSuccess("Congratulations! Your plan is active.
+                return redirect(route('campaigns.influencermanagement'))->withSuccess("Congratulations! Your plan is active.
              You can now view and monitor how influencers are interacting with your hashtag");
             }
 
