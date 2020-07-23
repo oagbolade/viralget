@@ -114,36 +114,13 @@
                 </td>
                 <td>
                   <div>
-                    <b-button v-b-modal.modal-1 variant="outline-success"
+                    <b-button
+                      @click="showModal(JSON.parse(campaign.influencers))"
+                      v-b-modal.modal-1
+                      variant="outline-success"
                       >ViewList</b-button
                     >
                   </div>
-                  <b-modal id="modal-1" title="Influencer List">
-                    <div class="row">
-                      <div
-                        v-for="(influencers, index) in JSON.parse(
-                          campaign.influencers
-                        )"
-                        :key="index"
-                      >
-                        <p class="col-12">
-                          @{{ influencers }}<br />
-                          <button
-                            @click="
-                              viewStats(
-                                influencers,
-                                campaign.user_query,
-                                campaign.influencer_management_plan.id
-                              )
-                            "
-                            class="btn btn-success btn-sm"
-                          >
-                            view stats
-                          </button>
-                        </p>
-                      </div>
-                    </div>
-                  </b-modal>
                 </td>
                 <td>
                   {{ campaign.campaign_objective }}
@@ -229,6 +206,30 @@
         </section>
       </div>
     </div>
+
+    <div>
+      <b-modal id="modal-1" title="Influencer List">
+        <div class="row">
+          <div v-for="(influencers, index) in this.influencers" :key="index">
+            <p class="col-12">
+              @{{ influencers }}<br />
+              <button
+                @click="
+                  viewStats(
+                    influencers,
+                    campaign.user_query,
+                    campaign.influencer_management_plan.id
+                  )
+                "
+                class="btn btn-success btn-sm"
+              >
+                view stats
+              </button>
+            </p>
+          </div>
+        </div>
+      </b-modal>
+    </div>
   </div>
 </template>
 
@@ -247,6 +248,7 @@ export default {
   data() {
     return {
       collapsed: false,
+      influencers: [],
       menu: [
         {
           header: true,
@@ -292,8 +294,8 @@ export default {
       if (window.innerWidth < 1600) {
         this.collapsed = true;
       }
-      
-      if(window.innerWidth > 1600){
+
+      if (window.innerWidth > 1600) {
         this.collapsed = false;
       }
     });
@@ -302,6 +304,9 @@ export default {
     this.getUserCampaigns();
   },
   methods: {
+    showModal(influencers = []) {
+      this.influencers = influencers;
+    },
     goToCheckout(booking_type, plan_id, email, user_plan_id) {
       const URL = `/checkout/${booking_type}/${plan_id}?email=${email}&user_plan_id=${user_plan_id}`;
       window.location = URL;
@@ -507,7 +512,7 @@ th {
   padding-top: 50px;
 }
 
-.v-sidebar-menu{
+.v-sidebar-menu {
   width: 250px;
 }
 </style>
