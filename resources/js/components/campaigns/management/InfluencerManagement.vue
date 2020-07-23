@@ -283,10 +283,21 @@ export default {
       profilingCampaigns: [],
       subscription: {},
       loading: true,
-      displayError: false
+      displayError: false,
+      windowWidth: ""
     };
   },
-  mounted: function() {},
+  mounted: function() {
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 1600) {
+        this.collapsed = true;
+      }
+      
+      if(window.innerWidth > 1600){
+        this.collapsed = false;
+      }
+    });
+  },
   created: function() {
     this.getUserCampaigns();
   },
@@ -368,17 +379,21 @@ export default {
         return;
       }
 
-        this.getCampaignSummary(influencers, keyword, plan_id);
+      this.getCampaignSummary(influencers, keyword, plan_id);
     },
 
     getCampaignSummary(influencers = [], keyword, plan_id) {
       this.loading = true;
       let $this = this;
-      fetch(`/api/v1/management/profile/summary?influencers=${influencers}&keyword=${keyword}&plan_id=${plan_id}`, {
-        headers: {
-          Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
+      fetch(
+        `/api/v1/management/profile/summary?influencers=${influencers}&keyword=${keyword}&plan_id=${plan_id}`,
+        {
+          headers: {
+            Authorization:
+              "Bearer " + $('meta[name="api-token"]').attr("content")
+          }
         }
-      })
+      )
         .then(res => res.json())
         .then(res => {
           if (res.data) {
@@ -490,5 +505,9 @@ th {
 .vsm--item,
 .v-sidebar-menu {
   padding-top: 50px;
+}
+
+.v-sidebar-menu{
+  width: 250px;
 }
 </style>

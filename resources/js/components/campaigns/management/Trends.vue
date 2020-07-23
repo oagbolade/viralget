@@ -236,11 +236,24 @@ export default {
       displayError: false
     };
   },
-  mounted: function() {},
+  mounted: function() {
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 1600) {
+        this.collapsed = true;
+      }
+      
+      if(window.innerWidth > 1600){
+        this.collapsed = false;
+      }
+    });
+  },
   created: function() {
     this.getUserCampaigns();
   },
   methods: {
+    refreshData(){
+
+    },
     goToCheckout(booking_type, plan_id, email, user_plan_id) {
       const URL = `/checkout/${booking_type}/${plan_id}?email=${email}&user_plan_id=${user_plan_id}`;
       window.location = URL;
@@ -424,6 +437,10 @@ th {
 .vsm--item,
 .v-sidebar-menu {
   padding-top: 50px;
+}
+
+.v-sidebar-menu {
+  width: 250px;
 }
 </style>
 
