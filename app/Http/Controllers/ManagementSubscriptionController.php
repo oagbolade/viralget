@@ -13,6 +13,8 @@ use App\Transactions;
 
 use App\Mail\PlanMailables;
 use App\Mail\ManagementInvoiceMailables;
+use App\Scheduler;
+use Exception;
 
 class ManagementSubscriptionController extends Controller
 {
@@ -83,6 +85,19 @@ class ManagementSubscriptionController extends Controller
             // Verify that plan from URL is legit by comparing with database
 
             $update = $user_details->update(['paid' => 'true']);
+
+            try {
+                Scheduler::create([
+                    'user_id' => $get_user_details->user_id,
+                    'user_details_id' => $get_user_details->id,
+                    'last_refresh' => $get_user_details->date,
+                ]);
+            } catch (Exception $e) {
+                return response([
+                    'status' => 500,
+                    'message' => 'An error occured '. $e->getMessage();
+                ], 500);
+            }
 
             $viralget_email = 'info@viralget.com.ng';
             Mail::to($viralget_email)->send(new PlanMailables($get_user_details));
