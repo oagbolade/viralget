@@ -308,7 +308,7 @@ export default {
         );
         return;
       }
-
+      
       if (now.diff(user_date, "days") < 1) {
         Swal.fire(
           "Sorry!",
@@ -339,9 +339,8 @@ export default {
     },
 
     async confirmedDelete(campaignId) {
-      return;
       this.loading = true;
-      const URL = `/api/v1/campaign/delete/${campaignId}`;
+      const URL = `/api/v1/management/campaign/delete/${campaignId}`;
 
       try {
         let response = await axios.delete(URL, {
@@ -364,7 +363,6 @@ export default {
     },
 
     async deleteCampaign(campaignId) {
-      return;
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
