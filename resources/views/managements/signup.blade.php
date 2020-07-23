@@ -82,7 +82,7 @@
         </div>
       </div>
 
-      @if($bookingType === 'trends')
+      {{-- @if($bookingType === 'trends') --}}
       <div class="alert alert-primary" role="alert">
         Note: You can only select a date 48hrs onwards from when you are filling this form
       </div>
@@ -100,7 +100,7 @@
           </select>
         </div>
       </div>
-      @endif
+      {{-- @endif --}}
 
       <div class="form-row">
         <div class="form-group col-md-6">
