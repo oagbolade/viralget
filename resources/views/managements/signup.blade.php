@@ -82,7 +82,7 @@
         </div>
       </div>
 
-      {{-- @if($bookingType === 'trends') --}}
+      @if($bookingType === 'trends')
       <div class="alert alert-primary" role="alert">
         Note: You can only select a date 48hrs onwards from when you are filling this form
       </div>
@@ -100,7 +100,20 @@
           </select>
         </div>
       </div>
-      {{-- @endif --}}
+      @endif
+      
+      @if($bookingType === 'influencer_management')
+      {{-- <div class="alert alert-primary" role="alert">
+        Note: You can only select a date 48hrs onwards from when you are filling this form
+      </div> --}}
+      <div class="form-row">
+        <label>Date</label>
+        {{-- <h6 class="text-center">Pick a date</h6> --}}
+        <div class="form-group col-md-12">
+          <input type="text" name="dateInfluencer" class="form-control date form-control-lg text-center" />
+        </div>
+      </div>
+      @endif
 
       <div class="form-row">
         <div class="form-group col-md-6">
@@ -135,6 +148,23 @@
       singleDatePicker: true,
       showDropdowns: true,
       minDate: moment().add(2, 'days'),
+      minYear: moment().year(),
+      locale: {
+      format: 'YYYY-MM-DD',
+      "separator": " - ",
+      }
+    }, function(start, end, label) {
+      console.log('start', start.format('YYYY-MM-DD'))
+    });
+  });
+    
+  $(function() {
+    $('input[name="dateInfluencer"]').daterangepicker({
+      opens: 'center',
+      autoApply: true,
+      singleDatePicker: true,
+      showDropdowns: true,
+      // minDate: moment().add(2, 'days'),
       minYear: moment().year(),
       locale: {
       format: 'YYYY-MM-DD',
