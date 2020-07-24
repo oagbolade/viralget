@@ -38,8 +38,9 @@ class ManagementSearchController extends Controller
     function hashtag(){
         $q = str_replace('%23', '', strip_tags(request()->q));
         $plan_id = request()->plan_id;
+        $user_details_id = request()->user_details_id;
 
-        return view('managements.show')->with(['q' => $q, 'plan_id' => $plan_id])->with('is_hashtag', true)->withQ($q);        
+        return view('managements.show')->with(['q' => $q, 'plan_id' => $plan_id, 'user_details_id' => $user_details_id])->with('is_hashtag', true)->withQ($q);        
     }
     
     function profile(){
@@ -47,8 +48,9 @@ class ManagementSearchController extends Controller
         $username = str_replace($replace, '', strip_tags(request()->q));
         $keyword = str_replace('%23', '', strip_tags(request()->keyword));
         $plan_id = request()->plan_id;
+        $user_details_id = request()->user_details_id;
 
-        return view('managements.show')->with(['q' => $username, 'keyword' => $keyword, 'plan_id' => $plan_id])->withQ($username);        
+        return view('managements.show')->with(['q' => $username, 'keyword' => $keyword, 'plan_id' => $plan_id, 'user_details_id' => $user_details_id])->withQ($username);        
     }
 
 

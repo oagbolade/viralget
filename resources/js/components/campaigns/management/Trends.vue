@@ -136,6 +136,7 @@
                 <button
                   @click="
                     viewCampaign({
+                      user_details_id: campaign.id,
                       time: campaign.time,
                       date: campaign.date,
                       keyword: campaign.user_query,
@@ -322,14 +323,14 @@ export default {
         return;
       }
       
-      if (now.diff(user_date, "days") < 1) {
-        Swal.fire(
-          "Sorry!",
-          `You can start viewing reports 24hrs after your selected trend date. Please check in again on ${viewDate}`,
-          "question"
-        );
-        return;
-      }
+      // if (now.diff(user_date, "days") < 1) {
+      //   Swal.fire(
+      //     "Sorry!",
+      //     `You can start viewing reports 24hrs after your selected trend date. Please check in again on ${viewDate}`,
+      //     "question"
+      //   );
+      //   return;
+      // }
 
       if (data.expired === "true") {
         Swal.fire(
@@ -343,7 +344,7 @@ export default {
 
       const URL = `/management/hashtag?q=${encodeURIComponent(
         data.keyword
-      )}&fromDate=&toDate=&plan_id=${data.plan_id}`;
+      )}&fromDate=&toDate=&user_details_id=${data.user_details_id}&plan_id=${data.plan_id}`;
       window.location.href = URL;
     },
 

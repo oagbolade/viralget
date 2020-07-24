@@ -20,6 +20,8 @@ use App\ManagementReportingHistory;
 use App\ManagementProfilingHistory;
 use App\SummaryHistory;
 use App\ProfilingHistory;
+use App\SchedulerManagement;
+use DateTime;
 
 use App\InfluencerManagementPlan;
 use Exception;
@@ -56,6 +58,7 @@ class ManagementTwitterAPIController extends Controller
 
         $decode_query = urldecode(request()->q);
         $query = $decode_query;
+        $user_details_id = request()->user_details_id;
 
         if (!$query) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
@@ -66,7 +69,7 @@ class ManagementTwitterAPIController extends Controller
 
         $report = ManagementReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
 
-        if($report) {
+        if ($report && !$this->refresh($user_details_id)) {
             $data['report_type'] = $report->plan->name;
             $data['report_type_days'] = $report->plan->days;
             $data['data'] = json_decode(json_encode($report->report_data));
@@ -317,16 +320,16 @@ class ManagementTwitterAPIController extends Controller
             $plan_id = request()->plan_id;
 
             $influencers_array = json_decode($influencers);
-            
+
             $report = SummaryHistory::where(['user_id' => $user_id, 'influencers' => $influencers])->first();
-    
+
             if ($report) {
                 $data['keyword'] = $report->keyword;
                 $data['report_type'] = $report->plan->name;
                 $data['report_type_days'] = $report->plan->days;
                 $data['data'] = json_decode(json_encode($report->report_data));
                 $data['influencers'] = $report->influencers;
-    
+
                 return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
             }
         }
@@ -396,11 +399,11 @@ class ManagementTwitterAPIController extends Controller
                     "message" => "failed to get influencers profile " . $e->getMessage(),
                 ], 500);
             }
-        }else{
+        } else {
             $report = SummaryHistory::where(['user_id' => $user_id, 'influencers' => $influencers])->update([
                 'report_data' => json_encode($data),
             ]);
-            
+
             return 'done';
         }
 
@@ -430,6 +433,8 @@ class ManagementTwitterAPIController extends Controller
 
     function getAllProfileData()
     {
+        $user_details_id = request()->user_details_id;
+
         $user = $this->authenticate();
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthenticated user']);
@@ -443,7 +448,7 @@ class ManagementTwitterAPIController extends Controller
 
         $profile = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
 
-        if ($profile) {
+        if ($profile && !$this->refresh($user_details_id)) {
             $data['keyword'] = $profile->keyword;
             $data['report_type'] = $profile->plan->name;
             $data['report_type_days'] = $profile->plan->days;
@@ -527,6 +532,27 @@ class ManagementTwitterAPIController extends Controller
         }
 
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+    }
+
+    public function isPlanExpired($user_details_id, $plan_id)
+    {
+    }
+
+    public function refresh($user_details_id)
+    {
+        $scheduler = SchedulerManagement::where(['user_details_id' => $user_details_id])->first();
+        $last_refresh = $scheduler->last_refresh;
+        $last_refresh = new DateTime($scheduler->last_refresh);
+        $now = date("Y-m-d");
+        $current_time = date_create($now);
+        $interval = $last_refresh->diff($current_time);
+        $time_difference = $interval->format('%R%a');
+
+        if ($time_difference > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     function getProfileHighestRetweets($tweets, $isHashtag = false)
@@ -646,32 +672,6 @@ class ManagementTwitterAPIController extends Controller
 
         return $total_engagements;
     }
-
-
-
-    // function getAllHashtagData() {
-
-    //     $handle = request()->q;
-
-    //     if(!$handle) {
-    //         return response(['status' => 'error', 'message' => 'Please specify an hashtag to query'], 403);
-    //     }
-
-    //     $data = [];
-
-    //     $userTweets = $this->getHashtagTweets($handle);
-
-    //     if($userTweets) {
-    //         $data['tweets'] = $userTweets;
-    //     }
-
-    //     $data['media_tweets_count'] = $this->getTweetsMedia($userTweets);
-
-    //     $data['retweeters'] = $this->getTopRetweeters($this->retweetersList($userTweets));
-
-    //     return $data;
-    // }
-
 
     function getUserProfile($value, $search_by = 'screen_name')
     {

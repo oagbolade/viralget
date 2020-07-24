@@ -42,7 +42,7 @@ import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
-  props: ["q", "keyword", "plan_id", "reload"],
+  props: ["q", "keyword", "plan_id", "reload", "user_details_id"],
   components: { Loading },
   data() {
     return {
@@ -75,7 +75,7 @@ export default {
     getProfile: function() {
       this.loading = true;
       let $this = this;
-      fetch(`/api/v1/management/profile?q=${this.q}&keyword=${this.keyword}&plan_id=${this.plan_id}&reload=${this.reload}`, {
+      fetch(`/api/v1/management/profile?q=${this.q}&keyword=${this.keyword}&plan_id=${this.plan_id}&user_details_id=${this.user_details_id}&reload=${this.reload}`, {
         headers: {
           Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
         }
