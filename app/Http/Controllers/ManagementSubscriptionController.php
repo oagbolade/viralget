@@ -116,8 +116,8 @@ class ManagementSubscriptionController extends Controller
             }
 
             $viralget_email = 'info@viralget.com.ng';
-            Mail::to($viralget_email)->send(new PlanMailables($get_user_details));
-            Mail::to($email)->send(new ManagementInvoiceMailables($get_user_details));
+            // Mail::to($viralget_email)->send(new PlanMailables($get_user_details));
+            // Mail::to($email)->send(new ManagementInvoiceMailables($get_user_details));
             // Send invoice
 
             // Store transactions records
