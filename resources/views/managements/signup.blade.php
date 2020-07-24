@@ -89,7 +89,7 @@
       <div class="form-row">
         <h6>When do you want your keyword/hashtag to trend?</h6>
         <div class="form-group col-md-6">
-          <input type="text" name="date" class="form-control date form-control-lg text-center" />
+          <input type="text" name="date" class="date-trends form-control date form-control-lg text-center" />
         </div>
         <div class="form-group col-md-6">
           <select class="form-control form-control-lg" name="time">
@@ -110,7 +110,7 @@
         <label>Date</label>
         {{-- <h6 class="text-center">Pick a date</h6> --}}
         <div class="form-group col-md-12">
-          <input type="text" name="dateInfluencer" class="form-control date form-control-lg text-center" />
+          <input type="text" name="date" class="date-influencer form-control date form-control-lg text-center" />
         </div>
       </div>
       @endif
@@ -142,7 +142,7 @@
 
   <script>
     $(function() {
-    $('input[name="date"]').daterangepicker({
+    $('.date-trends').daterangepicker({
       opens: 'center',
       autoApply: true,
       singleDatePicker: true,
@@ -159,7 +159,7 @@
   });
     
   $(function() {
-    $('input[name="dateInfluencer"]').daterangepicker({
+    $('.date-influencer').daterangepicker({
       opens: 'center',
       autoApply: true,
       singleDatePicker: true,
