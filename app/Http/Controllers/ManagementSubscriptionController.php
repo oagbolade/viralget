@@ -95,7 +95,7 @@ class ManagementSubscriptionController extends Controller
             } catch (Exception $e) {
                 return response([
                     'status' => 500,
-                    'message' => 'An error occured '. $e->getMessage();
+                    'message' => 'An error occured '. $e->getMessage()
                 ], 500);
             }
 
