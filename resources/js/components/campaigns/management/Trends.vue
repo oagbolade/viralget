@@ -323,14 +323,14 @@ export default {
         return;
       }
       
-      // if (now.diff(user_date, "days") < 1) {
-      //   Swal.fire(
-      //     "Sorry!",
-      //     `You can start viewing reports 24hrs after your selected trend date. Please check in again on ${viewDate}`,
-      //     "question"
-      //   );
-      //   return;
-      // }
+      if (now.diff(user_date, "days") < 1) {
+        Swal.fire(
+          "Sorry!",
+          `You can start viewing reports 24hrs after your selected trend date. Please check in again on ${viewDate}`,
+          "question"
+        );
+        return;
+      }
 
       if (data.expired === "true") {
         Swal.fire(
