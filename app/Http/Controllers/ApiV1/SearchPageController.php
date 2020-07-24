@@ -46,7 +46,6 @@ class SearchPageController extends Controller
         }
 
         if ($category && $category != 0) {
-            dd('here');
             $filterInfluencers->where(function ($query) use ($category) {
                 $query->where('category_id', $category);
             });
