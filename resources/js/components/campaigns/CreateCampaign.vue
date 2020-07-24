@@ -185,7 +185,9 @@ export default {
         });
         return;
       }
-
+      
+      const stripHastag = this.form.keywords.replace("#", "");
+      
       this.loading = true;
       const config = {
         headers: {
@@ -194,7 +196,7 @@ export default {
       };
 
       const data = {
-        keywords: this.form.keywords,
+        keywords: stripHastag,
         dates: {
           from: this.form.dates.from,
           to: this.form.dates.to
