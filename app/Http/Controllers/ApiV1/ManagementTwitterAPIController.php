@@ -553,7 +553,6 @@ class ManagementTwitterAPIController extends Controller
         }
 
         return false;
-
     }
 
     function getProfileHighestRetweets($tweets, $isHashtag = false)

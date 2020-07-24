@@ -14,6 +14,7 @@ use App\Transactions;
 use App\Mail\PlanMailables;
 use App\Mail\ManagementInvoiceMailables;
 use App\Scheduler;
+use App\SchedulerManagement;
 use Exception;
 
 class ManagementSubscriptionController extends Controller
@@ -86,8 +87,23 @@ class ManagementSubscriptionController extends Controller
 
             $update = $user_details->update(['paid' => 'true']);
 
+            if($get_user_details->booking_type == 'influencer_management'){
+                try {
+                    Scheduler::create([
+                        'user_id' => $get_user_details->user_id,
+                        'user_details_id' => $get_user_details->id,
+                        'last_refresh' => $get_user_details->date,
+                    ]);
+                } catch (Exception $e) {
+                    return response([
+                        'status' => 500,
+                        'message' => 'An error occured '. $e->getMessage()
+                    ], 500);
+                }
+            }
+            
             try {
-                Scheduler::create([
+                SchedulerManagement::create([
                     'user_id' => $get_user_details->user_id,
                     'user_details_id' => $get_user_details->id,
                     'last_refresh' => $get_user_details->date,
