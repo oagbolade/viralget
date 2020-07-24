@@ -115,7 +115,7 @@
                 <td>
                   <div>
                     <b-button
-                      @click="showModal(JSON.parse(campaign.influencers))"
+                      @click="showModal(JSON.parse(campaign.influencers), campaign)"
                       v-b-modal.modal-1
                       variant="outline-success"
                       >ViewList</b-button
@@ -217,8 +217,8 @@
                 @click="
                   viewStats(
                     influencers,
-                    campaign.user_query,
-                    campaign.influencer_management_plan.id
+                    listCampaign.user_query,
+                    listCampaign.influencer_management_plan.id
                   )
                 "
                 class="btn btn-success btn-sm"
@@ -280,6 +280,7 @@ export default {
         enterprise: "Enterprise"
       },
       campaigns: [],
+      listCampaign: {},
       planName: "",
       planColor: "",
       profilingCampaigns: [],
@@ -304,7 +305,8 @@ export default {
     this.getUserCampaigns();
   },
   methods: {
-    showModal(influencers = []) {
+    showModal(influencers = [], campaign) {
+      this.listCampaign = campaign;
       this.influencers = influencers;
     },
     goToCheckout(booking_type, plan_id, email, user_plan_id) {
