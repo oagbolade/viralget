@@ -95,7 +95,7 @@ class TwitterAPIController extends Controller
 
         $report = ReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
 
-        if ($report) {
+        if ($report && $report->report_data !== null) {
             $data['report_type'] = $report->plan->name;
             $data['report_type_days'] = $report->plan->days;
             $data['data'] = json_decode(json_encode($report->report_data));
