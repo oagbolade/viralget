@@ -218,6 +218,7 @@
                   viewStats(
                     influencers,
                     listCampaign.user_query,
+                    listCampaign.id,
                     listCampaign.influencer_management_plan.id
                   )
                 "
@@ -359,8 +360,8 @@ export default {
         console.log(err);
       }
     },
-    viewStats(username, keyword, plan_id) {
-      const URL = `/management/profile?q=${username}&keyword=${keyword}&plan_id=${plan_id}`;
+    viewStats(username, keyword, user_details_id, plan_id) {
+      const URL = `/management/profile?q=${username}&keyword=${keyword}&user_details_id=${user_details_id}&plan_id=${plan_id}`;
 
       window.location = URL;
     },
