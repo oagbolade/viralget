@@ -75,7 +75,7 @@
                 >
                     <div class="container">
                         <div class="row gap-y text-center">
-                            <div class="col-md-4">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
                                 <h4 class="lead-6">
                                     <i
                                         class="icon-linegraph text-lighter mr-3"
@@ -94,7 +94,7 @@
                                 </p>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
                                 <h4 class="lead-6">
                                     <i
                                         class="icon-target text-lighter mr-3"
@@ -111,7 +111,7 @@
                                 </p>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
                                 <h4 class="lead-6">
                                     <i
                                         class="icon-wallet text-lighter mr-3"
@@ -134,25 +134,6 @@
                         </div>
                     </div>
                 </section>
-
-                <!-- Removed this feature -->
-                <!-- <div class="col-md-4">
-          <form class="input-round">
-            <div class="form-group">
-              <select
-                @change="getDays"
-                v-model="selectedDays"
-                class="form-control"
-                placeholder="Select input"
-              >
-                <option value="">Select Days</option>
-                <option value="1">24hrs</option>
-                <option selected value="7">1 Week (7days)</option>
-                <option value="30">30 days</option>
-              </select>
-            </div>
-          </form>
-        </div> -->
 
                 <section class="download-section">
                     <div class="row">
