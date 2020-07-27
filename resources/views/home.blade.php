@@ -47,7 +47,7 @@
     <div class="container">
       <div class="row gap-y align-items-center">
         <div class="col-md-12 text-center text-center">
-          <h2 class="text-white">Analyse your hashtags/keywords and profile an influencer</h2>
+          <h2 class="text-white">Analyse your hashtags/keywords or profile an influencer</h2>
 
           <div class="col-md-8 offset-md-2">
             <form class="rounded p-5 mt-7" action="{{ route('profiles') }}"
@@ -401,15 +401,15 @@
     </header>
 
     <div class="row">
-      {{-- <div class="col-md-6"> --}}
+      <div class="col-md-12">
         <div class="image-container">
           <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/lasg.png') }}" alt="LASG"></div>
-          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/gtb.png') }}" alt="LASG"></div>
-          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/pwc.png') }}" alt="LASG"></div>
-          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/shoprite.png') }}" alt="LASG"></div>
-          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/dstvLogo.jpg') }}" alt="LASG"></div>
+          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/gtb.png') }}" alt="GTB"></div>
+          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/pwc.png') }}" alt="PWC"></div>
+          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/shoprite.png') }}" alt="SHOP"></div>
+          <div class="p-2"><img class="dstv-logo" src="{{ asset('./static/assets/img/portfolio/dstvLogo.jpg') }}" alt="DSTV"></div>
         </div>
-      {{-- </div> --}}
+      </div>
     </div>
     {{-- </div> --}}
   </section>
@@ -429,14 +429,16 @@
 </main>
 
 <style>
-  .logo-image {
-    height: 250px;
-    max-width: 300px;
+  .dstv-logo {
+    height: 200px;
+    max-width: 200px;
   }
 
   .image-container {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
+    align-items: end;
+    justify-items: center;
   }
 
   @media only screen and (max-width: 1200px) {

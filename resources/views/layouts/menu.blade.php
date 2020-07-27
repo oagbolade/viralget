@@ -26,7 +26,7 @@
           
           <span class="dropdown-toggle" data-toggle="dropdown">My Account</span>
           <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="{{ route('campaigns.view') }}">Dashboard</a>
+            <a class="dropdown-item" href="#">Account Settings</a>
             <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
           </div>          
           @endguest

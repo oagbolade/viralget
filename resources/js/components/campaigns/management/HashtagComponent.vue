@@ -42,22 +42,17 @@
         </div>
 
         <div class="row" v-show="!loading && !displayError">
-            <h6 id="block-2" class="block-number">
-                24 hours report for:
-                <strong>{{ decodeURIComponent(handle) }}</strong>
-                <span v-show="report_type_days !== '30'">
-                    <a href="/pricing"> | Upgrade Plan</a></span
-                >
-            </h6>
+            <div class="report-data col-lg-8">
+                <h6 id="block-2" class="block-number">
+                    24 hours report for:
+                    <strong>{{ decodeURIComponent(handle) }}</strong>
+                </h6>
 
-            <div class="col-md-12">
                 <div>
-                    <p>
-                        <small
-                            ><span class="icon-calendar"></span> &nbsp;
-                            {{ date_from }} - {{ date_to }}</small
-                        >
-                    </p>
+                    <small
+                        ><span class="icon-calendar"></span> &nbsp;
+                        {{ date_from }} - {{ date_to }}</small
+                    >
                 </div>
 
                 <a-range-picker
@@ -68,14 +63,27 @@
                 <button class="btn btn-sm btn-primary" @click="goTo">
                     Filter
                 </button>
+            </div>
 
+            <div class="report-data col-lg-4 col-sm-12">
+                <button
+                    @click="goToSubscription"
+                    type="button"
+                    class="btn btn-round btn-primary float-right"
+                >
+                    <label><i class="fa fa-thumbs-up"></i></label>
+                    Run another trend
+                </button>
+            </div>
+
+            <div class="col-md-12">
                 <section
                     class="section text-white mt-5"
                     style="background-color: #1b8bf9"
                 >
                     <div class="container">
                         <div class="row gap-y text-center">
-                            <div class="col-md-4">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
                                 <h4 class="lead-6">
                                     <i
                                         class="icon-linegraph text-lighter mr-3"
@@ -94,7 +102,7 @@
                                 </p>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
                                 <h4 class="lead-6">
                                     <i
                                         class="icon-target text-lighter mr-3"
@@ -111,7 +119,7 @@
                                 </p>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
                                 <h4 class="lead-6">
                                     <i
                                         class="icon-wallet text-lighter mr-3"
@@ -134,25 +142,6 @@
                         </div>
                     </div>
                 </section>
-
-                <!-- Removed this feature -->
-                <!-- <div class="col-md-4">
-          <form class="input-round">
-            <div class="form-group">
-              <select
-                @change="getDays"
-                v-model="selectedDays"
-                class="form-control"
-                placeholder="Select input"
-              >
-                <option value="">Select Days</option>
-                <option value="1">24hrs</option>
-                <option selected value="7">1 Week (7days)</option>
-                <option value="30">30 days</option>
-              </select>
-            </div>
-          </form>
-        </div> -->
 
                 <section class="download-section">
                     <div class="row">
@@ -529,7 +518,7 @@
 
                 <section class="section mt-0 pt-0">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="tweet-margin col-md-4">
                             <h3>Top Contributors</h3>
                             <table
                                 class="table bg-white shadow table-hover table-striped"
@@ -599,7 +588,7 @@
                                 }"
                             ></paginate-links>
                         </div>
-                        <div class="col-md-4">
+                        <div class="tweet-margin col-md-4">
                             <h3>Retweeters</h3>
                             <table
                                 class="table bg-white shadow table-hover table-striped"
@@ -669,7 +658,7 @@
                                 }"
                             ></paginate-links>
                         </div>
-                        <div class="col-md-4">
+                        <div class="tweet-margin col-md-4">
                             <h3>Highest Impacts</h3>
                             <table
                                 class="table shadow bg-white table-hover table-striped"
@@ -741,7 +730,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="tweet-margin col-md-6">
                                 <h3>Original Contributors</h3>
                                 <table
                                     class="table shadow bg-white table-hover table-striped"
@@ -812,7 +801,7 @@
                                 ></paginate-links>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="tweet-margin col-md-6">
                                 <h3>Top Original Contributors</h3>
                                 <table
                                     class="table shadow bg-white table-hover table-striped"
@@ -884,7 +873,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-4">
+                                <div class="tweet-margin col-lg-4">
                                     <h3>
                                         Most Recent<br />
                                         Tweets
@@ -1002,7 +991,7 @@
                                     ></paginate-links>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="tweet-margin col-md-4">
                                     <h3>
                                         Most Recent Replies to Tweets
                                     </h3>
@@ -1119,7 +1108,7 @@
                                     ></paginate-links>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="tweet-margin col-md-4">
                                     <h3>
                                         Highest Retweeted Tweets
                                     </h3>
@@ -1423,7 +1412,6 @@ export default {
                 .then(res => {
                     if (res.status == "success") {
                         let data = JSON.parse(res.data.data);
-                        console.log("response", data);
 
                         const total_engagements = data.total_engagements;
                         const potential_reach = data.potential_reach;
@@ -1476,11 +1464,6 @@ export default {
 
                         this.date_from = data.date_from;
                         this.date_to = data.date_to;
-
-                        // let start = moment(data.date_from);
-                        // let end = moment(data.date_to);
-                        // this.report_type_days = end.from(start, true);
-
                         this.fillData();
                     } else {
                         this.displayError = true;
@@ -1497,6 +1480,9 @@ export default {
             window.location = `/hashtag/${encodeURI(this.handle)}?fromDate=${
                 this.selected_date_from
             }&toDate=${this.selected_date_to}`;
+        },
+        goToSubscription() {
+            window.location.href = "/pricing/management";
         },
         onChange(date, dateString) {
             this.selected_date_from = `${date[0].format("YYYYMMDDHHMM")}`;
@@ -1576,4 +1562,18 @@ export default {
 /* a:not([href]):not([tabindex]){
   color: black;
 } */
+
+.tweet-margin {
+    margin: 30px 0;
+}
+
+.report-data{
+  margin: -15px 0;
+}
+
+@media only screen and (max-width: 990px) {
+    .report-data{
+        margin: -5px 0;
+    }
+}
 </style>

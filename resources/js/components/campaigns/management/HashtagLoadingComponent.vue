@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div class="row gap-y" v-show="displayError && !loading">
+    <div class="row gap-y" v-show="displayError && !loading && !planExpired">
       <div class="col-md-10 mx-auto text-center">
         <span class="icon-sad lg-error-icon"></span>
         <h1>Oops!</h1>
@@ -30,6 +30,21 @@
 
         <button class="btn btn-sm btn-warning btn-round" @click="getData">
           <span class="icon-refresh"></span> Try again
+        </button>
+      </div>
+    </div>
+
+    <div class="row gap-y" v-show="displayError && !loading && planExpired">
+      <div class="col-md-10 mx-auto text-center">
+        <span class="icon-sad lg-error-icon"></span>
+        <h1>Oops!</h1>
+        <h3>
+          Your plan has expired
+        </h3>
+        <h5>You can purchase one of our plans to run another trend</h5>
+
+        <button class="btn btn-sm btn-warning btn-round" @click="goToPricing">
+          <span class="icon-refresh"></span> Run another Trend
         </button>
       </div>
     </div>
@@ -49,6 +64,7 @@ export default {
   components: { Loading },
   data() {
     return {
+      planExpired: false,
       loading: true,
       tweets: [],
       averageRetweets: 0,
@@ -83,6 +99,9 @@ export default {
     this.getData();
   },
   methods: {
+    goToPricing(){
+      window.location = "/pricing/trends";
+    },
     getData: function() {
       this.loading = true;
       fetch(`/api/v1/management/hashtag?q=${this.q}&user_details_id=${this.user_details_id}&plan_id=${this.plan_id}`, {

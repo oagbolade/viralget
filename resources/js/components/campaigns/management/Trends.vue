@@ -27,7 +27,7 @@
     </div>
 
     <div class="row gap-y" v-show="displayError && !loading">
-      <div class="col-md-10 mx-auto text-center">
+      <div class="col-md-8 mx-auto text-center">
         <span class="icon-sad lg-error-icon"></span>
         <h1>Oops!</h1>
         <h3>
@@ -44,26 +44,24 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <button
-          @click="goToSubscription"
-          type="button"
-          class="btn btn-round btn-primary"
-        >
-          <label><i class="fa fa-thumbs-up"></i></label> Run another trend
-        </button>
-      </div>
-    </div>
-
     <!-- <div class="row" v-show="!loading && !displayError"> -->
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-8">
         <h3 id="block-2">Trends</h3>
         <h6 id="block-2">
           Monitor hastag campaigns, generate reports and listen to what people
           online are saying about your brand
         </h6>
+      </div>
+
+      <div class="col-md-4">
+        <button
+          @click="goToSubscription"
+          type="button"
+          class="pull-right btn btn-round btn-primary"
+        >
+          <label><i class="fa fa-thumbs-up"></i></label> Run another trend
+        </button>
       </div>
 
       <section
@@ -130,7 +128,16 @@
                   >
                 </div>
               </td>
-              <td>{{ campaign.expired === "false" ? "No" : "Yes" }}</td>
+              <td>
+                <button
+                    class="btn"
+                    :class="[
+                      campaign.expired === 'false' ? 'btn-success' : 'btn-danger'
+                    ]"
+                  >
+                  {{ campaign.expired === "false" ? "No" : "Yes" }}
+                </button>
+              </td>
               <td>{{ campaign.created_at }}</td>
               <td>
                 <button
@@ -327,16 +334,6 @@ export default {
         Swal.fire(
           "Sorry!",
           `You can start viewing reports 24hrs after your selected trend date. Please check in again on ${viewDate}`,
-          "question"
-        );
-        return;
-      }
-
-      if (data.expired === "true") {
-        Swal.fire(
-          "Oops!",
-          "It seems your trend plan has expired. Kindly checkout our pricing page" +
-            " and select a plan that best suits your needs",
           "question"
         );
         return;

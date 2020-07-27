@@ -138,14 +138,14 @@
           <td><span class="tick">&#10004;</span></td>
           <td><span class="tick">&#10004;</span></td>
         </tr>
-        <tr>
+        {{-- <tr>
           <td>Twitter Live Report</td>
           <td class="default"><span class="cancel">x</span></td>
           <td><span class="cancel">x</span></td>
           <td><span class="tick">&#10004;</span></td>
           <td><span class="tick">&#10004;</span></td>
           <td><span class="tick">&#10004;</span></td>
-        </tr>
+        </tr> --}}
         <tr>
           <td>Twitter Historic Report</td>
           <td class="default"><span class="cancel">x</span></td>

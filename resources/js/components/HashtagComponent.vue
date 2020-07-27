@@ -75,7 +75,7 @@
                 >
                     <div class="container">
                         <div class="row gap-y text-center">
-                            <div class="col-md-4">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
                                 <h4 class="lead-6">
                                     <i
                                         class="icon-linegraph text-lighter mr-3"
@@ -94,7 +94,7 @@
                                 </p>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
                                 <h4 class="lead-6">
                                     <i
                                         class="icon-target text-lighter mr-3"
@@ -111,7 +111,7 @@
                                 </p>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
                                 <h4 class="lead-6">
                                     <i
                                         class="icon-wallet text-lighter mr-3"
@@ -134,25 +134,6 @@
                         </div>
                     </div>
                 </section>
-
-                <!-- Removed this feature -->
-                <!-- <div class="col-md-4">
-          <form class="input-round">
-            <div class="form-group">
-              <select
-                @change="getDays"
-                v-model="selectedDays"
-                class="form-control"
-                placeholder="Select input"
-              >
-                <option value="">Select Days</option>
-                <option value="1">24hrs</option>
-                <option selected value="7">1 Week (7days)</option>
-                <option value="30">30 days</option>
-              </select>
-            </div>
-          </form>
-        </div> -->
 
                 <section class="download-section">
                     <div class="row">
@@ -465,71 +446,9 @@
                     </div>
                 </section>
 
-                <!-- <section class="section bg-white mt-2" style="box-shadow: 0 0 15px rgba(0,0,0,0.05);">
-                <div class="container">
-
-                  <div class="row gap-y">
-
-                    </div>
-                <div class="container">
-                  <hr/>
-                  <div class="row gap-y">
-                    <div class="col-md-2 text-center">
-                      <span class="iconbox iconbox-xxl">
-                        <i class="icon-globe"></i>
-                      </span>
-                      <p>
-                          <span class="text-primary"><strong>{{ number(potential_impact) }}</strong></span><br/>
-                          <small><strong>Impressions</strong></small>
-                      </p>
-                    </div>
-                    <div class="col text-center">
-                      <span class="iconbox iconbox-xxl">
-                        <i class="icon-refresh "></i>
-                      </span>
-                      <p>
-                          <span class="text-primary"><strong>{{ number(potential_reach) }}</strong></span><br/>
-                          <small><strong>Reach</strong></small>
-                      </p>
-                    </div>
-                    <div class="col text-center">
-                      <span class="iconbox iconbox-xxl">
-                        <i class="fa fa-users"></i>
-                      </span>
-                      <p>
-                          <span class="text-primary"><strong>{{ number(contributors) }}</strong></span><br/>
-                          <small><strong>Contributors</strong></small>
-                      </p>
-                    </div>
-                    <div class="col text-center">
-                      <span class="iconbox iconbox-xxl">
-                        <i class="icon-quote "></i>
-                      </span>
-                      <p>
-                          <span class="text-primary"><strong>{{ avr_contribution }}</strong></span><br/>
-                          <small><strong>Avg Tweet/Contributor</strong></small>
-                      </p>
-                    </div>
-
-                    <div class="col text-center">
-                      <span class="iconbox iconbox-xxl">
-                        <i class="icon-piechart"></i>
-                      </span>
-                      <p>
-                          <span class="text-primary"><strong>{{ `${engagement_rate}%` }}</strong></span><br/>
-                          <small><strong>Engagement Rate</strong></small>
-                      </p>
-                    </div>
-                  </div>
-
-                  </div>
-
-                </div>
-              </section> -->
-
                 <section class="section mt-0 pt-0">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="tweet-margin col-md-4">
                             <h3>Top Contributors</h3>
                             <table
                                 class="table bg-white shadow table-hover table-striped"
@@ -602,7 +521,7 @@
                                 }"
                             ></paginate-links>
                         </div>
-                        <div class="col-md-4">
+                        <div class="tweet-margin col-md-4">
                             <h3>Retweeters</h3>
                             <table
                                 class="table bg-white shadow table-hover table-striped"
@@ -675,7 +594,7 @@
                                 }"
                             ></paginate-links>
                         </div>
-                        <div class="col-md-4">
+                        <div class="tweet-margin col-md-4">
                             <h3>Highest Impacts</h3>
                             <table
                                 class="table shadow bg-white table-hover table-striped"
@@ -750,7 +669,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="tweet-margin col-md-6">
                                 <h3>Original Contributors</h3>
                                 <table
                                     class="table shadow bg-white table-hover table-striped"
@@ -829,7 +748,7 @@
                                 ></paginate-links>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="tweet-margin col-md-6">
                                 <h3>Top Original Contributors</h3>
                                 <table
                                     class="table shadow bg-white table-hover table-striped"
@@ -909,7 +828,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-4">
+                                <div class="tweet-margin col-lg-4">
                                     <h3>
                                         Most Recent<br />
                                         Tweets
@@ -1037,7 +956,7 @@
                                     ></paginate-links>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="tweet-margin col-md-4">
                                     <h3>
                                         Most Recent Replies to Tweets
                                     </h3>
@@ -1164,7 +1083,7 @@
                                     ></paginate-links>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="tweet-margin col-md-4">
                                     <h3>
                                         Highest Retweeted Tweets
                                     </h3>
@@ -1479,7 +1398,7 @@ export default {
                 .then(res => {
                     if (res.status == "success") {
                         let data = JSON.parse(res.data.data);
-                        console.log("response", data);
+                        console.log("response", res);
 
                         const total_engagements = data.total_engagements;
                         const potential_reach = data.potential_reach;
@@ -1643,4 +1562,8 @@ export default {
 /* a:not([href]):not([tabindex]){
   color: black;
 } */
+
+.tweet-margin {
+    margin: 30px 0;
+}
 </style>

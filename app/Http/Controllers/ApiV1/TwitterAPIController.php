@@ -131,8 +131,8 @@ class TwitterAPIController extends Controller
 
         $contribution = $this->getUniqueContributors($tweets);
         $reach = $this->getHashtagReach($tweets, $contribution);
-        $data['date_to'] = $request->has('toDate') ? \Carbon\Carbon::parse($request->toDate)->toDayDateTimeString() : \Carbon\Carbon::now()->toDayDateTimeString();
-        $data['date_from'] = $request->has('fromDate') ? \Carbon\Carbon::parse($request->fromDate)->toDayDateTimeString() :  \Carbon\Carbon::now()->subDays($package->days)->toDayDateTimeString();
+        $data['date_from'] = request()->fromDate !== null ? \Carbon\Carbon::parse($request->fromDate)->toDayDateTimeString() : \Carbon\Carbon::now()->subDays($package->days)->toDayDateTimeString();
+        $data['date_to'] = request()->toDate !== null ? \Carbon\Carbon::parse($request->toDate)->toDayDateTimeString() : \Carbon\Carbon::now()->toDayDateTimeString();
         $data['retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
         $data['replies'] =  $this->getHashtagTweetsData($tweets, $user, 'replies');
         $data['high_likes'] =  $this->getHashtagTweetsData($tweets, $user, 'likes', true);
@@ -351,10 +351,9 @@ class TwitterAPIController extends Controller
             $data['recent_tweets'] = array_slice($userTweets, 0, 30);
         }
 
+        $data['date_from'] = \Carbon\Carbon::now()->subDays($package->days)->toDayDateTimeString();
 
         $data['date_to'] = \Carbon\Carbon::now()->toDayDateTimeString();
-
-        $data['date_from'] = \Carbon\Carbon::now()->subDays(30)->toDayDateTimeString();
 
         $data['profile_location'] = $profileData->location ?? 'Not specified';
 
@@ -579,12 +578,7 @@ class TwitterAPIController extends Controller
 
     function getUserTweets($handle)
     {
-        // $this->connect();
-
-
         $tweets = $this->guzzleClient('statuses/user_timeline', ['screen_name' => $handle, 'count' => 500, 'include_rts' => false, 'exclude_replies' => true]);
-        //'count' => 100, 'exclude_replies' => true,
-        // $tweets = $this->connection->get("statuses/user_timeline", ['screen_name' => $handle, 'count' => 100, 'exclude_replies'=> true]);
         if (isset($tweets->error)) {
             return;
         }

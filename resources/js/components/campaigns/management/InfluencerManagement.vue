@@ -22,7 +22,7 @@
       <div class="col-md-10 mx-auto text-center">
         <h1>We're almost done...</h1>
         <h3>Just a few seconds. Kindly exercise some patience...</h3>
-        <img src="/images/processing.gif" style="max-width: 400px" alt="" />
+        <img src="/images/processing.gif" style="max-width: 400px;" alt="" />
       </div>
     </div>
 
@@ -45,16 +45,6 @@
     </div>
 
     <div class="row">
-      <div class="col-md-6">
-        <button
-          @click="goToSubscription"
-          type="button"
-          class="btn btn-round btn-primary"
-        >
-          <label><i class="fa fa-thumbs-up"></i></label> MANAGE MORE INFLUENCERS
-        </button>
-      </div>
-
       <div class="col-md-6 align-self-center">
         <h5 class="float-right">
           <button
@@ -70,7 +60,7 @@
 
     <div class="row" v-show="!loading && !displayError">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
           <h3 id="block-2">Influencer Management</h3>
           <h6 id="block-2">
             Monitor hastag campaigns, generate reports and listen to what people
@@ -78,9 +68,20 @@
           </h6>
         </div>
 
+        <div class="col-md-4">
+          <button
+            @click="goToSubscription"
+            type="button"
+            class="pull-right btn btn-round btn-primary"
+          >
+            <label><i class="fa fa-thumbs-up"></i></label> MANAGE MORE
+            INFLUENCERS
+          </button>
+        </div>
+
         <section
           class="table-section bg-white col-md-12"
-          style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
+          style="box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);"
         >
           <table class="table table-hover responsive">
             <thead>
@@ -115,7 +116,9 @@
                 <td>
                   <div>
                     <b-button
-                      @click="showModal(JSON.parse(campaign.influencers), campaign)"
+                      @click="
+                        showModal(JSON.parse(campaign.influencers), campaign)
+                      "
                       v-b-modal.modal-1
                       variant="outline-success"
                       >ViewList</b-button
@@ -132,7 +135,7 @@
                   <button
                     class="btn"
                     :class="[
-                      campaign.paid === 'false' ? 'btn-danger' : 'btn-success'
+                      campaign.paid === 'false' ? 'btn-danger' : 'btn-success',
                     ]"
                   >
                     {{ campaign.paid === "false" ? "No" : "Yes" }}
@@ -152,7 +155,16 @@
                   </div>
                 </td>
                 <td>
-                  {{ campaign.expired === "false" ? "No" : "Yes" }}
+                  <button
+                    class="btn"
+                    :class="[
+                      campaign.expired === 'false'
+                        ? 'btn-success'
+                        : 'btn-danger',
+                    ]"
+                  >
+                    {{ campaign.expired === "false" ? "No" : "Yes" }}
+                  </button>
                 </td>
                 <td>{{ campaign.created_at }}</td>
                 <td>
@@ -194,13 +206,13 @@
             :show-step-links="true"
             :step-links="{
               next: 'NEXT',
-              prev: 'PREV'
+              prev: 'PREV',
             }"
             for="campaigns"
             :classes="{
               ul: 'pagination',
               'ul.paginate-links > li.number': 'page-item',
-              'ul.paginate-links > li.number > a': 'page-link'
+              'ul.paginate-links > li.number > a': 'page-link',
             }"
           ></paginate-links>
         </section>
@@ -219,7 +231,8 @@
                     influencers,
                     listCampaign.user_query,
                     listCampaign.id,
-                    listCampaign.influencer_management_plan.id
+                    listCampaign.influencer_management_plan.id,
+                    listCampaign.paid
                   )
                 "
                 class="btn btn-success btn-sm"
@@ -254,23 +267,23 @@ export default {
         {
           header: true,
           title: "Main Navigation",
-          hiddenOnCollapse: true
+          hiddenOnCollapse: true,
         },
         {
           href: "/campaigns",
           title: "Profiling & Reports",
-          icon: "fa fa-dashboard"
+          icon: "fa fa-dashboard",
         },
         {
           href: "/campaigns/influencermanagement",
           title: "Influencer Management",
-          icon: "fa fa-user"
+          icon: "fa fa-user",
         },
         {
           href: "/campaigns/trends",
           title: "Trends",
-          icon: "fa fa-line-chart"
-        }
+          icon: "fa fa-line-chart",
+        },
       ],
       paginate: ["campaigns"],
       planSchema: {
@@ -278,7 +291,7 @@ export default {
         basic: "Basic",
         premiumLite: "Premium Lite",
         premiumBusiness: "Premium Business",
-        enterprise: "Enterprise"
+        enterprise: "Enterprise",
       },
       campaigns: [],
       listCampaign: {},
@@ -288,10 +301,10 @@ export default {
       subscription: {},
       loading: true,
       displayError: false,
-      windowWidth: ""
+      windowWidth: "",
     };
   },
-  mounted: function() {
+  mounted: function () {
     window.addEventListener("resize", () => {
       if (window.innerWidth < 1600) {
         this.collapsed = true;
@@ -302,7 +315,7 @@ export default {
       }
     });
   },
-  created: function() {
+  created: function () {
     this.getUserCampaigns();
   },
   methods: {
@@ -318,7 +331,7 @@ export default {
       const jsonData = JSON.parse(dates);
       return {
         from: jsonData.from,
-        to: jsonData.to
+        to: jsonData.to,
       };
     },
     formatCampaignDatesForTwitter(date) {
@@ -342,8 +355,8 @@ export default {
         let response = await axios.get(URL, {
           headers: {
             Authorization:
-              "Bearer " + $('meta[name="api-token"]').attr("content")
-          }
+              "Bearer " + $('meta[name="api-token"]').attr("content"),
+          },
         });
 
         if (response.data.status === 200) {
@@ -360,23 +373,23 @@ export default {
         console.log(err);
       }
     },
-    viewStats(username, keyword, user_details_id, plan_id) {
+    viewStats(username, keyword, user_details_id, plan_id, paid) {
+      if (paid === "false") {
+        Swal.fire(
+          "Oops!",
+          "It seems you haven't completed your payment," +
+            " please click on the COMPLETE PAYMENT button to complete your payment",
+          "question"
+        );
+        return;
+      }
+
       const URL = `/management/profile?q=${username}&keyword=${keyword}&user_details_id=${user_details_id}&plan_id=${plan_id}`;
 
       window.location = URL;
     },
 
     viewCampaign(influencers = [], keyword, plan_id, expired, paid) {
-      if (expired === "true") {
-        Swal.fire(
-          "Oops!",
-          "It seems your trend plan has expired. Kindly checkout our pricing page" +
-            " and select a plan that best suits your needs",
-          "question"
-        );
-        return;
-      }
-
       if (paid === "false") {
         Swal.fire(
           "Oops!",
@@ -398,12 +411,12 @@ export default {
         {
           headers: {
             Authorization:
-              "Bearer " + $('meta[name="api-token"]').attr("content")
-          }
+              "Bearer " + $('meta[name="api-token"]').attr("content"),
+          },
         }
       )
-        .then(res => res.json())
-        .then(res => {
+        .then((res) => res.json())
+        .then((res) => {
           if (res.data) {
             let data = res.data;
             this.displayError = false;
@@ -413,7 +426,7 @@ export default {
             this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.displayError = true;
           this.loading = false;
         });
@@ -431,11 +444,11 @@ export default {
         let response = await axios.delete(URL, {
           headers: {
             Authorization:
-              "Bearer " + $('meta[name="api-token"]').attr("content")
-          }
+              "Bearer " + $('meta[name="api-token"]').attr("content"),
+          },
         });
         const campaignId = response.data.data;
-        this.campaigns = this.campaigns.filter(campaignData => {
+        this.campaigns = this.campaigns.filter((campaignData) => {
           this.loading = false;
           this.displayError = false;
           return campaignData.id != campaignId;
@@ -455,8 +468,8 @@ export default {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then(result => {
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
         if (result.value) {
           this.confirmedDelete(campaignId);
           Swal.fire("Deleted!", "Your report has been deleted.", "success");
@@ -466,10 +479,10 @@ export default {
 
     makeCamelCase(str) {
       return str
-        .replace(/\s(.)/g, function(a) {
+        .replace(/\s(.)/g, function (a) {
           return a.toUpperCase();
         })
-        .replace(/^(.)/, function(b) {
+        .replace(/^(.)/, function (b) {
           return b.toUpperCase();
         });
     },
@@ -481,9 +494,9 @@ export default {
     dateFormatter(date) {
       let formatedDate = date.split(" ");
       return formatedDate[0];
-    }
+    },
   },
-  computed: {}
+  computed: {},
 };
 </script>
 

@@ -55,7 +55,7 @@
         </button>
       </div>
 
-      <div class="col-md-6 align-self-center">
+      <div :class="planName !== 'enterprise' ? 'col-md-6' : 'col-md-12'" class="align-self-center">
         <h5 class="float-right">
           <button
             type="button"
