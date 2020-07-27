@@ -21,6 +21,7 @@ use App\ManagementProfilingHistory;
 use App\SummaryHistory;
 use App\ProfilingHistory;
 use App\SchedulerManagement;
+use App\Scheduler;
 use DateTime;
 
 use App\InfluencerManagementPlan;
@@ -64,15 +65,22 @@ class ManagementTwitterAPIController extends Controller
         $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
         $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
 
-        if ($this->isPlanExpired($user_details_id, $plan_days->days)) {
-            return response(['status' => 410, 'message' => 'Your plan has expired, please run a plan'], 410);
-        }
 
         if (!$query) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
 
         $report = ManagementReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
+        
+        if ($report && $this->isPlanExpired($user_details_id, $plan_days->days)) {
+            $data['report_type'] = $report->plan->name;
+            $data['report_type_days'] = $report->plan->days;
+            $data['data'] = json_decode(json_encode($report->report_data));
+            $data['expired'] = 'true';
+            $data['handle'] = $report->query;
+
+            return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+        }
 
         if ($report && !$this->refresh($user_details_id)) {
             $data['report_type'] = $report->plan->name;
@@ -440,11 +448,11 @@ class ManagementTwitterAPIController extends Controller
 
     function getAllProfileData()
     {
-        
+
         $user = $this->authenticate();
-        
+
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthenticated user']);
-        
+
         $user_details_id = request()->user_details_id;
         $handle = request()->q;
         $keyword = request()->keyword;
@@ -452,16 +460,23 @@ class ManagementTwitterAPIController extends Controller
 
         $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
         $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
-        
-        if($this->isPlanExpired($user_details_id, $plan_days->days)){
-            return response(['status' => 410, 'message' => 'Your plan has expired, please run a plan'], 410);
-        }
 
         if (!$handle) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
 
         $profile = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
+
+        if ($profile && $this->isPlanExpired($user_details_id, $plan_days->days)) {
+            $data['keyword'] = $profile->keyword;
+            $data['report_type'] = $profile->plan->name;
+            $data['report_type_days'] = $profile->plan->days;
+            $data['data'] = json_decode(json_encode($profile->report_data));
+            $data['handle'] = $profile->handle;
+            $data['expired'] = 'true';
+
+            return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
+        }
 
         if ($profile && !$this->refresh($user_details_id)) {
             $data['keyword'] = $profile->keyword;
@@ -550,12 +565,12 @@ class ManagementTwitterAPIController extends Controller
     {
         $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
 
-        if($user_details->booking_type == 'influencer_management'){
+        if ($user_details->booking_type == 'influencer_management') {
             $user_details = UserDetailsManagement::where(['id' => $user_details_id])->with('influencerManagementPlan')->first();
 
             $compensate_a_day = $plan_days + 1;
             $days_after = \Carbon\Carbon::parse($user_details->date)->addDays($compensate_a_day);
-            
+
             $now = date("Y-m-d");
             $current_time = date_create($now);
             $interval = $days_after->diff($current_time);
@@ -563,6 +578,7 @@ class ManagementTwitterAPIController extends Controller
 
             if ($time_difference > 0) {
                 $this->setExpired($user_details_id);
+                $this->removeScheduler($user_details_id);
                 return true;
             }
 
@@ -591,9 +607,20 @@ class ManagementTwitterAPIController extends Controller
         ]);
     }
 
+    public function removeScheduler($user_details_id)
+    {
+        SchedulerManagement::where(['user_details_id' => $user_details_id])->delete();
+        Scheduler::where(['user_details_id' => $user_details_id])->delete();
+    }
+
     public function refresh($user_details_id)
     {
         $scheduler = SchedulerManagement::where(['user_details_id' => $user_details_id])->first();
+
+        if (!$scheduler) {
+            return false;
+        }
+
         $last_refresh = $scheduler->last_refresh;
         $last_refresh = new DateTime($scheduler->last_refresh);
         $now = date("Y-m-d");
@@ -602,6 +629,10 @@ class ManagementTwitterAPIController extends Controller
         $time_difference = $interval->format('%R%a');
 
         if ($time_difference > 0) {
+            $scheduler = SchedulerManagement::where(['user_details_id' => $user_details_id])->update([
+                'last_refresh' => $current_time
+            ]);
+
             return true;
         }
 
