@@ -465,68 +465,6 @@
                     </div>
                 </section>
 
-                <!-- <section class="section bg-white mt-2" style="box-shadow: 0 0 15px rgba(0,0,0,0.05);">
-                <div class="container">
-
-                  <div class="row gap-y">
-
-                    </div>
-                <div class="container">
-                  <hr/>
-                  <div class="row gap-y">
-                    <div class="col-md-2 text-center">
-                      <span class="iconbox iconbox-xxl">
-                        <i class="icon-globe"></i>
-                      </span>
-                      <p>
-                          <span class="text-primary"><strong>{{ number(potential_impact) }}</strong></span><br/>
-                          <small><strong>Impressions</strong></small>
-                      </p>
-                    </div>
-                    <div class="col text-center">
-                      <span class="iconbox iconbox-xxl">
-                        <i class="icon-refresh "></i>
-                      </span>
-                      <p>
-                          <span class="text-primary"><strong>{{ number(potential_reach) }}</strong></span><br/>
-                          <small><strong>Reach</strong></small>
-                      </p>
-                    </div>
-                    <div class="col text-center">
-                      <span class="iconbox iconbox-xxl">
-                        <i class="fa fa-users"></i>
-                      </span>
-                      <p>
-                          <span class="text-primary"><strong>{{ number(contributors) }}</strong></span><br/>
-                          <small><strong>Contributors</strong></small>
-                      </p>
-                    </div>
-                    <div class="col text-center">
-                      <span class="iconbox iconbox-xxl">
-                        <i class="icon-quote "></i>
-                      </span>
-                      <p>
-                          <span class="text-primary"><strong>{{ avr_contribution }}</strong></span><br/>
-                          <small><strong>Avg Tweet/Contributor</strong></small>
-                      </p>
-                    </div>
-
-                    <div class="col text-center">
-                      <span class="iconbox iconbox-xxl">
-                        <i class="icon-piechart"></i>
-                      </span>
-                      <p>
-                          <span class="text-primary"><strong>{{ `${engagement_rate}%` }}</strong></span><br/>
-                          <small><strong>Engagement Rate</strong></small>
-                      </p>
-                    </div>
-                  </div>
-
-                  </div>
-
-                </div>
-              </section> -->
-
                 <section class="section mt-0 pt-0">
                     <div class="row">
                         <div class="tweet-margin col-md-4">
