@@ -15,7 +15,7 @@
       <div class="col-md-10 mx-auto text-center">
         <h1>We're almost done...</h1>
         <h3>Just a few seconds. Kindly exercise some patience...</h3>
-        <img src="/images/processing.gif" style="max-width: 400px" alt="" />
+        <img src="/images/processing.gif" style="max-width: 400px;" alt="" />
       </div>
     </div>
 
@@ -33,20 +33,32 @@
     </div>
 
     <div class="row" v-show="!loading && !displayError">
-      <h6 id="block-2" class="block-number">
-        {{ report_type_days }} Days profiling report for:
-        <strong>{{ decodeURIComponent(handle) }}</strong
-        ><span v-show="report_type_days !== '30'">
-          <a href="/pricing"> | Upgrade Plan</a></span
-        >
-      </h6>
-      <div class="col-md-12">
-        <p>
+      <div class="report-data col-lg-8">
+        <h6 id="block-2" class="block-number">
+          {{ report_type_days }} Days profiling report for:
+          <strong>{{ decodeURIComponent(handle) }}</strong>
+        </h6>
+
+        <div>
           <small
             ><span class="icon-calendar"></span> &nbsp; {{ date_from }} -
             {{ date_to }}</small
           >
-        </p>
+        </div>
+      </div>
+      
+      <div v-if="report_type !== 'enterprise'" class="report-data col-lg-4 col-sm-12">
+        <button
+          @click="goToSubscription"
+          type="button"
+          class="btn btn-round btn-primary float-right"
+        >
+          <label><i class="fa fa-thumbs-up"></i></label>
+          Upgrade Plan
+        </button>
+      </div>
+
+      <div class="col-md-12">
         <p>
           <a
             :href="`/search/profile/${handle}?reloadData=true`"
@@ -56,7 +68,7 @@
         </p>
         <section
           class="section bg-white"
-          style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
+          style="box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);"
         >
           <div class="container">
             <div class="row gap-y">
@@ -196,7 +208,7 @@
           </div>
         </section>
 
-        <section class="section bg-gray" style="width: 100%">
+        <section class="section bg-gray" style="width: 100%;">
           <div class="container">
             <div class="row gap-y">
               <div class="col-md-6">
@@ -254,12 +266,12 @@
                   :limit="5"
                   :step-links="{
                     next: 'NEXT',
-                    prev: 'PREV'
+                    prev: 'PREV',
                   }"
                   :classes="{
                     ul: 'pagination',
                     'ul.paginate-links > li.number': 'page-item',
-                    'ul.paginate-links > li.number > a': 'page-link'
+                    'ul.paginate-links > li.number > a': 'page-link',
                   }"
                 ></paginate-links>
               </div>
@@ -319,12 +331,12 @@
                   :limit="5"
                   :step-links="{
                     next: 'NEXT',
-                    prev: 'PREV'
+                    prev: 'PREV',
                   }"
                   :classes="{
                     ul: 'pagination',
                     'ul.paginate-links > li.number': 'page-item',
-                    'ul.paginate-links > li.number > a': 'page-link'
+                    'ul.paginate-links > li.number > a': 'page-link',
                   }"
                 ></paginate-links>
               </div>
@@ -333,7 +345,10 @@
             <div class="row gap-y">
               <div
                 class="col-md-12 bg-white"
-                style="box-shadow: 0 0 15px rgba(0,0,0,0.05); height: fit-content;"
+                style="
+                  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+                  height: fit-content;
+                "
               >
                 <h5 class="fw-500 my-4">Need Extra Data?</h5>
                 <hr class="my-7" />
@@ -417,14 +432,17 @@ export default {
       displayError: false,
       total_engagements: 0,
       impressions: 0,
-      reach: 0
+      reach: 0,
     };
   },
-  mounted: function() {},
-  created: function() {
+  mounted: function () {},
+  created: function () {
     this.getProfile();
   },
   methods: {
+    goToSubscription() {
+      window.location.href = "/pricing";
+    },
     dynamicLimit(plan) {
       if (plan === "starter" || plan === "basic") {
         return 1;
@@ -437,8 +455,9 @@ export default {
 
       const config = {
         headers: {
-          Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
-        }
+          Authorization:
+            "Bearer " + $('meta[name="api-token"]').attr("content"),
+        },
       };
 
       const data = {
@@ -460,7 +479,7 @@ export default {
         retweets: this.retweets,
         tweets: this.recent_tweets,
         about: this.about,
-        name: this.name
+        name: this.name,
       };
 
       // Add all necessary formaters
@@ -470,16 +489,17 @@ export default {
         console.log(err);
       }
     },
-    getProfile: function() {
+    getProfile: function () {
       this.loading = true;
       let $this = this;
       fetch(`/api/v1/report/profile/${this.id}`, {
         headers: {
-          Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
-        }
+          Authorization:
+            "Bearer " + $('meta[name="api-token"]').attr("content"),
+        },
       })
-        .then(res => res.json())
-        .then(res => {
+        .then((res) => res.json())
+        .then((res) => {
           if (res.data) {
             let data = JSON.parse(res.data.data);
             this.total_engagements = data.total_engagements;
@@ -512,12 +532,12 @@ export default {
             this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.displayError = true;
           this.loading = false;
         });
     },
-    numberFormat: function(number) {
+    numberFormat: function (number) {
       var format = 0;
 
       if (number > 999999999) {
@@ -531,15 +551,15 @@ export default {
       }
       return format;
     },
-    getHumanDate: function(date) {
+    getHumanDate: function (date) {
       return moment(date).format("LLLL");
-    }
+    },
   },
   computed: {
-    _avatar: function() {
+    _avatar: function () {
       return this.avatar.replace("_normal", "");
-    }
-  }
+    },
+  },
 };
 </script>
 
