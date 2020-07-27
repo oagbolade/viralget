@@ -152,7 +152,14 @@
                   </div>
                 </td>
                 <td>
+                  <button
+                    class="btn"
+                    :class="[
+                      campaign.expired === 'false' ? 'btn-success' : 'btn-danger'
+                    ]"
+                  >
                   {{ campaign.expired === "false" ? "No" : "Yes" }}
+                  </button>
                 </td>
                 <td>{{ campaign.created_at }}</td>
                 <td>
