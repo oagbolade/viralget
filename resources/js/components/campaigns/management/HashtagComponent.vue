@@ -1464,11 +1464,6 @@ export default {
 
                         this.date_from = data.date_from;
                         this.date_to = data.date_to;
-
-                        // let start = moment(data.date_from);
-                        // let end = moment(data.date_to);
-                        // this.report_type_days = end.from(start, true);
-
                         this.fillData();
                     } else {
                         this.displayError = true;

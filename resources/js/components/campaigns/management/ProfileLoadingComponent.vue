@@ -15,11 +15,11 @@
       <div class="col-md-10 mx-auto text-center">
         <h1>We are processing your request.</h1>
         <h3>Please wait as this could take a few minutes...</h3>
-        <img src="/images/processing.gif" style="max-width: 400px" alt="" />
+        <img src="/images/processing.gif" style="max-width: 400px;" alt="" />
       </div>
     </div>
 
-    <div class="row gap-y" v-show="displayError && !loading">
+    <div class="row gap-y" v-show="displayError && !loading && !planExpired">
       <div class="col-md-10 mx-auto text-center">
         <span class="icon-sad lg-error-icon"></span>
         <h1>Oops!</h1>
@@ -30,6 +30,21 @@
 
         <button class="btn btn-sm btn-warning btn-round" @click="getProfile">
           <span class="icon-refresh"></span> Try again
+        </button>
+      </div>
+    </div>
+
+    <div class="row gap-y" v-show="displayError && !loading && planExpired">
+      <div class="col-md-10 mx-auto text-center">
+        <span class="icon-sad lg-error-icon"></span>
+        <h1>Oops!</h1>
+        <h3>
+          Your plan has expired
+        </h3>
+        <h5>You can purchase one of our plans to profile more influencers</h5>
+
+        <button class="btn btn-sm btn-warning btn-round" @click="goToPricing">
+          <span class="icon-refresh"></span> Profile More Influencers
         </button>
       </div>
     </div>
@@ -46,6 +61,7 @@ export default {
   components: { Loading },
   data() {
     return {
+      planExpired: false,
       loading: true,
       avatar: "",
       tweets: [],
@@ -72,6 +88,9 @@ export default {
     this.getProfile();
   },
   methods: {
+    goToPricing(){
+      window.location = "/pricing/management";
+    },
     getProfile: function() {
       this.loading = true;
       let $this = this;
@@ -82,6 +101,12 @@ export default {
       })
         .then(res => res.json())
         .then(res => {
+          if(res.status === 410){
+            this.planExpired = true;
+            this.displayError = true;
+            this.loading = false;
+          }
+
           if (res.data) {
             let data = res.data;
             this.displayError = false;
@@ -92,6 +117,7 @@ export default {
           }
         })
         .catch(err => {
+          console.log(err)
           this.displayError = true;
           this.loading = false;
         });

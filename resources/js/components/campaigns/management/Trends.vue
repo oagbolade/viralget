@@ -332,16 +332,6 @@ export default {
         return;
       }
 
-      if (data.expired === "true") {
-        Swal.fire(
-          "Oops!",
-          "It seems your trend plan has expired. Kindly checkout our pricing page" +
-            " and select a plan that best suits your needs",
-          "question"
-        );
-        return;
-      }
-
       const URL = `/management/hashtag?q=${encodeURIComponent(
         data.keyword
       )}&fromDate=&toDate=&user_details_id=${data.user_details_id}&plan_id=${data.plan_id}`;

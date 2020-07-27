@@ -219,7 +219,8 @@
                     influencers,
                     listCampaign.user_query,
                     listCampaign.id,
-                    listCampaign.influencer_management_plan.id
+                    listCampaign.influencer_management_plan.id,
+                    listCampaign.paid
                   )
                 "
                 class="btn btn-success btn-sm"
@@ -360,23 +361,23 @@ export default {
         console.log(err);
       }
     },
-    viewStats(username, keyword, user_details_id, plan_id) {
+    viewStats(username, keyword, user_details_id, plan_id, paid) {
+      if (paid === "false") {
+        Swal.fire(
+          "Oops!",
+          "It seems you haven't completed your payment," +
+            " please click on the COMPLETE PAYMENT button to complete your payment",
+          "question"
+        );
+        return;
+      }
+
       const URL = `/management/profile?q=${username}&keyword=${keyword}&user_details_id=${user_details_id}&plan_id=${plan_id}`;
 
       window.location = URL;
     },
 
     viewCampaign(influencers = [], keyword, plan_id, expired, paid) {
-      if (expired === "true") {
-        Swal.fire(
-          "Oops!",
-          "It seems your trend plan has expired. Kindly checkout our pricing page" +
-            " and select a plan that best suits your needs",
-          "question"
-        );
-        return;
-      }
-
       if (paid === "false") {
         Swal.fire(
           "Oops!",
