@@ -47,7 +47,7 @@
     <div class="container">
       <div class="row gap-y align-items-center">
         <div class="col-md-12 text-center text-center">
-          <h2 class="text-white">Analyse your hashtags/keywords and profile an influencer</h2>
+          <h2 class="text-white">Analyse your hashtags/keywords or profile an influencer</h2>
 
           <div class="col-md-8 offset-md-2">
             <form class="rounded p-5 mt-7" action="{{ route('profiles') }}"
