@@ -24,6 +24,7 @@ use App\SchedulerManagement;
 use DateTime;
 
 use App\InfluencerManagementPlan;
+use App\UserDetailsManagement;
 use Exception;
 
 class ManagementTwitterAPIController extends Controller
@@ -60,12 +61,16 @@ class ManagementTwitterAPIController extends Controller
         $query = $decode_query;
         $user_details_id = request()->user_details_id;
 
+        $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
+        $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
+
+        if ($this->isPlanExpired($user_details_id, $plan_days->days)) {
+            return response(['status' => 410, 'message' => 'Your plan has expired, please run a plan'], 410);
+        }
+
         if (!$query) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
-
-        // Check if expired
-        // Check if paid
 
         $report = ManagementReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
 
@@ -93,8 +98,10 @@ class ManagementTwitterAPIController extends Controller
 
         $contribution = $this->getUniqueContributors($tweets);
         $reach = $this->getHashtagReach($tweets, $contribution);
-        // $data['date_to'] = $request->has('toDate') ? \Carbon\Carbon::parse($request->toDate)->toDayDateTimeString() : \Carbon\Carbon::now()->toDayDateTimeString();
-        // $data['date_from'] = $request->has('fromDate') ? \Carbon\Carbon::parse($request->fromDate)->toDayDateTimeString() :  \Carbon\Carbon::now()->subDays($package->days)->toDayDateTimeString();
+
+        $data['date_from'] = request()->fromDate !== null ? \Carbon\Carbon::parse($request->fromDate)->toDayDateTimeString() : \Carbon\Carbon::now()->subDays(1)->toDayDateTimeString();
+        $data['date_to'] = request()->toDate !== null ? \Carbon\Carbon::parse($request->toDate)->toDayDateTimeString() : \Carbon\Carbon::now()->toDayDateTimeString();
+
         $data['retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
         $data['replies'] =  $this->getHashtagTweetsData($tweets, $user, 'replies');
         $data['high_likes'] =  $this->getHashtagTweetsData($tweets, $user, 'likes', true);
@@ -433,14 +440,22 @@ class ManagementTwitterAPIController extends Controller
 
     function getAllProfileData()
     {
-        $user_details_id = request()->user_details_id;
-
+        
         $user = $this->authenticate();
-
+        
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthenticated user']);
-
+        
+        $user_details_id = request()->user_details_id;
         $handle = request()->q;
         $keyword = request()->keyword;
+        $plan_id = request()->plan_id;
+
+        $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
+        $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
+        
+        if($this->isPlanExpired($user_details_id, $plan_days->days)){
+            return response(['status' => 410, 'message' => 'Your plan has expired, please run a plan'], 410);
+        }
 
         if (!$handle) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
@@ -458,8 +473,6 @@ class ManagementTwitterAPIController extends Controller
             return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
         }
 
-        $plan_id = request()->plan_id;
-        $plan = InfluencerManagementPlan::where(['id' => $plan_id])->first();
 
         $data = [];
 
@@ -479,9 +492,8 @@ class ManagementTwitterAPIController extends Controller
             $data['recent_tweets'] = array_slice($userTweets, 0, 30);
         }
 
+        $data['date_from'] = \Carbon\Carbon::parse($user_details->date)->toDayDateTimeString();
         $data['date_to'] = \Carbon\Carbon::now()->toDayDateTimeString();
-
-        $data['date_from'] = \Carbon\Carbon::now()->subDays(30)->toDayDateTimeString();
 
         $data['profile_location'] = $profileData->location ?? 'Not specified';
 
@@ -521,7 +533,7 @@ class ManagementTwitterAPIController extends Controller
                     'handle' => $handle,
                     'keyword' => $keyword,
                     'report_data' => json_encode($data),
-                    'package' => $plan->id
+                    'package' => $plan_id
                 ]);
             } catch (Exception $e) {
                 return response([
@@ -534,8 +546,49 @@ class ManagementTwitterAPIController extends Controller
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
     }
 
-    public function isPlanExpired($user_details_id, $plan_id)
+    public function isPlanExpired($user_details_id, $plan_days)
     {
+        $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
+
+        if($user_details->booking_type == 'influencer_management'){
+            $user_details = UserDetailsManagement::where(['id' => $user_details_id])->with('influencerManagementPlan')->first();
+
+            $compensate_a_day = $plan_days + 1;
+            $days_after = \Carbon\Carbon::parse($user_details->date)->addDays($compensate_a_day);
+            
+            $now = date("Y-m-d");
+            $current_time = date_create($now);
+            $interval = $days_after->diff($current_time);
+            $time_difference = $interval->format('%R%a');
+
+            if ($time_difference > 0) {
+                $this->setExpired($user_details_id);
+                return true;
+            }
+
+            return false;
+        }
+
+        $trend_date = \Carbon\Carbon::parse($user_details->date)->addDays(1);
+
+        $now = date("Y-m-d");
+        $current_time = date_create($now);
+        $interval = $trend_date->diff($current_time);
+        $time_difference = $interval->format('%R%a');
+
+        if ($time_difference > 0) {
+            $this->setExpired($user_details_id);
+            return true;
+        }
+
+        return false;
+    }
+
+    public function setExpired($user_details_id)
+    {
+        UserDetailsManagement::where(['id' => $user_details_id])->update([
+            'expired' => 'true',
+        ]);
     }
 
     public function refresh($user_details_id)
