@@ -529,7 +529,7 @@
 
                 <section class="section mt-0 pt-0">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="tweet-margin col-md-4">
                             <h3>Top Contributors</h3>
                             <table
                                 class="table bg-white shadow table-hover table-striped"
@@ -599,7 +599,7 @@
                                 }"
                             ></paginate-links>
                         </div>
-                        <div class="col-md-4">
+                        <div class="tweet-margin col-md-4">
                             <h3>Retweeters</h3>
                             <table
                                 class="table bg-white shadow table-hover table-striped"
@@ -669,7 +669,7 @@
                                 }"
                             ></paginate-links>
                         </div>
-                        <div class="col-md-4">
+                        <div class="tweet-margin col-md-4">
                             <h3>Highest Impacts</h3>
                             <table
                                 class="table shadow bg-white table-hover table-striped"
@@ -741,7 +741,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="tweet-margin col-md-6">
                                 <h3>Original Contributors</h3>
                                 <table
                                     class="table shadow bg-white table-hover table-striped"
@@ -812,7 +812,7 @@
                                 ></paginate-links>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="tweet-margin col-md-6">
                                 <h3>Top Original Contributors</h3>
                                 <table
                                     class="table shadow bg-white table-hover table-striped"
@@ -884,7 +884,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-4">
+                                <div class="tweet-margin col-lg-4">
                                     <h3>
                                         Most Recent<br />
                                         Tweets
@@ -1002,7 +1002,7 @@
                                     ></paginate-links>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="tweet-margin col-md-4">
                                     <h3>
                                         Most Recent Replies to Tweets
                                     </h3>
@@ -1119,7 +1119,7 @@
                                     ></paginate-links>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="tweet-margin col-md-4">
                                     <h3>
                                         Highest Retweeted Tweets
                                     </h3>
@@ -1423,7 +1423,6 @@ export default {
                 .then(res => {
                     if (res.status == "success") {
                         let data = JSON.parse(res.data.data);
-                        console.log("response", data);
 
                         const total_engagements = data.total_engagements;
                         const potential_reach = data.potential_reach;
@@ -1576,4 +1575,8 @@ export default {
 /* a:not([href]):not([tabindex]){
   color: black;
 } */
+
+.tweet-margin {
+    margin: 30px 0;
+}
 </style>
