@@ -131,8 +131,8 @@ class TwitterAPIController extends Controller
 
         $contribution = $this->getUniqueContributors($tweets);
         $reach = $this->getHashtagReach($tweets, $contribution);
-        $data['date_from'] = \Carbon\Carbon::now()->subDays($package->days)->toDayDateTimeString();
-        $data['date_to'] = request()->fromDate !== null ? \Carbon\Carbon::parse($request->toDate)->toDayDateTimeString() : \Carbon\Carbon::now()->toDayDateTimeString();
+        $data['date_from'] = request()->fromDate !== null ? \Carbon\Carbon::parse($request->fromDate)->toDayDateTimeString() : \Carbon\Carbon::now()->subDays($package->days)->toDayDateTimeString();
+        $data['date_to'] = request()->toDate !== null ? \Carbon\Carbon::parse($request->toDate)->toDayDateTimeString() : \Carbon\Carbon::now()->toDayDateTimeString();
         $data['retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
         $data['replies'] =  $this->getHashtagTweetsData($tweets, $user, 'replies');
         $data['high_likes'] =  $this->getHashtagTweetsData($tweets, $user, 'likes', true);
