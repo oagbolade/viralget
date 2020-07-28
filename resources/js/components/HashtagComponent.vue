@@ -1396,9 +1396,9 @@ export default {
             })
                 .then(res => res.json())
                 .then(res => {
-                    if (res.status == "success") {
-                        let data = JSON.parse(res.data.data);
+                    if (res.status == "success" && res.data) {
                         console.log("response", res);
+                        let data = JSON.parse(res.data.data);
 
                         const total_engagements = data.total_engagements;
                         const potential_reach = data.potential_reach;
