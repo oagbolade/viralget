@@ -1133,17 +1133,26 @@ export default {
         .then((res) => res.json())
         .then((res) => {
           if (res.status == "success") {
+            console.log(res)
             let data = JSON.parse(res.data.data);
             this.displayError = false;
             this.loading = false;
             
+            // High Tweets
             const get_most_recent_tweets = JSON.parse(res.high_tweets.most_recent_tweets)
             const get_most_recent_replies = JSON.parse(res.high_tweets.most_recent_replies)
             const get_highest_retweeted_tweets = JSON.parse(res.high_tweets.highest_retweeted_tweets)
+
+            // Contributors
+            const get_original_contributors = JSON.parse(res.contributors.original_contributors)
+            const get_top_original_contributors = JSON.parse(res.contributors.top_original_contributors)
             
             this.most_recent_tweets = get_most_recent_tweets;
             this.most_recent_replies = get_most_recent_replies;
             this.high_retweet_tweets = get_highest_retweeted_tweets ? get_highest_retweeted_tweets : [];
+
+            this.original_contributors = get_original_contributors;
+            this.top_original_contributors = get_top_original_contributors;
 
             const total_engagements = data.total_engagements;
             const potential_reach = data.potential_reach;
@@ -1153,8 +1162,8 @@ export default {
             this.accurate_impressions = data.impressions;
             this.total_engagements = total_engagements;
             this.ad_recall = (total_engagements / potential_reach) * 100;
-            this.original_contributors = data.original_contributors;
-            this.top_original_contributors = data.top_original_contributors;
+            // this.original_contributors = data.original_contributors;
+            // this.top_original_contributors = data.top_original_contributors;
             // this.most_recent_tweets = data.most_recent_tweets;
             // this.most_recent_replies = data.most_recent_replies;
             // this.high_retweet_tweets = data.high_retweet_tweets

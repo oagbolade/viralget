@@ -69,12 +69,14 @@ class ManagementShowDataController extends Controller
         $data['report_type'] = $report->plan->name;
         $data['report_type_days'] = 24;
         $data['data'] = json_decode(json_encode($report->report_data));
+        $contributors['original_contributors'] = json_decode(json_encode($report->original_contributors));
+        $contributors['top_original_contributors'] = json_decode(json_encode($report->top_original_contributors));
         $high_tweets['most_recent_tweets'] = json_decode(json_encode($report->most_recent_tweets));
         $high_tweets['most_recent_replies'] = json_decode(json_encode($report->most_recent_replies));
         $high_tweets['highest_retweeted_tweets'] = json_decode(json_encode($report->highest_retweeted_tweets));
         $data['handle'] = $report->query;
 
-        return response(['status' => 'success', 'data' => $data, 'high_tweets' => $high_tweets]);
+        return response(['status' => 'success', 'data' => $data, 'high_tweets' => $high_tweets, 'contributors' => $contributors]);
     }
 
 }

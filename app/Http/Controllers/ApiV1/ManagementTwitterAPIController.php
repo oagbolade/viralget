@@ -122,7 +122,11 @@ class ManagementTwitterAPIController extends Controller
         $high_tweets['most_recent_tweets'] = $this->getMostRecentTweets($tweets);
         $high_tweets['most_recent_replies'] = $this->getMostRecentReplies($tweets);
         $high_tweets['highest_retweeted_tweets'] = $this->getProfileHighestRetweets($tweets, true);
-        
+
+        // Contributors Data
+        $high_tweets['original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
+        $high_tweets['top_original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
+
         $impressions = $this->getTopHashImpactsData($tweets, $user);
         $data['high_impacts'] = $impressions['sorted'];
         $data['contributors'] = $contribution['unique_users'];
@@ -134,8 +138,7 @@ class ManagementTwitterAPIController extends Controller
         $data['campaign_value'] = ($impressions['sum'] / 1000) * 80;
         $data['accurate_engagement_rate'] = ($total_engagements / $data['impressions']) * 100;
         $data['total_engagements'] = $total_engagements;
-        $data['original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
-        $data['top_original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
+
         
         // **OLD** High tweets data
         // $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets, true);
@@ -159,6 +162,8 @@ class ManagementTwitterAPIController extends Controller
                     'user_id' => $user->id,
                     'query' => $removeSymbol,
                     'report_data' => json_encode($data),
+                    'original_contributors' => json_encode($high_tweets['original_contributors']),
+                    'top_original_contributors' => json_encode($high_tweets['top_original_contributors']),
                     'most_recent_tweets' => json_encode($high_tweets['most_recent_tweets']),
                     'most_recent_replies' => json_encode($high_tweets['most_recent_replies']),
                     'highest_retweeted_tweets' => json_encode($high_tweets['highest_retweeted_tweets']),
