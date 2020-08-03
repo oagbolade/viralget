@@ -94,6 +94,7 @@ class ManagementTwitterAPIController extends Controller
         $tweets = $this->getManagementHashtagTweets($query);
 
         $data = [];
+        $high_tweets = [];
 
         if (count($tweets) > 0) {
             $data['count'] = count($tweets);
@@ -116,13 +117,17 @@ class ManagementTwitterAPIController extends Controller
         $data['most_active'] = $this->getHashtagTweetsData($tweets, $user, 'original', true);
         $data['popular'] = $this->getHashtagPopularUsers($tweets, $user);
         $data['high_retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
-        $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets, true);
-
+        
+        // High tweets data
+        $high_tweets['most_recent_tweets'] = $this->getMostRecentTweets($tweets);
+        $high_tweets['most_recent_replies'] = $this->getMostRecentReplies($tweets);
+        $high_tweets['highest_retweeted_tweets'] = $this->getProfileHighestRetweets($tweets, true);
+        
         $impressions = $this->getTopHashImpactsData($tweets, $user);
         $data['high_impacts'] = $impressions['sorted'];
         $data['contributors'] = $contribution['unique_users'];
         $data['avr_contribution'] = $contribution['avr_contribution'];
-
+        
         $total_engagements = $this->getTotalEngagements($tweets);
         $data['potential_reach'] = $reach['reach'];
         $data['impressions'] = $impressions['sum'];
@@ -131,8 +136,11 @@ class ManagementTwitterAPIController extends Controller
         $data['total_engagements'] = $total_engagements;
         $data['original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
         $data['top_original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
-        $data['most_recent_tweets'] = $this->getMostRecentTweets($tweets);
-        $data['most_recent_replies'] = $this->getMostRecentReplies($tweets);
+        
+        // **OLD** High tweets data
+        // $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets, true);
+        // $data['most_recent_tweets'] = $this->getMostRecentTweets($tweets);
+        // $data['most_recent_replies'] = $this->getMostRecentReplies($tweets);
 
 
         $data['potential_impact'] =  $impressions['sum'] * 0.60; //$reach['impact'];
@@ -151,6 +159,9 @@ class ManagementTwitterAPIController extends Controller
                     'user_id' => $user->id,
                     'query' => $removeSymbol,
                     'report_data' => json_encode($data),
+                    'most_recent_tweets' => json_encode($high_tweets['most_recent_tweets']),
+                    'most_recent_replies' => json_encode($high_tweets['most_recent_replies']),
+                    'highest_retweeted_tweets' => json_encode($high_tweets['highest_retweeted_tweets']),
                     'package' => $plan->id
                 ]);
             } catch (Exception $e) {
@@ -161,7 +172,7 @@ class ManagementTwitterAPIController extends Controller
             }
         }
 
-        return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+        return response(['status' => 'success', 'data' => $data, '' => $high_tweets,'id' => $report->id], 200);
     }
 
     function getManagementHashtagTweets($query)
@@ -459,34 +470,34 @@ class ManagementTwitterAPIController extends Controller
         $plan_id = request()->plan_id;
 
         $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
-        $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
+        // $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
 
         if (!$handle) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
 
-        $profile = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
+        // $profile = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
 
-        if ($profile && $this->isPlanExpired($user_details_id, $plan_days->days)) {
-            $data['keyword'] = $profile->keyword;
-            $data['report_type'] = $profile->plan->name;
-            $data['report_type_days'] = $profile->plan->days;
-            $data['data'] = json_decode(json_encode($profile->report_data));
-            $data['handle'] = $profile->handle;
-            $data['expired'] = 'true';
+        // if ($profile && $this->isPlanExpired($user_details_id, $plan_days->days)) {
+        //     $data['keyword'] = $profile->keyword;
+        //     $data['report_type'] = $profile->plan->name;
+        //     $data['report_type_days'] = $profile->plan->days;
+        //     $data['data'] = json_decode(json_encode($profile->report_data));
+        //     $data['handle'] = $profile->handle;
+        //     $data['expired'] = 'true';
 
-            return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
-        }
+        //     return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
+        // }
 
-        if ($profile && !$this->refresh($user_details_id)) {
-            $data['keyword'] = $profile->keyword;
-            $data['report_type'] = $profile->plan->name;
-            $data['report_type_days'] = $profile->plan->days;
-            $data['data'] = json_decode(json_encode($profile->report_data));
-            $data['handle'] = $profile->handle;
+        // if ($profile && !$this->refresh($user_details_id)) {
+        //     $data['keyword'] = $profile->keyword;
+        //     $data['report_type'] = $profile->plan->name;
+        //     $data['report_type_days'] = $profile->plan->days;
+        //     $data['data'] = json_decode(json_encode($profile->report_data));
+        //     $data['handle'] = $profile->handle;
 
-            return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
-        }
+        //     return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
+        // }
 
 
         $data = [];

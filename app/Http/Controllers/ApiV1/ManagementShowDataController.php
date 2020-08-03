@@ -54,13 +54,6 @@ class ManagementShowDataController extends Controller
         $data['data'] = json_decode(json_encode($profile->report_data));
         $data['handle'] = $profile->handle;
 
-        // $profile_data = json_decode($profile->report_data);
-        //Temporary hack to update er
-        // Coming soon
-        // if($profile_data) {
-        //     Influencers::where('handle','LIKE', "%$profile->handle%")->update(['er' => $profile_data->engagement_rate]);
-        // }
-
         return response(['status' => 'success', 'data' => $data]);
     }
 
@@ -74,11 +67,14 @@ class ManagementShowDataController extends Controller
         if(!$report) return response(['status' => 'error', 'message' => 'Data not found']);
 
         $data['report_type'] = $report->plan->name;
-        $data['report_type_days'] = $report->plan->days;
+        $data['report_type_days'] = 24;
         $data['data'] = json_decode(json_encode($report->report_data));
+        $high_tweets['most_recent_tweets'] = json_decode(json_encode($report->most_recent_tweets));
+        $high_tweets['most_recent_replies'] = json_decode(json_encode($report->most_recent_replies));
+        $high_tweets['highest_retweeted_tweets'] = json_decode(json_encode($report->highest_retweeted_tweets));
         $data['handle'] = $report->query;
 
-        return response(['status' => 'success', 'data' => $data]);
+        return response(['status' => 'success', 'data' => $data, 'high_tweets' => $high_tweets]);
     }
 
 }
