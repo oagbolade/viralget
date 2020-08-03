@@ -71,24 +71,53 @@ class ManagementTwitterAPIController extends Controller
         }
 
         $report = ManagementReportingHistory::where(['user_id' => $user->id, 'query' => $query])->first();
-        
+
         if ($report && $this->isPlanExpired($user_details_id, $plan_days->days)) {
             $data['report_type'] = $report->plan->name;
             $data['report_type_days'] = $report->plan->days;
             $data['data'] = json_decode(json_encode($report->report_data));
+            
+            $contributors['original_contributors'] = json_decode(json_encode($report->original_contributors));
+            $contributors['top_original_contributors'] = json_decode(json_encode($report->top_original_contributors));
+            
+            $high_tweets['most_recent_tweets'] = json_decode(json_encode($report->most_recent_tweets));
+            $high_tweets['most_recent_replies'] = json_decode(json_encode($report->most_recent_replies));
+            $high_tweets['highest_retweeted_tweets'] = json_decode(json_encode($report->highest_retweeted_tweets));
+            
             $data['expired'] = 'true';
             $data['handle'] = $report->query;
 
-            return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+            return response([
+                'status' => 'success',
+                'data' => $data,
+                'id' => $report->id,
+                'high_tweets' => $high_tweets,
+                'contributors' => $contributors
+            ], 200);
         }
 
         if ($report && !$this->refresh($user_details_id)) {
             $data['report_type'] = $report->plan->name;
             $data['report_type_days'] = $report->plan->days;
             $data['data'] = json_decode(json_encode($report->report_data));
+            
+            $contributors['original_contributors'] = json_decode(json_encode($report->original_contributors));
+            $contributors['top_original_contributors'] = json_decode(json_encode($report->top_original_contributors));
+            
+            $high_tweets['most_recent_tweets'] = json_decode(json_encode($report->most_recent_tweets));
+            $high_tweets['most_recent_replies'] = json_decode(json_encode($report->most_recent_replies));
+            $high_tweets['highest_retweeted_tweets'] = json_decode(json_encode($report->highest_retweeted_tweets));
+            
+            $data['expired'] = 'true';
             $data['handle'] = $report->query;
 
-            return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+            return response([
+                'status' => 'success',
+                'data' => $data,
+                'id' => $report->id,
+                'high_tweets' => $high_tweets,
+                'contributors' => $contributors
+            ], 200);
         }
 
         $tweets = $this->getManagementHashtagTweets($query);
@@ -117,34 +146,27 @@ class ManagementTwitterAPIController extends Controller
         $data['most_active'] = $this->getHashtagTweetsData($tweets, $user, 'original', true);
         $data['popular'] = $this->getHashtagPopularUsers($tweets, $user);
         $data['high_retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
-        
+
         // High tweets data
-        $high_tweets['most_recent_tweets'] = $this->getMostRecentTweets($tweets);
-        $high_tweets['most_recent_replies'] = $this->getMostRecentReplies($tweets);
-        $high_tweets['highest_retweeted_tweets'] = $this->getProfileHighestRetweets($tweets, true);
+        $most_recent_tweets = $this->getMostRecentTweets($tweets);
+        $most_recent_replies = $this->getMostRecentReplies($tweets);
+        $highest_retweeted_tweets = $this->getProfileHighestRetweets($tweets, true);
 
         // Contributors Data
-        $high_tweets['original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
-        $high_tweets['top_original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
+        $original_contributors = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
+        $top_original_contributors = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
 
         $impressions = $this->getTopHashImpactsData($tweets, $user);
         $data['high_impacts'] = $impressions['sorted'];
         $data['contributors'] = $contribution['unique_users'];
         $data['avr_contribution'] = $contribution['avr_contribution'];
-        
+
         $total_engagements = $this->getTotalEngagements($tweets);
         $data['potential_reach'] = $reach['reach'];
         $data['impressions'] = $impressions['sum'];
         $data['campaign_value'] = ($impressions['sum'] / 1000) * 80;
         $data['accurate_engagement_rate'] = ($total_engagements / $data['impressions']) * 100;
         $data['total_engagements'] = $total_engagements;
-
-        
-        // **OLD** High tweets data
-        // $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets, true);
-        // $data['most_recent_tweets'] = $this->getMostRecentTweets($tweets);
-        // $data['most_recent_replies'] = $this->getMostRecentReplies($tweets);
-
 
         $data['potential_impact'] =  $impressions['sum'] * 0.60; //$reach['impact'];
         $data['media_meta_data'] = $this->getTweetsMedia($tweets, 'hashtag');
@@ -162,11 +184,11 @@ class ManagementTwitterAPIController extends Controller
                     'user_id' => $user->id,
                     'query' => $removeSymbol,
                     'report_data' => json_encode($data),
-                    'original_contributors' => json_encode($high_tweets['original_contributors']),
-                    'top_original_contributors' => json_encode($high_tweets['top_original_contributors']),
-                    'most_recent_tweets' => json_encode($high_tweets['most_recent_tweets']),
-                    'most_recent_replies' => json_encode($high_tweets['most_recent_replies']),
-                    'highest_retweeted_tweets' => json_encode($high_tweets['highest_retweeted_tweets']),
+                    'original_contributors' => json_encode($original_contributors),
+                    'top_original_contributors' => json_encode($top_original_contributors),
+                    'most_recent_tweets' => json_encode($most_recent_tweets),
+                    'most_recent_replies' => json_encode($most_recent_replies),
+                    'highest_retweeted_tweets' => json_encode($highest_retweeted_tweets),
                     'package' => $plan->id
                 ]);
             } catch (Exception $e) {
@@ -177,7 +199,7 @@ class ManagementTwitterAPIController extends Controller
             }
         }
 
-        return response(['status' => 'success', 'data' => $data, '' => $high_tweets,'id' => $report->id], 200);
+        return response(['status' => 'success', 'data' => $data, '' => $high_tweets, 'id' => $report->id], 200);
     }
 
     function getManagementHashtagTweets($query)
