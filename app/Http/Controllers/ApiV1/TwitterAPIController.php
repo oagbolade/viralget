@@ -308,6 +308,10 @@ class TwitterAPIController extends Controller
 
         $top_sorted_user_data = $this->sortOriginalContributorImpacts($sorted_user_data);
 
+        // Return just 30
+        $sorted_user_data = array_slice($sorted_user_data, 0, 30);
+        $top_sorted_user_data = array_slice($top_sorted_user_data, 0, 30);
+
         return ['original_contributors' => $sorted_user_data, 'top_original_contributors' => $top_sorted_user_data];
     }
 
@@ -672,7 +676,7 @@ class TwitterAPIController extends Controller
             $data = array_reverse($data);
         }
 
-        //'tweets' => $_tweets,
+        $data = array_slice($data, 0, 20);
         return ['count' => $total_count, 'data' => $data, 'percentage' => ceil(($total_count / $total_tweets) * 100)];
     }
 
@@ -840,7 +844,8 @@ class TwitterAPIController extends Controller
         if ($user->subscription->plan->name == 'Free') {
             $sorted = array_reverse($sorted);
         }
-
+        
+        $sorted = array_slice($sorted, 0, 20);
         return $sorted;
     }
 
