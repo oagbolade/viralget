@@ -99,9 +99,23 @@ class TwitterAPIController extends Controller
             $data['report_type'] = $report->plan->name;
             $data['report_type_days'] = $report->plan->days;
             $data['data'] = json_decode(json_encode($report->report_data));
+
+            $contributors['original_contributors'] = json_decode(json_encode($report->original_contributors));
+            $contributors['top_original_contributors'] = json_decode(json_encode($report->top_original_contributors));
+
+            $high_tweets['most_recent_tweets'] = json_decode(json_encode($report->most_recent_tweets));
+            $high_tweets['most_recent_replies'] = json_decode(json_encode($report->most_recent_replies));
+            $high_tweets['highest_retweeted_tweets'] = json_decode(json_encode($report->highest_retweeted_tweets));
+
             $data['handle'] = $report->query;
 
-            return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+            return response([
+                'status' => 'success',
+                'data' => $data,
+                'id' => $report->id,
+                'high_tweets' => $high_tweets,
+                'contributors' => $contributors
+            ], 200);
         }
 
         $no_of_tweets = 100;
@@ -139,7 +153,15 @@ class TwitterAPIController extends Controller
         $data['most_active'] = $this->getHashtagTweetsData($tweets, $user, 'original', true);
         $data['popular'] = $this->getHashtagPopularUsers($tweets, $user);
         $data['high_retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
-        $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets, true);
+
+        // High tweets data
+        $most_recent_tweets = $this->getMostRecentTweets($tweets);
+        $most_recent_replies = $this->getMostRecentReplies($tweets);
+        $highest_retweeted_tweets = $this->getProfileHighestRetweets($tweets, true);
+
+        // Contributors Data
+        $original_contributors = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
+        $top_original_contributors = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
 
         $impressions = $this->getTopHashImpactsData($tweets, $user);
         $data['high_impacts'] = $impressions['sorted'];
@@ -152,11 +174,6 @@ class TwitterAPIController extends Controller
         $data['campaign_value'] = ($impressions['sum'] / 1000) * 80;
         $data['accurate_engagement_rate'] = ($total_engagements / $data['impressions']) * 100;
         $data['total_engagements'] = $total_engagements;
-        $data['original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
-        $data['top_original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
-        $data['most_recent_tweets'] = $this->getMostRecentTweets($tweets);
-        $data['most_recent_replies'] = $this->getMostRecentReplies($tweets);
-
 
         $data['potential_impact'] =  $impressions['sum'] * 0.60; //$reach['impact'];
         $data['media_meta_data'] = $this->getTweetsMedia($tweets, 'hashtag');
@@ -175,6 +192,11 @@ class TwitterAPIController extends Controller
                     'user_id' => $user->id,
                     'query' => $removeSymbol,
                     'report_data' => json_encode($data),
+                    'original_contributors' => json_encode($original_contributors),
+                    'top_original_contributors' => json_encode($top_original_contributors),
+                    'most_recent_tweets' => json_encode($most_recent_tweets),
+                    'most_recent_replies' => json_encode($most_recent_replies),
+                    'highest_retweeted_tweets' => json_encode($highest_retweeted_tweets),
                     'package' => $package->id
                 ]);
             } catch (Exception $e) {
@@ -191,6 +213,11 @@ class TwitterAPIController extends Controller
                     'user_id' => $user->id,
                     'query' => $query,
                     'report_data' => json_encode($data),
+                    'original_contributors' => json_encode($original_contributors),
+                    'top_original_contributors' => json_encode($top_original_contributors),
+                    'most_recent_tweets' => json_encode($most_recent_tweets),
+                    'most_recent_replies' => json_encode($most_recent_replies),
+                    'highest_retweeted_tweets' => json_encode($highest_retweeted_tweets),
                     'package' => $package->id
                 ]);
             } catch (Exception $e) {

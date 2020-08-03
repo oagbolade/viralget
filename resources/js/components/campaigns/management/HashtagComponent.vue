@@ -1133,7 +1133,6 @@ export default {
         .then((res) => res.json())
         .then((res) => {
           if (res.status == "success") {
-            console.log(res)
             let data = JSON.parse(res.data.data);
             this.displayError = false;
             this.loading = false;
@@ -1162,13 +1161,6 @@ export default {
             this.accurate_impressions = data.impressions;
             this.total_engagements = total_engagements;
             this.ad_recall = (total_engagements / potential_reach) * 100;
-            // this.original_contributors = data.original_contributors;
-            // this.top_original_contributors = data.top_original_contributors;
-            // this.most_recent_tweets = data.most_recent_tweets;
-            // this.most_recent_replies = data.most_recent_replies;
-            // this.high_retweet_tweets = data.high_retweet_tweets
-            //   ? data.high_retweet_tweets
-            //   : [];
 
             this.totalTweets = data.count;
             this.loading = false;
