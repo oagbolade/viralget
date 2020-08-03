@@ -119,13 +119,13 @@ class ManagementTwitterAPIController extends Controller
         $data['high_retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
         
         // High tweets data
-        $high_tweets['most_recent_tweets'] = $this->getMostRecentTweets($tweets);
-        $high_tweets['most_recent_replies'] = $this->getMostRecentReplies($tweets);
-        $high_tweets['highest_retweeted_tweets'] = $this->getProfileHighestRetweets($tweets, true);
+        $most_recent_tweets = $this->getMostRecentTweets($tweets);
+        $most_recent_replies = $this->getMostRecentReplies($tweets);
+        $highest_retweeted_tweets = $this->getProfileHighestRetweets($tweets, true);
 
         // Contributors Data
-        $high_tweets['original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
-        $high_tweets['top_original_contributors'] = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
+        $original_contributors = $this->getOriginalContributorsData($tweets, $user)['original_contributors'];
+        $top_original_contributors = $this->getOriginalContributorsData($tweets, $user)['top_original_contributors'];
 
         $impressions = $this->getTopHashImpactsData($tweets, $user);
         $data['high_impacts'] = $impressions['sorted'];
@@ -138,13 +138,6 @@ class ManagementTwitterAPIController extends Controller
         $data['campaign_value'] = ($impressions['sum'] / 1000) * 80;
         $data['accurate_engagement_rate'] = ($total_engagements / $data['impressions']) * 100;
         $data['total_engagements'] = $total_engagements;
-
-        
-        // **OLD** High tweets data
-        // $data['high_retweet_tweets'] =  $this->getProfileHighestRetweets($tweets, true);
-        // $data['most_recent_tweets'] = $this->getMostRecentTweets($tweets);
-        // $data['most_recent_replies'] = $this->getMostRecentReplies($tweets);
-
 
         $data['potential_impact'] =  $impressions['sum'] * 0.60; //$reach['impact'];
         $data['media_meta_data'] = $this->getTweetsMedia($tweets, 'hashtag');
@@ -162,11 +155,11 @@ class ManagementTwitterAPIController extends Controller
                     'user_id' => $user->id,
                     'query' => $removeSymbol,
                     'report_data' => json_encode($data),
-                    'original_contributors' => json_encode($high_tweets['original_contributors']),
-                    'top_original_contributors' => json_encode($high_tweets['top_original_contributors']),
-                    'most_recent_tweets' => json_encode($high_tweets['most_recent_tweets']),
-                    'most_recent_replies' => json_encode($high_tweets['most_recent_replies']),
-                    'highest_retweeted_tweets' => json_encode($high_tweets['highest_retweeted_tweets']),
+                    'original_contributors' => json_encode($original_contributors),
+                    'top_original_contributors' => json_encode($top_original_contributors),
+                    'most_recent_tweets' => json_encode($most_recent_tweets),
+                    'most_recent_replies' => json_encode($most_recent_replies),
+                    'highest_retweeted_tweets' => json_encode($highest_retweeted_tweets),
                     'package' => $plan->id
                 ]);
             } catch (Exception $e) {
