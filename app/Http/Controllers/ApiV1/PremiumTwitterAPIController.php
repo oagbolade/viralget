@@ -186,7 +186,7 @@ class PremiumTwitterAPIController extends Controller
         $searching = true;
         $tweets_array = [];
 
-        // $tweet_cap = 500;
+        // $tweet_cap = 4500;
         $count = 500;
 
         while ($searching) {
@@ -197,6 +197,8 @@ class PremiumTwitterAPIController extends Controller
                     'fromDate' => $fromDate,
                     'toDate' => $toDate,
                 ];
+
+                $page + 1;
             } else {
                 $this->_temporary_parameters = [
                     "query" => $query,
@@ -232,7 +234,7 @@ class PremiumTwitterAPIController extends Controller
                 return $tweets_array;
             }
         }
-        // return $tweets_array;
+        return $tweets_array;
     }
 
 
