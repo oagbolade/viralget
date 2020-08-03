@@ -199,7 +199,7 @@ class ManagementTwitterAPIController extends Controller
             }
         }
 
-        return response(['status' => 'success', 'data' => $data, '' => $high_tweets, 'id' => $report->id], 200);
+        return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
     }
 
     function getManagementHashtagTweets($query)
@@ -224,6 +224,8 @@ class ManagementTwitterAPIController extends Controller
                     "maxResults" => $count,
                     'toDate' => $toDate,
                 ];
+
+                $page + 1;
             } else {
                 $this->_temporary_parameters = [
                     "query" => $query,
