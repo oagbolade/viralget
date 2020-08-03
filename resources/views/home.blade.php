@@ -20,11 +20,13 @@
 
       <div class="col-lg-7 homepage-title">
         <h1>Find. <br />Connect. <br /><span class="text-warning">Track.</span></h1>
-        <p>Don't just PAY, SPRAY and PRAY.<br />
-          Grow your business with intelligent influencer marketing.<br />
-          The time for performance-driven influencer marketing is here. <br />
-          ViralGet is an easy-to-use platform that matches you with the right influencers and offers targeted and
-          measured campaigns.</p>
+        <p>
+          Grow your business with intelligent influencer marketing.
+          The time for performance-driven influencer marketing is here.
+          ViralGet is an easy-to-use tool that helps you Analyze campaign hashtags/keywords, see it’s impact. Profile influencers
+          beyond their followers count. Manage hired influencers all on one platform, see how their post is performing. Monitor
+          your trends and generate instant reports.
+        </p>
         <!-- , helps develop creative content and synchronization on every campaign.
               Find Influencers > Reach out > Sit back and watch us manage them while you campaign goes viral.</p> -->
         {{-- profiles --}}
@@ -81,8 +83,10 @@
       <header class="section-header">
         <h1>Find Influencers Of Your Choice</h1>
         <hr>
-        <p class="lead">Choose influencers from our database of influencers across different categories, and profile
-          them, checking their engagement level and audience interest to know who suits your brand & campaign objective
+        <p class="lead">
+          Choose influencers from our database of influencers across different categories. Profile influencers, viewing Data stats
+          such as Reach, Engagement Rate, Most Retweeted Tweets, Total Engagement as well as the Demography and Interest of their
+          followers
         </p>
       </header>
       <div class="row gap-y align-items-center">
@@ -288,8 +292,9 @@
           <div class="row">
             <div class="col-md-6 pb-8">
               <!-- <h2>Campaign Report</h2> -->
-              <p>While you can track your campaign and see how it’s performing here(hyperlink). We’ll send you a
-                detailed report on how your campaign performed in comparison to your KPIs</p>
+              <p>You can track your campaign and see how it’s performing,
+                 through a detailed report.
+                  Click <u><a href="{{ route('campaigns.view') }}">here</a></u> to get started.</p>
             </div>
 
             <div class="col-md-6 align-self-center text-center">
