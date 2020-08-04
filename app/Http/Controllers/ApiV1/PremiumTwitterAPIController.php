@@ -246,14 +246,11 @@ class PremiumTwitterAPIController extends Controller
 
         if ($total_tweets > 0) {
             foreach ($tweets as $tweet) {
-                //                dd($tweet->entities->media);
-
                 switch ($type) {
                     case 'retweets': //retweeted tweets
                         if (isset($tweet->retweeted_status)) {
                             $_tweets[] = $tweet;
                             $total_count += 1;
-                            //                            $total_count += $tweet->retweeted_status->retweet_count;
                         }
                         break;
                     case 'original': //original tweets
