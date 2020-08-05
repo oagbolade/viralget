@@ -367,6 +367,7 @@ class ManagementTwitterAPIController extends Controller
 
     public function getCampaignSummary($user_id = '', $influencers = [], $keyword = '', $plan_id = '')
     {
+        // If not scheduling
         if (trim($user_id) == '') {
             $user = $this->authenticate();
             $user_id = $user->id;
@@ -391,7 +392,6 @@ class ManagementTwitterAPIController extends Controller
 
         $influencers_array = json_decode($influencers);
 
-
         $userTweets = [];
         foreach ($influencers_array as $handle) {
             $userTweets[$handle] = $this->getUserTweets($handle, $keyword);
@@ -402,23 +402,41 @@ class ManagementTwitterAPIController extends Controller
         $impressions = 0;
         $reach = 0;
 
-        foreach ($userTweets as $tweets) {
+        if (count($userTweets) <= 0) {
+            return response([
+                'message' => 'Could not retrieve tweets',
+                'tweet_count' => count($userTweets),
+            ], 500);
+        }
 
+        foreach ($userTweets as $tweets) {
             foreach ($tweets as $tweet) {
                 array_push($all_influencer_tweets, $tweet);
             }
 
-            $engagement = $this->getEngagementData($tweets[0]->user, $tweets);
-            $engagementRate += (int) $engagement->er ?? 0;
-            $impressions += (int) $engagement->impressions ?? 0;
-            $reach += (int) $engagement->reach ?? 0;
+            $calculations = ['er', 'impressions', 'reach'];
+            foreach($calculations as $calculation){
+                try {
+                    if($calculation == 'er'){
+                        $engagementRate += $this->getEngagementData($tweets[0]->user, $tweets)[$calculation];
+                    }
+                    
+                    if($calculation == 'impressions'){
+                        $impressions += $this->getEngagementData($tweets[0]->user, $tweets)[$calculation];
+                    }
+                    
+                    if($calculation == 'reach'){
+                        $reach += $this->getEngagementData($tweets[0]->user, $tweets)[$calculation];
+                    }
+                } catch (Exception $e) {
+                    continue;
+                }
+            }
         }
 
         $data['date_to'] = \Carbon\Carbon::now()->toDayDateTimeString();
 
         $data['date_from'] = \Carbon\Carbon::now()->subDays(30)->toDayDateTimeString();
-
-        $engagement = $this->getEngagementData($tweets[0]->user, $tweets);
 
         $data['engagement_rate'] = $engagementRate;
 
@@ -458,8 +476,6 @@ class ManagementTwitterAPIController extends Controller
             $report = SummaryHistory::where(['user_id' => $user_id, 'influencers' => $influencers])->update([
                 'report_data' => json_encode($data),
             ]);
-
-            return 'done';
         }
 
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
@@ -556,19 +572,19 @@ class ManagementTwitterAPIController extends Controller
 
         $engagement = $this->getEngagementData($profileData, $userTweets);
 
-        $data['engagement_rate'] = $engagement->er ?? 0;
+        $data['engagement_rate'] = $engagement['er'] ?? 0;
 
-        $data['impressions'] = $engagement->impressions ?? 0;
+        $data['impressions'] = $engagement['impressions'] ?? 0;
 
-        $data['reach'] = $engagement->reach ?? 0;
+        $data['reach'] = $engagement['reach'] ?? 0;
 
-        $data['total_engagements'] = $engagement->total_engagements ?? 0;
+        $data['total_engagements'] = $engagement['total_engagements'] ?? 0;
 
         $data['total_posts'] = count($userTweets);
 
-        $data['avr_likes'] = $engagement->avrLikes ?? 0;
+        $data['avr_likes'] = $engagement['avrLikes'] ?? 0;
 
-        $data['avr_retweets'] = $engagement->avrRetweets ?? 0;
+        $data['avr_retweets'] = $engagement['avrRetweets'] ?? 0;
 
         $data['media_meta_data'] = $this->getTweetsMedia($userTweets);
 
@@ -731,8 +747,8 @@ class ManagementTwitterAPIController extends Controller
 
         $obj = new \stdClass;
 
-        $obj->avrLikes = ceil($likes / $total_tweets);
-        $obj->avrRetweets = ceil($retweets / $total_tweets);
+        $avrLikes = ceil($likes / $total_tweets);
+        $avrRetweets = ceil($retweets / $total_tweets);
 
         $reach = $profile->followers_count * 0.3;
         $impressions = $reach * $total_tweets;
@@ -746,7 +762,15 @@ class ManagementTwitterAPIController extends Controller
         $obj->reach = $reach;
         $obj->total_engagements = $total_engagements;
 
-        return $obj;
+        // return $obj;
+        return [
+            'er' => $accurate_engagement_rate,
+            'impressions' => $impressions,
+            'reach' => $reach,
+            'total_engagements' => $total_engagements,
+            'avrLikes' => $avrLikes,
+            'avrRetweets' => $avrRetweets,
+        ];
     }
 
     function getHashtagEngagementData($tweets, $reach)
@@ -850,7 +874,7 @@ class ManagementTwitterAPIController extends Controller
             }
 
             // 200 tweets perpage
-            if ($page === 10) { 
+            if ($page === 10) {
                 $is_searching = false;
             }
 
