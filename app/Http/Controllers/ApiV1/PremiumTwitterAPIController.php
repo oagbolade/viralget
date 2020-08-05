@@ -95,14 +95,11 @@ class PremiumTwitterAPIController extends Controller
 
     function getUserProfile($value, $search_by = 'screen_name')
     {
-
-        //        $profile = $this->connection->get("users/show", [$search_by => $value]);
         $profile = $this->guzzleClient('users/show', [$search_by => $value]);
 
         if (isset($profile->errors)) {
             return;
         }
-
 
         return $profile;
     }
@@ -169,8 +166,6 @@ class PremiumTwitterAPIController extends Controller
     function getHashtagTweets($package, $query, $request)
     {
         $days = date("YmdHi", strtotime('-' . $package->days . ' days'));
-        $tweet_cap = $package->tweets;
-        
         $now = date("YmdH00");
         
         $fromDate = $days;
@@ -186,8 +181,25 @@ class PremiumTwitterAPIController extends Controller
         $searching = true;
         $tweets_array = [];
 
-        // $tweet_cap = 4500;
         $count = 500;
+
+        switch ($package->name) {
+            case 'enterprise':
+                $max_page = 10;
+                break;
+            case 'premiumBusiness':
+                $max_page = 6;
+                break;
+            case 'premiumLite':
+                $max_page = 4;
+                break;
+            case 'basic':
+                $max_page = 1;
+                break;
+            default:
+                $max_page = 0;
+                break;
+        }
 
         while ($searching) {
             if ($page === 0) {
@@ -197,8 +209,6 @@ class PremiumTwitterAPIController extends Controller
                     'fromDate' => $fromDate,
                     'toDate' => $toDate,
                 ];
-
-                $page + 1;
             } else {
                 $this->_temporary_parameters = [
                     "query" => $query,
@@ -209,22 +219,27 @@ class PremiumTwitterAPIController extends Controller
                 ];
             }
 
-            if (count($tweets_array) >= $tweet_cap) {
-                $searching = false;
-                return $tweets_array;
-            }
-
             try {
                 $tweets_result = $this->_connection->get("tweets/search/" . env('TWITTER_API_TYPE') . "/" . env('TWITTER__APP_DEVELOPMENT_NAME'), $this->_temporary_parameters);
+                $page++;
             } catch (\Exception $e) {
                 // return error response
                 return $e->getMessage();
             }
 
+            if (isset($tweets_result->error)) {
+                dd($tweets_result);
+            }
+            
             if (isset($tweets_result->results)) {
                 foreach ($tweets_result->results as $status) {
                     $tweets_array[] = $status;
                 }
+            }
+
+            if ($page === $max_page) {
+                $searching = false;
+                return $tweets_array;
             }
 
             if (isset($tweets_result->next)) {
