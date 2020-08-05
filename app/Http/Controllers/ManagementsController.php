@@ -56,6 +56,7 @@ class ManagementsController extends Controller
         $phone = request()->phone;
         $email = request()->email;
         $user_query = request()->user_query;
+        $user_query = str_replace('#', '',$user_query);
         $influencers = request()->influencers;
         $brand_name = request()->brand_name;
         $brand_industry = request()->brand_industry;
