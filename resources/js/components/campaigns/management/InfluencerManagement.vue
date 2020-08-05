@@ -58,7 +58,6 @@
       </div>
     </div>
 
-    <div class="row" v-show="!loading && !displayError">
       <div class="row">
         <div class="col-md-8">
           <h3 id="block-2">Influencer Management</h3>
@@ -83,139 +82,141 @@
           class="table-section bg-white col-md-12"
           style="box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);"
         >
-          <table class="table table-hover responsive">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Hashtag/Keyword</th>
-                <th>Influencers</th>
-                <th>Campaign Objective</th>
-                <th>Plan</th>
-                <th>Paid</th>
-                <th>Expired</th>
-                <th>Created</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Hashtag/Keyword</th>
+                  <th>Influencers</th>
+                  <th>Campaign Objective</th>
+                  <th>Plan</th>
+                  <th>Paid</th>
+                  <th>Expired</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
 
-            <paginate
-              v-if="campaigns.length !== 0"
-              name="campaigns"
-              :list="campaigns"
-              :per="10"
-              tag="tbody"
-            >
-              <tr
-                v-for="(campaign, index) in paginated('campaigns')"
-                :key="index"
+              <paginate
+                v-if="campaigns.length !== 0"
+                name="campaigns"
+                :list="campaigns"
+                :per="10"
+                tag="tbody"
               >
-                <th scope="row">{{ index + 1 }}</th>
-                <td>
-                  <strong>{{ makeCamelCase(campaign.user_query) }}</strong>
-                </td>
-                <td>
-                  <div>
-                    <b-button
-                      @click="
-                        showModal(JSON.parse(campaign.influencers), campaign)
-                      "
-                      v-b-modal.modal-1
-                      variant="outline-success"
-                      >ViewList</b-button
+                <tr
+                  v-for="(campaign, index) in paginated('campaigns')"
+                  :key="index"
+                >
+                  <th scope="row">{{ index + 1 }}</th>
+                  <td>
+                    <strong>{{ makeCamelCase(campaign.user_query) }}</strong>
+                  </td>
+                  <td>
+                    <div>
+                      <b-button
+                        @click="
+                          showModal(JSON.parse(campaign.influencers), campaign)
+                        "
+                        v-b-modal.modal-1
+                        variant="outline-success"
+                        >ViewList</b-button
+                      >
+                    </div>
+                  </td>
+                  <td>
+                    {{ campaign.campaign_objective }}
+                  </td>
+                  <td>
+                    {{ campaign.influencer_management_plan.name }}
+                  </td>
+                  <td>
+                    <button
+                      class="btn"
+                      :class="[
+                        campaign.paid === 'false' ? 'btn-danger' : 'btn-success',
+                      ]"
                     >
-                  </div>
-                </td>
-                <td>
-                  {{ campaign.campaign_objective }}
-                </td>
-                <td>
-                  {{ campaign.influencer_management_plan.name }}
-                </td>
-                <td>
-                  <button
-                    class="btn"
-                    :class="[
-                      campaign.paid === 'false' ? 'btn-danger' : 'btn-success',
-                    ]"
-                  >
-                    {{ campaign.paid === "false" ? "No" : "Yes" }}
-                  </button>
-                  <div v-if="campaign.paid === 'false'">
-                    <u
+                      {{ campaign.paid === "false" ? "No" : "Yes" }}
+                    </button>
+                    <div v-if="campaign.paid === 'false'">
+                      <u
+                        @click="
+                          goToCheckout(
+                            campaign.booking_type,
+                            campaign.plan_id,
+                            campaign.email,
+                            campaign.id
+                          )
+                        "
+                        ><a href="#">complete payment</a></u
+                      >
+                    </div>
+                  </td>
+                  <td>
+                    <button
+                      class="btn"
+                      :class="[
+                        campaign.expired === 'false'
+                          ? 'btn-success'
+                          : 'btn-danger',
+                      ]"
+                    >
+                      {{ campaign.expired === "false" ? "No" : "Yes" }}
+                    </button>
+                  </td>
+                  <td>{{ campaign.created_at }}</td>
+                  <td>
+                    <button
                       @click="
-                        goToCheckout(
-                          campaign.booking_type,
-                          campaign.plan_id,
-                          campaign.email,
-                          campaign.id
+                        viewCampaign(
+                          campaign.influencers,
+                          campaign.user_query,
+                          campaign.influencer_management_plan.id,
+                          campaign.expired,
+                          campaign.paid
                         )
                       "
-                      ><a href="#">complete payment</a></u
+                      type="button"
+                      class="btn btn-label btn-success"
                     >
-                  </div>
-                </td>
-                <td>
-                  <button
-                    class="btn"
-                    :class="[
-                      campaign.expired === 'false'
-                        ? 'btn-success'
-                        : 'btn-danger',
-                    ]"
-                  >
-                    {{ campaign.expired === "false" ? "No" : "Yes" }}
-                  </button>
-                </td>
-                <td>{{ campaign.created_at }}</td>
-                <td>
-                  <button
-                    @click="
-                      viewCampaign(
-                        campaign.influencers,
-                        campaign.user_query,
-                        campaign.influencer_management_plan.id,
-                        campaign.expired,
-                        campaign.paid
-                      )
-                    "
-                    type="button"
-                    class="btn btn-label btn-success"
-                  >
-                    <label><i class="fa fa-book"></i></label>
-                    CampaignSummary
-                  </button>
+                      <label><i class="fa fa-book"></i></label>
+                      CampaignSummary
+                    </button>
 
-                  <div>
-                    <b-button
-                      @click="
-                        showEditModal(
-                          JSON.parse(campaign.influencers),
-                          campaign
-                        )
-                      "
-                      variant="primary"
-                      >Edit</b-button
+                    <div>
+                      <b-button
+                        @click="
+                          showEditModal(
+                            JSON.parse(campaign.influencers),
+                            campaign
+                          )
+                        "
+                        variant="primary"
+                        >Edit</b-button
+                      >
+                    </div>
+
+                    <button
+                      @click="deleteCampaign(campaign.id)"
+                      type="button"
+                      class="btn btn-label btn-danger"
                     >
-                  </div>
+                      <label><i class="fa fa-trash"></i></label>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              </paginate>
 
-                  <button
-                    @click="deleteCampaign(campaign.id)"
-                    type="button"
-                    class="btn btn-label btn-danger"
-                  >
-                    <label><i class="fa fa-trash"></i></label>
-                    Delete
-                  </button>
+              <tbody v-else>
+                <td colspan="4">
+                  <h5>You have not created any reports</h5>
                 </td>
-              </tr>
-            </paginate>
-
-            <tbody v-else>
-              <td colspan="4">
-                <h5>You have not created any reports</h5>
-              </td>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
           <paginate-links
             :show-step-links="true"
             :step-links="{
@@ -230,7 +231,6 @@
             }"
           ></paginate-links>
         </section>
-      </div>
     </div>
 
     <!-- Influencer List Modal -->

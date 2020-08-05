@@ -44,7 +44,6 @@
       </div>
     </div>
 
-    <!-- <div class="row" v-show="!loading && !displayError"> -->
     <div class="row">
       <div class="col-md-8">
         <h3 id="block-2">Trends</h3>
@@ -68,110 +67,112 @@
         class="table-section bg-white col-md-12"
         style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
       >
-        <table class="table table-hover responsive">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Hashtag/Keyword</th>
-              <th>Trend Date</th>
-              <th>Time</th>
-              <th>Campaign Objective</th>
-              <th>Plan</th>
-              <th>Paid</th>
-              <th>Expired</th>
-              <th>Created</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+        <div class="table-responsive">
+          <table class="table table-hover responsive">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Hashtag/Keyword</th>
+                <th>Trend Date</th>
+                <th>Time</th>
+                <th>Campaign Objective</th>
+                <th>Plan</th>
+                <th>Paid</th>
+                <th>Expired</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
 
-          <paginate
-            v-if="campaigns.length !== 0"
-            name="campaigns"
-            :list="campaigns"
-            :per="10"
-            tag="tbody"
-          >
-            <tr
-              v-for="(campaign, index) in paginated('campaigns')"
-              :key="index"
+            <paginate
+              v-if="campaigns.length !== 0"
+              name="campaigns"
+              :list="campaigns"
+              :per="10"
+              tag="tbody"
             >
-              <th scope="row">{{ index + 1 }}</th>
-              <td>
-                <strong>{{ makeCamelCase(campaign.user_query) }}</strong>
-              </td>
-              <td>{{ campaign.date }}</td>
-              <td>{{ campaign.time }}</td>
-              <td>
-                {{ campaign.campaign_objective }}
-              </td>
-              <td>{{ campaign.trends_plan.name }}</td>
-              <td>
-                <button
-                  class="btn"
-                  :class="[
-                    campaign.paid === 'false' ? 'btn-danger' : 'btn-success'
-                  ]"
-                >
-                  {{ campaign.paid === "false" ? "No" : "Yes" }}
-                </button>
-                <div v-if="campaign.paid === 'false'">
-                  <u
-                    @click="
-                      goToCheckout(
-                        campaign.booking_type,
-                        campaign.plan_id,
-                        campaign.email,
-                        campaign.id
-                      )
-                    "
-                    ><a href="#">complete payment</a></u
-                  >
-                </div>
-              </td>
-              <td>
-                <button
+              <tr
+                v-for="(campaign, index) in paginated('campaigns')"
+                :key="index"
+              >
+                <th scope="row">{{ index + 1 }}</th>
+                <td>
+                  <strong>{{ makeCamelCase(campaign.user_query) }}</strong>
+                </td>
+                <td>{{ campaign.date }}</td>
+                <td>{{ campaign.time }}</td>
+                <td>
+                  {{ campaign.campaign_objective }}
+                </td>
+                <td>{{ campaign.trends_plan.name }}</td>
+                <td>
+                  <button
                     class="btn"
                     :class="[
-                      campaign.expired === 'false' ? 'btn-success' : 'btn-danger'
+                      campaign.paid === 'false' ? 'btn-danger' : 'btn-success'
                     ]"
                   >
-                  {{ campaign.expired === "false" ? "No" : "Yes" }}
-                </button>
-              </td>
-              <td>{{ campaign.created_at }}</td>
-              <td>
-                <button
-                  @click="
-                    viewCampaign({
-                      user_details_id: campaign.id,
-                      time: campaign.time,
-                      date: campaign.date,
-                      keyword: campaign.user_query,
-                      plan_id: campaign.plan_id,
-                      expired: campaign.expired,
-                      paid: campaign.paid
-                    })
-                  "
-                  type="button"
-                  class="btn btn-label btn-success"
-                >
-                  <label><i class="fa fa-book"></i></label> View
-                </button>
-                <button
-                  @click="deleteCampaign(campaign.id)"
-                  type="button"
-                  class="btn btn-label btn-danger"
-                >
-                  <label><i class="fa fa-trash"></i></label> Delete
-                </button>
-              </td>
-            </tr>
-          </paginate>
+                    {{ campaign.paid === "false" ? "No" : "Yes" }}
+                  </button>
+                  <div v-if="campaign.paid === 'false'">
+                    <u
+                      @click="
+                        goToCheckout(
+                          campaign.booking_type,
+                          campaign.plan_id,
+                          campaign.email,
+                          campaign.id
+                        )
+                      "
+                      ><a href="#">complete payment</a></u
+                    >
+                  </div>
+                </td>
+                <td>
+                  <button
+                      class="btn"
+                      :class="[
+                        campaign.expired === 'false' ? 'btn-success' : 'btn-danger'
+                      ]"
+                    >
+                    {{ campaign.expired === "false" ? "No" : "Yes" }}
+                  </button>
+                </td>
+                <td>{{ campaign.created_at }}</td>
+                <td>
+                  <button
+                    @click="
+                      viewCampaign({
+                        user_details_id: campaign.id,
+                        time: campaign.time,
+                        date: campaign.date,
+                        keyword: campaign.user_query,
+                        plan_id: campaign.plan_id,
+                        expired: campaign.expired,
+                        paid: campaign.paid
+                      })
+                    "
+                    type="button"
+                    class="btn btn-label btn-success"
+                  >
+                    <label><i class="fa fa-book"></i></label> View
+                  </button>
+                  <button
+                    @click="deleteCampaign(campaign.id)"
+                    type="button"
+                    class="btn btn-label btn-danger"
+                  >
+                    <label><i class="fa fa-trash"></i></label> Delete
+                  </button>
+                </td>
+              </tr>
+            </paginate>
 
-          <tbody v-else>
-            <td colspan="4"><h5>You have not created any reports</h5></td>
-          </tbody>
-        </table>
+            <tbody v-else>
+              <td colspan="4"><h5>You have not created any reports</h5></td>
+            </tbody>
+          </table>
+        </div>
         <paginate-links
           :show-step-links="true"
           :step-links="{
