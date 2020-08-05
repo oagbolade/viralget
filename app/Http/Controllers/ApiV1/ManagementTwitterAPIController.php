@@ -76,14 +76,14 @@ class ManagementTwitterAPIController extends Controller
             $data['report_type'] = $report->plan->name;
             $data['report_type_days'] = $report->plan->days;
             $data['data'] = json_decode(json_encode($report->report_data));
-            
+
             $contributors['original_contributors'] = json_decode(json_encode($report->original_contributors));
             $contributors['top_original_contributors'] = json_decode(json_encode($report->top_original_contributors));
-            
+
             $high_tweets['most_recent_tweets'] = json_decode(json_encode($report->most_recent_tweets));
             $high_tweets['most_recent_replies'] = json_decode(json_encode($report->most_recent_replies));
             $high_tweets['highest_retweeted_tweets'] = json_decode(json_encode($report->highest_retweeted_tweets));
-            
+
             $data['expired'] = 'true';
             $data['handle'] = $report->query;
 
@@ -100,14 +100,14 @@ class ManagementTwitterAPIController extends Controller
             $data['report_type'] = $report->plan->name;
             $data['report_type_days'] = $report->plan->days;
             $data['data'] = json_decode(json_encode($report->report_data));
-            
+
             $contributors['original_contributors'] = json_decode(json_encode($report->original_contributors));
             $contributors['top_original_contributors'] = json_decode(json_encode($report->top_original_contributors));
-            
+
             $high_tweets['most_recent_tweets'] = json_decode(json_encode($report->most_recent_tweets));
             $high_tweets['most_recent_replies'] = json_decode(json_encode($report->most_recent_replies));
             $high_tweets['highest_retweeted_tweets'] = json_decode(json_encode($report->highest_retweeted_tweets));
-            
+
             $data['expired'] = 'true';
             $data['handle'] = $report->query;
 
@@ -811,10 +811,7 @@ class ManagementTwitterAPIController extends Controller
 
     function getUserTweets($handle, $keyword)
     {
-        $count = 600;
-
         $is_searching = true;
-        $most_recent_tweets = [];
         $filtered_tweets = [];
 
         $initialQuery = [
@@ -826,11 +823,13 @@ class ManagementTwitterAPIController extends Controller
         ];
 
         $max_id = 0;
+        $page = 0;
 
         while ($is_searching) {
             try {
                 $this->connect();
                 $influencerTweets = $this->connection->get('statuses/user_timeline', $initialQuery);
+                $page++;
             } catch (\Exception $e) {
                 return $e->getMessage();
             }
@@ -847,12 +846,11 @@ class ManagementTwitterAPIController extends Controller
                     if (strpos($tweets->full_text, $keyword) !== false) {
                         $filtered_tweets[] = $tweets;
                     }
-
-                    $most_recent_tweets[] = $tweets;
                 }
             }
 
-            if (count($most_recent_tweets) >= $count || count($influencerTweets) === 0) {
+            // 200 tweets perpage
+            if ($page === 10) { 
                 $is_searching = false;
             }
 

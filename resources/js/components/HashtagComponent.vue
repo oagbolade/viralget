@@ -34,33 +34,42 @@
     </div>
 
     <div class="row" v-show="!loading && !displayError">
-      <h6 id="block-2" class="block-number">
-        {{ report_type_days }} days report for:
-        <strong>{{ decodeURIComponent(handle) }}</strong>
-        <span v-show="report_type_days !== '30'">
-          <a href="/pricing"> | Upgrade Plan</a></span
-        >
-      </h6>
+      <div class="report-data col-lg-8">
+        <h6 id="block-2" class="block-number">
+          {{ report_type_days }} days report for:
+          <strong>{{ decodeURIComponent(handle) }}</strong>
+        </h6>
 
-      <div class="col-md-12">
         <div>
-          <p>
-            <small
-              ><span class="icon-calendar"></span> &nbsp; {{ date_from }} -
-              {{ date_to }}</small
-            >
-          </p>
+          <small
+            ><span class="icon-calendar"></span> &nbsp; {{ date_from }} -
+            {{ date_to }}</small
+          >
         </div>
-
-        <a-range-picker
+        
+        <!-- Removed this feature -->
+        <!-- <a-range-picker
           @change="onChange"
           :disabledDate="disabledDate"
           :showTime="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
         />
         <button class="btn btn-sm btn-primary" @click="goTo">
           Filter
-        </button>
+        </button> -->
+      </div>
 
+      <div class="report-data col-lg-4 col-sm-12">
+        <button
+          @click="goToSubscription"
+          type="button"
+          class="btn btn-round btn-primary float-right"
+        >
+          <label><i class="fa fa-thumbs-up"></i></label>
+          Upgrade Plan
+        </button>
+      </div>
+
+      <div class="col-md-12">
         <section
           class="section text-white mt-5"
           style="background-color: #1b8bf9;"
@@ -1176,6 +1185,9 @@ export default {
           this.displayError = true;
           this.loading = false;
         });
+    },
+    goToSubscription() {
+      window.location.href = "/pricing";
     },
     goTo() {
       if (this.report_type === "starter" || this.report_type === "basic") {

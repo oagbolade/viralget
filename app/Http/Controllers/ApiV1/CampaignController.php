@@ -33,7 +33,7 @@ class CampaignController extends Controller
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         $campaign_details = new UserDetailsManagement;
-        
+
         try {
             $campaign_details = UserDetailsManagement::with('influencerManagementPlan')->where(['user_id' => $user->id, 'booking_type' => 'influencer_management'])->orderBy('id', 'desc')->get();
 
@@ -42,15 +42,14 @@ class CampaignController extends Controller
                 "message" => "successfull",
                 "data" => $campaign_details,
             ], 200);
-
         } catch (Exception $e) {
             return response([
                 "status" => 500,
-                "message" => "failed to get management campaigns " . $e,
+                "message" => "failed to get management campaigns " . $e->getMessage(),
             ], 500);
         }
     }
-    
+
     function trendsView()
     {
         $user = $this->authenticate();
@@ -58,29 +57,28 @@ class CampaignController extends Controller
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         $campaign_details = new UserDetailsManagement;
-        
+
         try {
             $campaign_details = UserDetailsManagement::with('trendsPlan')->where(['user_id' => $user->id, 'booking_type' => 'trends'])->orderBy('id', 'desc')->get();
-            
+
             return response([
                 "status" => 200,
                 "message" => "successfull",
                 "data" => $campaign_details,
             ], 200);
-
         } catch (Exception $e) {
             return response([
                 "status" => 500,
-                "message" => "failed to get trends campaigns " . $e,
+                "message" => "failed to get trends campaigns " . $e->getMessage(),
             ], 500);
         }
     }
-    
+
     function view()
     {
         $user = $this->authenticate();
         $hashtag_campaigns = new ReportingHistory;
-        
+
         $profiling_campaigns = new ProfilingHistory;
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
@@ -98,11 +96,10 @@ class CampaignController extends Controller
                 "profiling_data" => $profiling_campaigns,
                 'subscription' => $subscription,
             ], 200);
-
         } catch (Exception $e) {
             return response([
                 "status" => 500,
-                "message" => "failed to get campaigns " . $e,
+                "message" => "failed to get campaigns " . $e->getMessage(),
             ], 500);
         }
     }
@@ -130,7 +127,7 @@ class CampaignController extends Controller
         $campaign = new ReportingHistory;
         $subscription = Subscription::where('user_id', $user->id)->first();
 
-        if($campaign::where(['query' => request()->keywords, 'user_id' => $user->id])->first()){
+        if ($campaign::where(['query' => request()->keywords, 'user_id' => $user->id])->first()) {
             return response([
                 "message" => "query already exists for this user",
                 "status" => 400
@@ -147,7 +144,7 @@ class CampaignController extends Controller
             $campaign->save();
         } catch (Exception $e) {
             return response([
-                "message" => "failed to create new report" . $e,
+                "message" => "failed to create new report" . $e->getMessage(),
                 "status" => 400
             ], 500);
         }
@@ -193,7 +190,7 @@ class CampaignController extends Controller
             $create_campaign->save();
         } catch (Exception $e) {
             return response([
-                "message" => "failed to create new user profiling" . $e,
+                "message" => "failed to create new user profiling" . $e->getMessage(),
                 "status" => 400
             ], 500);
         }
@@ -230,11 +227,38 @@ class CampaignController extends Controller
         } catch (Exception $e) {
             return response([
                 "status" => 500,
-                "message" => "failed to delete campaign " . $e,
+                "message" => "failed to delete campaign " . $e->getMessage(),
             ], 500);
         }
     }
-    
+
+    function updateInfluencerManagement()
+    {
+        $campaign = new UserDetailsManagement;
+
+        $campaign_id = request()->campaignId;
+        $influencers = request()->influencers;
+        $influencers = explode(",", $influencers);
+        $makeString = json_encode($influencers);
+
+        try {
+            $campaign = $campaign->where('id', $campaign_id)->update([
+                'influencers' => $makeString
+            ]);
+
+            return response([
+                "status" => 200,
+                "message" => "successfull",
+                "data" => $campaign_id
+            ], 200);
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to update influencers " . $e->getMessage(),
+            ], 500);
+        }
+    }
+
     function deleteManagement()
     {
         $campaign = new UserDetailsManagement;

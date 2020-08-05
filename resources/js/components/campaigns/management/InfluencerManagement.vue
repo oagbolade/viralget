@@ -184,6 +184,20 @@
                     <label><i class="fa fa-book"></i></label>
                     CampaignSummary
                   </button>
+
+                  <div>
+                    <b-button
+                      @click="
+                        showEditModal(
+                          JSON.parse(campaign.influencers),
+                          campaign
+                        )
+                      "
+                      variant="primary"
+                      >Edit</b-button
+                    >
+                  </div>
+
                   <button
                     @click="deleteCampaign(campaign.id)"
                     type="button"
@@ -219,6 +233,7 @@
       </div>
     </div>
 
+    <!-- Influencer List Modal -->
     <div>
       <b-modal id="modal-1" title="Influencer List">
         <div class="row">
@@ -244,6 +259,67 @@
         </div>
       </b-modal>
     </div>
+
+    <!-- Edit Modal -->
+    <div>
+      <b-modal id="modal-2" title="Edit Influencers">
+        <div class="row">
+          <div v-for="(propertyValue, propertyName, index) in this.modal.influencers" :key="index">
+            <p class="col-12">
+              <div class="col-12">
+                <label class="sr-only" for="inline-form-input-username"
+                  >Username</label
+                >
+                <b-input-group prepend="@" class="mb-2 mr-sm-2 mb-sm-0">
+                  <b-input
+                    v-model="modal.influencers[propertyName]"
+                    id="inline-form-input-username"
+                    placeholder="Enter Username"
+                  ></b-input>
+                </b-input-group>
+              </div>
+            </p>
+          </div>
+
+            <div v-for="index in this.modal.no_of_influencers - getInfluencerObjectSize(this.modal.influencers)" :key="index">
+              <p class="col-12">
+              <div class="col-12">
+                <label class="sr-only" for="inline-form-input-username"
+                  >Username</label
+                >
+                <b-input-group prepend="@" class="mb-2 mr-sm-2 mb-sm-0">
+                  <b-input
+                    v-model="modal.newInfluencers[index]"
+                    id="inline-form-input-username"
+                    placeholder="Enter Username"
+                  ></b-input>
+                </b-input-group>
+              </div>
+            </p>
+          </div>
+        </div>
+        <template v-slot:modal-footer>
+        <div class="w-100">
+          <b-button
+            variant="danger"
+            size="sm"
+            class="float-right"
+            @click="hideEditModal()"
+          >
+            Close
+          </b-button>
+          <b-button
+            variant="primary"
+            size="sm"
+            class="float-right"
+            @click="editInfluencers"
+          >
+            Save
+          </b-button>
+        </div>
+      </template>
+      </b-modal>
+    </div>
   </div>
 </template>
 
@@ -261,6 +337,11 @@ export default {
   components: { Loading },
   data() {
     return {
+      modal: {
+        influencers: {},
+        newInfluencers: {},
+        no_of_influencers: 0,
+      },
       collapsed: false,
       influencers: [],
       menu: [
@@ -319,9 +400,48 @@ export default {
     this.getUserCampaigns();
   },
   methods: {
+    editInfluencers() {
+      let tempInfluencerArray = [];
+
+      for (const [key, value] of Object.entries(this.modal.influencers)) {
+        const replaceSymbol = value.replace("@", "");
+        tempInfluencerArray.push(replaceSymbol);
+      }
+
+      for (const [key, value] of Object.entries(this.modal.newInfluencers)) {
+        const replaceSymbol = value.replace("@", "");
+        tempInfluencerArray.push(replaceSymbol);
+      }
+
+      this.updateInfluencers(tempInfluencerArray, this.listCampaign.id);
+    },
+    hideEditModal() {
+      this.$bvModal.hide("modal-2");
+    },
     showModal(influencers = [], campaign) {
       this.listCampaign = campaign;
       this.influencers = influencers;
+    },
+    async showEditModal(influencers = [], campaign) {
+      this.listCampaign = campaign;
+      this.modal.no_of_influencers =
+        campaign.influencer_management_plan.no_of_influencers;
+      let tempObject = {};
+
+      await influencers.forEach((influencer) => {
+        tempObject[influencer] = influencer;
+      });
+
+      this.modal.influencers = Object.assign(tempObject);
+      await this.$bvModal.show("modal-2");
+    },
+    getInfluencerObjectSize(influencerObject) {
+      var size = 0,
+        key;
+      for (key in influencerObject) {
+        if (influencerObject.hasOwnProperty(key)) size++;
+      }
+      return size;
     },
     goToCheckout(booking_type, plan_id, email, user_plan_id) {
       const URL = `/checkout/${booking_type}/${plan_id}?email=${email}&user_plan_id=${user_plan_id}`;
@@ -347,6 +467,37 @@ export default {
     },
     goToSubscription() {
       window.location.href = "/pricing/management";
+    },
+    async updateInfluencers(influencers, campaignId) {
+      this.loading = true;
+      const URL = `/api/v1/management/campaign/update/${campaignId}?influencers=${influencers}`;
+
+      try {
+        let response = await axios.get(URL, {
+          headers: {
+            Authorization:
+              "Bearer " + $('meta[name="api-token"]').attr("content"),
+          },
+        });
+
+        if (response.data.status === 200) {
+          this.campaigns = response.data.data;
+          this.loading = false;
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          // REload
+          location.reload();
+        }
+      } catch (err) {
+        this.displayError = true;
+        this.loading = false;
+        console.log(err);
+      }
     },
     async getUserCampaigns() {
       const URL = `/api/v1/campaign/management/view`;

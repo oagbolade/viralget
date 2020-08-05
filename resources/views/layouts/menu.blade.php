@@ -27,6 +27,8 @@
           <span class="dropdown-toggle" data-toggle="dropdown">My Account</span>
           <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="#">Account Settings</a>
+            <a class="dropdown-item" href="{{ route('campaigns.trends') }}">Trends</a>
+            <a class="dropdown-item" href="{{ route('campaigns.influencermanagement') }}">Influencer Management</a>
             <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
           </div>          
           @endguest
