@@ -272,6 +272,7 @@
                 >
                 <b-input-group prepend="@" class="mb-2 mr-sm-2 mb-sm-0">
                   <b-input
+                    disabled="true"
                     v-model="modal.influencers[propertyName]"
                     id="inline-form-input-username"
                     placeholder="Enter Username"
@@ -280,6 +281,11 @@
               </div>
             </p>
           </div>
+
+            <div v-if="this.modal.no_of_influencers - getInfluencerObjectSize(this.modal.influencers) == 0" class="alert alert-primary col-12" role="alert">
+              You have reached your plan limit, you cannot add more influencers to your list.
+              You can click <a @click="goToSubscription"><u>here</u></a> to monitor more influencers
+            </div>
 
             <div v-for="index in this.modal.no_of_influencers - getInfluencerObjectSize(this.modal.influencers)" :key="index">
               <p class="col-12">
