@@ -689,7 +689,7 @@ class TwitterAPIController extends Controller
         $data['unique_users'] = 0;
         $data['avr_contribution']  = 0;
 
-        if (count($tweets) > 0) {
+        if (count($tweets) > 0 && is_array($tweets)) {
             foreach ($tweets as $tweet) {
                 $accounts[] = $tweet->user->screen_name; //get all usernames to sort occurence count
             }
@@ -697,7 +697,6 @@ class TwitterAPIController extends Controller
             $data['unique_users'] = count(array_unique($accounts));
             $data['avr_contribution'] = round(count($tweets) / count(array_unique($accounts)), 2);
         }
-
 
         return $data;
     }
