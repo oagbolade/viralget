@@ -14,7 +14,7 @@
       <div class="col-md-10 mx-auto text-center">
         <h1>We're almost done...</h1>
         <h3>Just a few seconds. Kindly exercise some patience...</h3>
-        <img src="/images/processing.gif" style="max-width: 400px" alt="" />
+        <img src="/images/processing.gif" style="max-width: 400px;" alt="" />
       </div>
     </div>
 
@@ -34,36 +34,23 @@
     </div>
 
     <div class="row" v-show="!loading && !displayError">
-      <h6 id="block-2" class="block-number">
-        24 hours report for:
-        <strong>{{ decodeURIComponent(handle) }}</strong>
-        <span v-show="report_type_days !== '30'">
-          <a href="/pricing"> | Upgrade Plan</a></span
-        >
-      </h6>
+      <div class="report-data col-lg-8">
+        <h6 id="block-2" class="block-number">
+          24 hours campaign summary report
+        </h6>
+
+        <div>
+          <small
+            ><span class="icon-calendar"></span> &nbsp; {{ date_from }} -
+            {{ date_to }}</small
+          >
+        </div>
+      </div>
 
       <div class="col-md-12">
-        <div>
-          <p>
-            <small
-              ><span class="icon-calendar"></span> &nbsp; {{ date_from }} -
-              {{ date_to }}</small
-            >
-          </p>
-        </div>
-
-        <a-range-picker
-          @change="onChange"
-          :disabledDate="disabledDate"
-          :showTime="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
-        />
-        <button class="btn btn-sm btn-primary" @click="goTo">
-          Filter
-        </button>
-
         <section
           class="section text-white mt-5"
-          style="background-color: #1b8bf9"
+          style="background-color: #1b8bf9;"
         >
           <div class="container">
             <div class="row gap-y text-center">
@@ -313,7 +300,7 @@ import PieChart from "../../../charts/PieChart.js";
 import {
   Datepicker,
   Timepicker,
-  DatetimePicker
+  DatetimePicker,
 } from "@livelybone/vue-datepicker";
 
 const numeral = require("numeral");
@@ -352,11 +339,11 @@ export default {
       total_engagements: 0,
       ad_recall: 0,
       keyword: 0,
-      selectedDays: ""
+      selectedDays: "",
     };
   },
-  mounted: function() {},
-  created: function() {
+  mounted: function () {},
+  created: function () {
     this.getData();
   },
   methods: {
@@ -410,8 +397,9 @@ export default {
 
       const config = {
         headers: {
-          Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
-        }
+          Authorization:
+            "Bearer " + $('meta[name="api-token"]').attr("content"),
+        },
       };
 
       const data = {
@@ -439,7 +427,7 @@ export default {
         high_impacts: this.high_impacts,
         top_contributors: this.most_active,
         high_retweeters: this.high_retweets,
-        highest_retweeted_tweets: this.high_retweet_tweets
+        highest_retweeted_tweets: this.high_retweet_tweets,
       };
 
       // Add all necessary formaters
@@ -451,15 +439,16 @@ export default {
       }
     },
     moment,
-    getData: function() {
+    getData: function () {
       this.loading = true;
       fetch(`/api/v1/management/report/profile/summary/${this.id}`, {
         headers: {
-          Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
-        }
+          Authorization:
+            "Bearer " + $('meta[name="api-token"]').attr("content"),
+        },
       })
-        .then(res => res.json())
-        .then(res => {
+        .then((res) => res.json())
+        .then((res) => {
           if (res.status == "success") {
             let data = JSON.parse(res.data.data);
             console.log(res);
@@ -493,7 +482,7 @@ export default {
             this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.displayError = true;
           this.loading = false;
@@ -526,32 +515,32 @@ export default {
             data: [
               this.totalTweets - this.retweets.count,
               this.retweets.count,
-              this.replies.count
+              this.replies.count,
             ],
-            backgroundColor: ["#ff4954", "#3cd458", "#926dde"]
-          }
+            backgroundColor: ["#ff4954", "#3cd458", "#926dde"],
+          },
         ],
-        labels: ["Tweets", "Retweets", "Replies"]
+        labels: ["Tweets", "Retweets", "Replies"],
       };
     },
     getRandomInt() {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
     },
-    getHumanDate: function(date) {
+    getHumanDate: function (date) {
       return moment(date).format("LLLL");
-    }
+    },
   },
   computed: {
-    replies_percentage: function() {
+    replies_percentage: function () {
       return `width: ${this.replies.percentage}%`;
     },
-    retweets_percentage: function() {
+    retweets_percentage: function () {
       return `width: ${this.retweets.percentage}%`;
     },
-    likes_percentage: function() {
+    likes_percentage: function () {
       return `width: ${this.likes.percentage}%`;
-    }
-  }
+    },
+  },
 };
 </script>
 

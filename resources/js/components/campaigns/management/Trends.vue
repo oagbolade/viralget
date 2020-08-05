@@ -205,7 +205,7 @@ export default {
   components: { Loading },
   data() {
     return {
-      collapsed: false,
+      collapsed: true,
       menu: [
         {
           header: true,

@@ -46,7 +46,7 @@ import VuePaginate from 'vue-paginate'
 const numeral = require('numeral');
 
 export default {
-    props: ['q', 'plan', 'from', 'to'],
+    props: ['q', 'plan', 'from', 'to', 'location'],
     components: {Loading},
     data() {
         return {
@@ -86,7 +86,7 @@ export default {
     methods: {
         getData: function() {
             this.loading = true;
-            fetch(`/api/v1/hashtag?q=${this.q}&plan=${this.plan}&fromDate=${this.from}&toDate=${this.to}`, {
+            fetch(`/api/v1/hashtag?q=${this.q}&plan=${this.plan}&fromDate=${this.from}&toDate=${this.to}&location=${this.location}`, {
                 headers: {
                   Authorization: 'Bearer ' + $('meta[name="api-token"]').attr("content"),
                 }

@@ -110,7 +110,7 @@ class PremiumTwitterAPIController extends Controller
         $user_subscription = $user->subscription->plan;
 
         $count = $user_subscription->tweets;
-        
+
         $is_searching = true;
         $days = date("U", strtotime('-' . $user_subscription->days . ' days'));
         $tweets_30_days = [];
@@ -163,11 +163,11 @@ class PremiumTwitterAPIController extends Controller
         return $timestamp;
     }
 
-    function getHashtagTweets($package, $query, $request)
+    function getHashtagTweets($package, $query, $location)
     {
         $days = date("YmdHi", strtotime('-' . $package->days . ' days'));
         $now = date("YmdH00");
-        
+
         $fromDate = $days;
         $toDate = $now;
 
@@ -202,21 +202,42 @@ class PremiumTwitterAPIController extends Controller
         }
 
         while ($searching) {
-            if ($page === 0) {
-                $this->_temporary_parameters = [
-                    "query" => $query,
-                    "maxResults" => $count,
-                    'fromDate' => $fromDate,
-                    'toDate' => $toDate,
-                ];
-            } else {
-                $this->_temporary_parameters = [
-                    "query" => $query,
-                    "maxResults" => $count,
-                    'fromDate' => $fromDate,
-                    'toDate' => $toDate,
-                    "next" => $next
-                ];
+            if ($location == true) {
+                if ($page === 0) {
+                    $this->_temporary_parameters = [
+                        "query" => "place: Nigeria place_country: NG lang: en " . $query,
+                        "maxResults" => $count,
+                        'fromDate' => $fromDate,
+                        'toDate' => $toDate,
+                    ];
+                } else {
+                    $this->_temporary_parameters = [
+                        "query" => "place: Nigeria place_country: NG lang: en " . $query,
+                        "maxResults" => $count,
+                        'fromDate' => $fromDate,
+                        'toDate' => $toDate,
+                        "next" => $next,
+                    ];
+                }
+            }
+
+            if ($location == false) {
+                if ($page === 0) {
+                    $this->_temporary_parameters = [
+                        "query" => $query,
+                        "maxResults" => $count,
+                        'fromDate' => $fromDate,
+                        'toDate' => $toDate,
+                    ];
+                } else {
+                    $this->_temporary_parameters = [
+                        "query" => $query,
+                        "maxResults" => $count,
+                        'fromDate' => $fromDate,
+                        'toDate' => $toDate,
+                        "next" => $next
+                    ];
+                }
             }
 
             try {
@@ -230,7 +251,7 @@ class PremiumTwitterAPIController extends Controller
             if (isset($tweets_result->error)) {
                 dd($tweets_result);
             }
-            
+
             if (isset($tweets_result->results)) {
                 foreach ($tweets_result->results as $status) {
                     $tweets_array[] = $status;

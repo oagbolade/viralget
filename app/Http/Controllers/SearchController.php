@@ -41,6 +41,7 @@ class SearchController extends Controller
         $keyword = request()->keyword;
         $q = request()->q;
         $er = request()->er;
+        $location = request()->location;
         $fromDate = request()->fromDate;
         $toDate = request()->toDate;
         $user = Auth()->user();
@@ -49,7 +50,7 @@ class SearchController extends Controller
             //check if is an hashtag
             if(strpos($q, '@') === false) {
                 $q = str_replace('%23', '', urlencode($q));
-                return redirect(route('search.show', ['q' => $q])."?fromDate=$fromDate&toDate=$toDate");
+                return redirect(route('search.show', ['q' => $q])."?fromDate=$fromDate&toDate=$toDate&location=$location");
             }
         }
 
@@ -72,7 +73,7 @@ class SearchController extends Controller
         $q = str_replace('%23', '', strip_tags(request()->q));
 
         $user = Auth()->user();
-
+        $location = request()->location;
 
         if(!$user->subscription) {
             return redirect(route('pricing'))->withError('You do not have an active subscription plan. Please choose a subscription package to continue.');
@@ -121,7 +122,7 @@ class SearchController extends Controller
             return redirect(route('pricing'))->withError('You have reached your reporting balance limit. Please choose a subscription package to continue.');
         }
 
-        return view('profiles.show')->with('q', $q)->with('is_hashtag', true)->withQ($q)->with('plan', $plan);
+        return view('profiles.show')->with('q', $q)->with('is_hashtag', true)->with('location', $location)->withQ($q)->with('plan', $plan);
     }
 
     function showProfile() {

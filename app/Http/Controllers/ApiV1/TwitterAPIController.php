@@ -49,7 +49,8 @@ class TwitterAPIController extends Controller
     {
         $user = $this->authenticate();
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-
+        
+        $location = request()->location;
 
         if (request()->has('plan')) {
             $package = Plans::where('name', request()->plan)->first();
@@ -122,7 +123,7 @@ class TwitterAPIController extends Controller
 
         if ($package->name == 'basic' || $package->name == 'premiumBusiness' || $package->name == 'premiumLite' || $package->name == 'enterprise') {
             $premiumData = new PremiumTwitterAPIController;
-            $tweets = $premiumData->getHashtagTweets($package, $query, $request);
+            $tweets = $premiumData->getHashtagTweets($package, $query, $location);
         } else {
             $this->connect();
 
@@ -250,7 +251,7 @@ class TwitterAPIController extends Controller
 
         return $recent_tweets;
     }
-    
+
     function getMostRecentReplies($tweets)
     {
         $recent_tweets = [];
@@ -688,7 +689,7 @@ class TwitterAPIController extends Controller
         $data['unique_users'] = 0;
         $data['avr_contribution']  = 0;
 
-        if (count($tweets) > 0) {
+        if (count($tweets) > 0 && is_array($tweets)) {
             foreach ($tweets as $tweet) {
                 $accounts[] = $tweet->user->screen_name; //get all usernames to sort occurence count
             }
@@ -696,7 +697,6 @@ class TwitterAPIController extends Controller
             $data['unique_users'] = count(array_unique($accounts));
             $data['avr_contribution'] = round(count($tweets) / count(array_unique($accounts)), 2);
         }
-
 
         return $data;
     }
@@ -844,7 +844,7 @@ class TwitterAPIController extends Controller
         if ($user->subscription->plan->name == 'Free') {
             $sorted = array_reverse($sorted);
         }
-        
+
         $sorted = array_slice($sorted, 0, 20);
         return $sorted;
     }
@@ -873,7 +873,7 @@ class TwitterAPIController extends Controller
         $reversed = array_unique(array_reverse($accounts));
 
         $count = 1;
-        
+
         switch ($user->subscription->plan->name) {
             case ('premiumLite'):
                 $account_limit = 15;

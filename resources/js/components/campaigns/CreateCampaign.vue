@@ -16,7 +16,7 @@
         <span class="icon-sad lg-error-icon"></span>
         <h1>Oops!</h1>
         <h3>
-          {{errorMessage}}
+          {{ errorMessage }}
         </h3>
         <h5>Please try again in few minutes</h5>
 
@@ -42,7 +42,7 @@
 
       <section
         class="table-section bg-white col-md-12"
-        style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
+        style="box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);"
       >
         <div>
           <form v-on:submit.prevent class="input-round">
@@ -66,15 +66,27 @@
               />
             </div>
 
-            <div v-if="!isHandle" class="form-group text-center">
-              <h6>Filter campaign data by date</h6>
-              <a-range-picker
-                @change="onChange"
-                size="large"
-                format="YYYY-MM-DD"
-                :disabledDate="disabledDate"
-                :showTime="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
-              />
+            <div v-if="!isHandle" class="row text-center">
+              <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                <h6>Filter campaign data by date</h6>
+                <a-range-picker
+                  @change="onChange"
+                  size="large"
+                  format="YYYY-MM-DD"
+                  :disabledDate="disabledDate"
+                  :showTime="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
+                />
+              </div>
+
+              <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                <h6>Filter Location</h6>
+                <div>
+                  <select v-model="form.location" class="form-control form-control-md">
+                    <option value="">Select Location</option>
+                    <option value="true">Nigeria</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
             <div class="form-group">
@@ -91,7 +103,7 @@
                 type="button"
                 class="btn btn-round btn-success"
               >
-                {{ (isHandle) ? 'Create User Profiling' : 'Create Campaign' }}
+                {{ isHandle ? "Create User Profiling" : "Create Campaign" }}
               </button>
             </div>
           </form>
@@ -114,7 +126,8 @@ export default {
   components: { Loading },
   data() {
     return {
-      errorMessage: "Unfortunately, we're unable to create your campaign at the moment.",
+      errorMessage:
+        "Unfortunately, we're unable to create your campaign at the moment.",
       loading: false,
       displayError: false,
       isHandle: false,
@@ -123,27 +136,28 @@ export default {
         keywords: "",
         handle: "",
         description: "",
+        location: "",
         dates: {
           from: "",
-          to: ""
-        }
-      }
+          to: "",
+        },
+      },
     };
   },
-  mounted: function() {
+  mounted: function () {
     this.Toast = Swal.mixin({
       toast: true,
       position: "top-end",
       showConfirmButton: false,
       timer: 3000,
       timerProgressBar: true,
-      onOpen: toast => {
+      onOpen: (toast) => {
         toast.addEventListener("mouseenter", Swal.stopTimer);
         toast.addEventListener("mouseleave", Swal.resumeTimer);
-      }
+      },
     });
   },
-  created: function() {
+  created: function () {
     this.checkCampaignType();
   },
   methods: {
@@ -173,35 +187,37 @@ export default {
           showConfirmButton: false,
           timer: 3000,
           timerProgressBar: true,
-          onOpen: toast => {
+          onOpen: (toast) => {
             toast.addEventListener("mouseenter", Swal.stopTimer);
             toast.addEventListener("mouseleave", Swal.resumeTimer);
-          }
+          },
         });
 
         Toast.fire({
           icon: "error",
-          title: "Please enter a keyword or hashtag"
+          title: "Please enter a keyword or hashtag",
         });
         return;
       }
       
       const stripHastag = this.form.keywords.replace("#", "");
-      
+
       this.loading = true;
       const config = {
         headers: {
-          Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
-        }
+          Authorization:
+            "Bearer " + $('meta[name="api-token"]').attr("content"),
+        },
       };
 
       const data = {
         keywords: stripHastag,
         dates: {
           from: this.form.dates.from,
-          to: this.form.dates.to
+          to: this.form.dates.to,
         },
-        description: this.form.description
+        description: this.form.description,
+        location: this.form.location,
       };
 
       const URL = `/api/v1/campaign/create`;
@@ -226,23 +242,24 @@ export default {
           showConfirmButton: false,
           timer: 3000,
           timerProgressBar: true,
-          onOpen: toast => {
+          onOpen: (toast) => {
             toast.addEventListener("mouseenter", Swal.stopTimer);
             toast.addEventListener("mouseleave", Swal.resumeTimer);
-          }
+          },
         });
 
         Toast.fire({
           icon: "error",
-          title: "Please enter a user handle"
+          title: "Please enter a user handle",
         });
         return;
       }
       this.loading = true;
       const config = {
         headers: {
-          Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
-        }
+          Authorization:
+            "Bearer " + $('meta[name="api-token"]').attr("content"),
+        },
       };
 
       const removeSymbol = this.form.handle.replace("@", "");
@@ -251,9 +268,9 @@ export default {
         handle: removeSymbol,
         dates: {
           from: this.form.dates.from,
-          to: this.form.dates.to
+          to: this.form.dates.to,
         },
-        description: this.form.description
+        description: this.form.description,
       };
 
       const URL = `/api/v1/campaign/create`;
@@ -278,13 +295,13 @@ export default {
     },
     handleBlur(search, handle = false) {
       console.log(search);
-      if(handle === true){
+      if (handle === true) {
         const getSymbol = search.trim().split("")[0];
-  
+
         if (getSymbol === "@") {
           this.Toast.fire({
             icon: "success",
-            title: "Looks good!"
+            title: "Looks good!",
           });
         }
         return;
@@ -292,17 +309,17 @@ export default {
 
       if (search.trim() !== "") {
         this.Toast.fire({
-            icon: "success",
-            title: "Looks good!"
-          });
+          icon: "success",
+          title: "Looks good!",
+        });
         return;
       }
     },
     disabledDate(current) {
       return current && current > moment().endOf("day");
-    }
+    },
   },
-  computed: {}
+  computed: {},
 };
 </script>
 
