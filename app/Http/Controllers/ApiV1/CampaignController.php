@@ -118,7 +118,7 @@ class CampaignController extends Controller
         $user = $this->authenticate();
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-
+        $location = request()->location;
         $keywords = request()->keywords;
         $dates = json_encode(request()->dates);
         $description = request()->description;
@@ -139,6 +139,10 @@ class CampaignController extends Controller
         $campaign->description = $description;
         $campaign->user_id = $user_id;
         $campaign->package = $subscription->plan_id;
+
+        if ($location != null) {
+            $campaign->location_set = 'true';
+        }
 
         try {
             $campaign->save();
