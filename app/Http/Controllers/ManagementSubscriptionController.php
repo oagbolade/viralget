@@ -134,7 +134,7 @@ class ManagementSubscriptionController extends Controller
             }
 
             return redirect(route('campaigns.trends'))->withSuccess("Congratulations! Your plan is active.
-             You will be able to view and monitor your hashtag as soon as it starts to trend which will take about 24hrs. Thank you");
+             You will be able to view and monitor your hashtag as soon as it starts to trend which will take about 48hrs. Thank you");
 
         } else {
             return redirect(route('subscribe', ['plan', \strtolower($plan->name)]))->withError('An error occured with your payment data');
