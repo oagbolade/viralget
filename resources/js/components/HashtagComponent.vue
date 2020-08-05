@@ -46,15 +46,16 @@
             {{ date_to }}</small
           >
         </div>
-
-        <a-range-picker
+        
+        <!-- Removed this feature -->
+        <!-- <a-range-picker
           @change="onChange"
           :disabledDate="disabledDate"
           :showTime="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
         />
         <button class="btn btn-sm btn-primary" @click="goTo">
           Filter
-        </button>
+        </button> -->
       </div>
 
       <div class="report-data col-lg-4 col-sm-12">
