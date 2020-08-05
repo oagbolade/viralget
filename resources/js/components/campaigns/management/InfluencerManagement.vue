@@ -342,7 +342,7 @@ export default {
         newInfluencers: {},
         no_of_influencers: 0,
       },
-      collapsed: false,
+      collapsed: true,
       influencers: [],
       menu: [
         {
@@ -568,6 +568,7 @@ export default {
       )
         .then((res) => res.json())
         .then((res) => {
+          console.log(res);
           if (res.data) {
             let data = res.data;
             this.displayError = false;

@@ -192,7 +192,7 @@ export default {
   components: { Loading, ProfilingHistory },
   data() {
     return {
-      collapsed: false,
+      collapsed: true,
       menu: [
         {
           header: true,
