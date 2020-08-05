@@ -135,6 +135,7 @@
                   @click="
                     viewCampaign(
                       campaign.query,
+                      campaign.location_set,
                       formatCampaignDates(campaign.dates).from,
                       formatCampaignDates(campaign.dates).to
                     )
@@ -296,7 +297,7 @@ export default {
       }
     },
 
-    viewCampaign(keyword, fromDate, toDate) {
+    viewCampaign(keyword, location, fromDate, toDate) {
       if (fromDate === null) {
         fromDate = "";
       }
@@ -310,7 +311,7 @@ export default {
 
       const URL = `/search/profiles?q=${encodeURIComponent(keyword)}&fromDate=${
         formattedFromDate !== undefined ? formattedFromDate : ""
-      }&toDate=${formattedToDate !== undefined ? formattedToDate : ""}`;
+      }&toDate=${formattedToDate !== undefined ? formattedToDate : ""}&location=${location}`;
       window.location.href = URL;
     },
 
