@@ -127,7 +127,7 @@
           <td class="default"><span class="tick">&#10004;</span>100</td>
           <td><span class="tick">&#10004;</span>500</td>
           <td><span class="tick">&#10004;</span>2000</td>
-          <td><span class="tick">&#10004;</span>2500</td>
+          <td><span class="tick">&#10004;</span>3000</td>
           <td><span class="tick">&#10004;</span>4500</td>
         </tr>
         <tr>

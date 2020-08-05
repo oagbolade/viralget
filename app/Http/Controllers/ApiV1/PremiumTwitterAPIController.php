@@ -185,7 +185,7 @@ class PremiumTwitterAPIController extends Controller
 
         switch ($package->name) {
             case 'enterprise':
-                $max_page = 10;
+                $max_page = 9;
                 break;
             case 'premiumBusiness':
                 $max_page = 6;
