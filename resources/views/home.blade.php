@@ -41,12 +41,6 @@
 
     </div>
   </div>
-  <style>
-    .sample-platform {
-      height: 1000px;
-      width: 100%;
-    }
-  </style>
 </header><!-- /.header -->
 
 
@@ -66,7 +60,7 @@
             with our software, it's now easier to manage your
             influencers and see their performance
           </p>
-          <p><a class="btn btn-lg btn-round btn-info" href="#">Find out More</a></p>
+          <p><a class="btn btn-lg btn-round btn-info" href="{{ route('pricing.management') }}">Find out More</a></p>
         </div>
       </div>
     </div>
@@ -81,7 +75,7 @@
           <p class="lead mb-6">Trending on twitter isn't going to give you the desired result,
             it's what people are saying about your brand that will
           </p>
-          <p><a class="btn btn-lg btn-round btn-info" href="#">Find out More</a></p>
+          <p><a class="btn btn-lg btn-round btn-info" href="{{ route('pricing.trends') }}">Find out More</a></p>
         </div>
 
         <div class="col-md-6 text-center">
