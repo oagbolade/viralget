@@ -13,4 +13,9 @@ class ProfilingHistory extends Model
         return $this->belongsTo(Plans::class, 'package', 'id');
     }
 
+    public function subscriptionUsage()
+    {
+        return $this->hasMany(Subscription::class, 'user_id', 'user_id');
+    }
+
 }
