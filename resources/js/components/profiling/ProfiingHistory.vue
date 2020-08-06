@@ -15,7 +15,7 @@
       <div class="col-md-10 mx-auto text-center">
         <h1>We're almost done...</h1>
         <h3>Just a few seconds. Kindly exercise some patience...</h3>
-        <img src="/images/processing.gif" style="max-width: 400px" alt="" />
+        <img src="/images/processing.gif" style="max-width: 400px;" alt="" />
       </div>
     </div>
 
@@ -40,10 +40,10 @@
                       <h5>Profiling Usage</h5>
                       <h3 class="mb-4">
                         {{
-                          subscription.plan.profiling_limit -
-                            subscription.profiling_balance
+                          planProp.profiling_limit -
+                          subscription.profiling_balance
                         }}
-                        / {{ subscription.plan.profiling_limit }}
+                        / {{ planProp.profiling_limit }}
                       </h3>
                       <button class="btn btn-warning btn-sm">
                         Searched Profiles
@@ -68,10 +68,10 @@
                       <h5>Reporting Usage</h5>
                       <h3 class="mb-4">
                         {{
-                          subscription.plan.reporting_limit -
-                            subscription.reporting_balance
+                          planProp.reporting_limit -
+                          subscription.reporting_balance
                         }}
-                        / {{ subscription.plan.reporting_limit }}
+                        / {{ planProp.reporting_limit }}
                       </h3>
                       <button class="btn btn-danger btn-sm">
                         Searched Hashtags
@@ -101,7 +101,7 @@
       </div>
       <section
         class="table-section bg-white col-md-12"
-        style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
+        style="box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);"
       >
         <table class="table table-hover responsive">
           <thead>
@@ -165,12 +165,12 @@
           :limit="5"
           :step-links="{
             next: 'NEXT',
-            prev: 'PREV'
+            prev: 'PREV',
           }"
           :classes="{
             ul: 'pagination',
             'ul.paginate-links > li.number': 'page-item',
-            'ul.paginate-links > li.number > a': 'page-link'
+            'ul.paginate-links > li.number > a': 'page-link',
           }"
         ></paginate-links>
       </section>
@@ -189,15 +189,18 @@ import moment from "moment";
 
 export default {
   components: { Loading },
-  props: ["profilingCampaigns", "usage"],
+  props: ["profilingCampaigns", "usage", "plan"],
   watch: {
-    profilingCampaigns: function(campaignValue) {
+    profilingCampaigns: function (campaignValue) {
       this.campaigns = campaignValue;
     },
-    usage: function(usageValue) {
+    usage: function (usageValue) {
       this.subscription = usageValue;
+    },
+    plan: function (planValue) {
+      this.planProp = planValue;
       this.loading = false;
-    }
+    },
   },
   data() {
     return {
@@ -208,11 +211,12 @@ export default {
       user: {},
       profiling: [],
       reporting: [],
-      subscription: {}
+      subscription: {},
+      planProp: {},
     };
   },
-  mounted: function() {},
-  created: function() {},
+  mounted: function () {},
+  created: function () {},
   methods: {
     goToCreateCampaign() {
       window.location.href = "/create-campaign?handle=true";
@@ -227,15 +231,15 @@ export default {
       try {
         let response = await axios.delete(URL, {
           params: {
-            handle: true
+            handle: true,
           },
           headers: {
             Authorization:
-              "Bearer " + $('meta[name="api-token"]').attr("content")
-          }
+              "Bearer " + $('meta[name="api-token"]').attr("content"),
+          },
         });
         const campaignId = response.data.data;
-        this.campaigns = this.campaigns.filter(campaignData => {
+        this.campaigns = this.campaigns.filter((campaignData) => {
           this.loading = false;
           this.displayError = false;
           return campaignData.id != campaignId;
@@ -254,8 +258,8 @@ export default {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then(result => {
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
         if (result.value) {
           this.confirmedDelete(campaignId);
           Swal.fire(
@@ -270,7 +274,7 @@ export default {
       const jsonData = JSON.parse(dates);
       return {
         from: jsonData.from,
-        to: jsonData.to
+        to: jsonData.to,
       };
     },
     dateFormatter(date) {
@@ -280,9 +284,9 @@ export default {
     viewCampaign(query) {
       const URL = `/search/profile/${query}`;
       window.location.href = URL;
-    }
+    },
   },
-  computed: {}
+  computed: {},
 };
 </script>
 
