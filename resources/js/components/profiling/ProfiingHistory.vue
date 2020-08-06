@@ -1,24 +1,5 @@
 <template>
   <div class="container">
-    <loading
-      :active.sync="loading"
-      :is-full-page="true"
-      :opacity="0.5"
-      :width="128"
-      :height="128"
-      loader="dots"
-      color="#007bff"
-      backgroundColor="#fff"
-    />
-
-    <div class="row gap-y" v-show="loading">
-      <div class="col-md-10 mx-auto text-center">
-        <h1>We're almost done...</h1>
-        <h3>Just a few seconds. Kindly exercise some patience...</h3>
-        <img src="/images/processing.gif" style="max-width: 400px;" alt="" />
-      </div>
-    </div>
-
     <!-- <div class="row gap-y" v-show="displayError && !loading"> -->
     <div class="row gap-y">
       <main class="main-content">
