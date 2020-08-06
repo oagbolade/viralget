@@ -84,17 +84,23 @@ class CampaignController extends Controller
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         try {
-            // Add pagination
-            $hashtag_campaigns = $hashtag_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
-            $profiling_campaigns = $profiling_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
-            $subscription = Subscription::where('user_id', $user->id)->with('plan')->get();
+            $campaigns = $hashtag_campaigns::where('user_id', $user->id)->with('profilingHistory')->with('subscriptionUsage', 'plan')->orderBy('id', 'desc')->get();
+
+            if(count($campaigns) == 0){
+                $profiling_campaigns = $profiling_campaigns::where('user_id', $user->id)->with('subscriptionUsage', 'plan')->orderBy('id', 'desc')->get();
+                return response([
+                    "status" => 200,
+                    "type" => "profiling",
+                    "message" => "successfull",
+                    "data" => $profiling_campaigns,
+                ], 200);
+            }
 
             return response([
                 "status" => 200,
+                "type" => "all",
                 "message" => "successfull",
-                "data" => $hashtag_campaigns,
-                "profiling_data" => $profiling_campaigns,
-                'subscription' => $subscription,
+                "data" => $campaigns,
             ], 200);
         } catch (Exception $e) {
             return response([
