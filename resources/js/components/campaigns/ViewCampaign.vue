@@ -22,7 +22,7 @@
       <div class="col-md-10 mx-auto text-center">
         <h1>We're almost done...</h1>
         <h3>Just a few seconds. Kindly exercise some patience...</h3>
-        <img src="/images/processing.gif" style="max-width: 400px" alt="" />
+        <img src="/images/processing.gif" style="max-width: 400px;" alt="" />
       </div>
     </div>
 
@@ -55,7 +55,10 @@
         </button>
       </div>
 
-      <div :class="planName !== 'enterprise' ? 'col-md-6' : 'col-md-12'" class="align-self-center">
+      <div
+        :class="planName !== 'enterprise' ? 'col-md-6' : 'col-md-12'"
+        class="align-self-center"
+      >
         <h5 class="float-right">
           <button
             type="button"
@@ -68,6 +71,7 @@
       </div>
       <ProfilingHistory
         :usage="subscription"
+        :plan="plan"
         :profilingCampaigns="profilingCampaigns"
       />
     </div>
@@ -88,7 +92,7 @@
       </div>
       <section
         class="table-section bg-white col-md-12"
-        style="box-shadow: 0 0 15px rgba(0,0,0,0.05);"
+        style="box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);"
       >
         <table class="table table-hover responsive">
           <thead>
@@ -164,13 +168,13 @@
           :show-step-links="true"
           :step-links="{
             next: 'NEXT',
-            prev: 'PREV'
+            prev: 'PREV',
           }"
           for="campaigns"
           :classes="{
             ul: 'pagination',
             'ul.paginate-links > li.number': 'page-item',
-            'ul.paginate-links > li.number > a': 'page-link'
+            'ul.paginate-links > li.number > a': 'page-link',
           }"
         ></paginate-links>
       </section>
@@ -198,23 +202,23 @@ export default {
         {
           header: true,
           title: "Main Navigation",
-          hiddenOnCollapse: true
+          hiddenOnCollapse: true,
         },
         {
           href: "/campaigns",
           title: "Profiling & Reports",
-          icon: "fa fa-dashboard"
+          icon: "fa fa-dashboard",
         },
         {
           href: "/campaigns/influencermanagement",
           title: "Influencer Management",
-          icon: "fa fa-user"
+          icon: "fa fa-user",
         },
         {
           href: "/campaigns/trends",
           title: "Trends",
-          icon: "fa fa-line-chart"
-        }
+          icon: "fa fa-line-chart",
+        },
       ],
       paginate: ["campaigns"],
       planSchema: {
@@ -222,7 +226,7 @@ export default {
         basic: "Basic",
         premiumLite: "Premium Lite",
         premiumBusiness: "Premium Business",
-        enterprise: "Enterprise"
+        enterprise: "Enterprise",
       },
       campaigns: [],
       planName: "",
@@ -230,10 +234,11 @@ export default {
       profilingCampaigns: [],
       subscription: {},
       loading: true,
-      displayError: false
+      displayError: false,
+      plan: {},
     };
   },
-  mounted: function() {
+  mounted: function () {
     if (window.innerWidth < 1600) {
       this.collapsed = true;
     }
@@ -242,7 +247,7 @@ export default {
       this.collapsed = false;
     }
   },
-  created: function() {
+  created: function () {
     this.getUserCampaigns();
   },
   methods: {
@@ -250,7 +255,7 @@ export default {
       const jsonData = JSON.parse(dates);
       return {
         from: jsonData.from,
-        to: jsonData.to
+        to: jsonData.to,
       };
     },
     formatCampaignDatesForTwitter(date) {
@@ -274,16 +279,26 @@ export default {
         let response = await axios.get(URL, {
           headers: {
             Authorization:
-              "Bearer " + $('meta[name="api-token"]').attr("content")
-          }
+              "Bearer " + $('meta[name="api-token"]').attr("content"),
+          },
         });
 
         if (response.data.status === 200) {
-          this.campaigns = response.data.data;
-          this.planName = response.data.subscription[0].plan.name;
-          this.planColor = response.data.subscription[0].plan.color;
-          this.profilingCampaigns = response.data.profiling_data;
-          this.subscription = response.data.subscription[0];
+          const data = response.data;
+          if (data.type === "all") {
+            this.campaigns = data.data;
+            this.profilingCampaigns = data.data[0].profiling_history;
+          }
+
+          if (data.type === "profiling") {
+            this.campaigns = [];
+            this.profilingCampaigns = data.data;
+          }
+
+          this.subscription = data.data[0].subscription_usage[0];
+          this.planName = data.data[0].plan.name;
+          this.planColor = data.data[0].plan.color;
+          this.plan = data.data[0].plan;
           this.loading = false;
         }
 
@@ -311,7 +326,9 @@ export default {
 
       const URL = `/search/profiles?q=${encodeURIComponent(keyword)}&fromDate=${
         formattedFromDate !== undefined ? formattedFromDate : ""
-      }&toDate=${formattedToDate !== undefined ? formattedToDate : ""}&location=${location}`;
+      }&toDate=${
+        formattedToDate !== undefined ? formattedToDate : ""
+      }&location=${location}`;
       window.location.href = URL;
     },
 
@@ -327,11 +344,11 @@ export default {
         let response = await axios.delete(URL, {
           headers: {
             Authorization:
-              "Bearer " + $('meta[name="api-token"]').attr("content")
-          }
+              "Bearer " + $('meta[name="api-token"]').attr("content"),
+          },
         });
         const campaignId = response.data.data;
-        this.campaigns = this.campaigns.filter(campaignData => {
+        this.campaigns = this.campaigns.filter((campaignData) => {
           this.loading = false;
           this.displayError = false;
           return campaignData.id != campaignId;
@@ -351,8 +368,8 @@ export default {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then(result => {
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
         if (result.value) {
           this.confirmedDelete(campaignId);
           Swal.fire("Deleted!", "Your report has been deleted.", "success");
@@ -362,10 +379,10 @@ export default {
 
     makeCamelCase(str) {
       return str
-        .replace(/\s(.)/g, function(a) {
+        .replace(/\s(.)/g, function (a) {
           return a.toUpperCase();
         })
-        .replace(/^(.)/, function(b) {
+        .replace(/^(.)/, function (b) {
           return b.toUpperCase();
         });
     },
@@ -373,9 +390,9 @@ export default {
     dateFormatter(date) {
       let formatedDate = date.split(" ");
       return formatedDate[0];
-    }
+    },
   },
-  computed: {}
+  computed: {},
 };
 </script>
 
@@ -407,7 +424,7 @@ th {
   padding-top: 50px;
 }
 
-.v-sidebar-menu{
+.v-sidebar-menu {
   width: 250px;
 }
 </style>
