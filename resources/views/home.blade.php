@@ -23,8 +23,10 @@
         <p>
           Grow your business with intelligent influencer marketing.
           The time for performance-driven influencer marketing is here.
-          ViralGet is an easy-to-use tool that helps you Analyze campaign hashtags/keywords, see it’s impact. Profile influencers
-          beyond their followers count. Manage hired influencers all on one platform, see how their post is performing. Monitor
+          ViralGet is an easy-to-use tool that helps you Analyze campaign hashtags/keywords, see it’s impact. Profile
+          influencers
+          beyond their followers count. Manage hired influencers all on one platform, see how their post is performing.
+          Monitor
           your trends and generate instant reports.
         </p>
         <!-- , helps develop creative content and synchronization on every campaign.
@@ -39,12 +41,56 @@
 
     </div>
   </div>
-
+  <style>
+    .sample-platform {
+      height: 1000px;
+      width: 100%;
+    }
+  </style>
 </header><!-- /.header -->
 
 
 <!-- Main Content -->
 <main class="main-content">
+  <section class="section">
+    <div class="container">
+      <div class="row gap-y align-items-center">
+        <div class="col-md-6 text-center">
+          <img src="https://res.cloudinary.com/viralget/image/upload/v1596728900/profiling_x1kzlo.png" alt="...">
+        </div>
+
+        <div class="col-md-6 text-center text-md-left">
+          <h2>Do you need some help managing influencers?</h2>
+          <p class="lead mb-6">
+            Cut out the stress of manually managing influencers,
+            with our software, it's now easier to manage your
+            influencers and see their performance
+          </p>
+          <p><a class="btn btn-lg btn-round btn-info" href="#">Find out More</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="row gap-y align-items-center">
+
+        <div class="col-md-6 text-center text-md-left">
+          <h2>Find out what people are saying about your brand</h2>
+          <p class="lead mb-6">Trending on twitter isn't going to give you the desired result,
+            it's what people are saying about your brand that will
+          </p>
+          <p><a class="btn btn-lg btn-round btn-info" href="#">Find out More</a></p>
+        </div>
+
+        <div class="col-md-6 text-center">
+          <img src="https://res.cloudinary.com/viralget/image/upload/v1596728901/reporting_w63fxy.png" alt="...">
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section py-7 bg-info">
     <div class="container">
       <div class="row gap-y align-items-center">
@@ -84,8 +130,10 @@
         <h1>Find Influencers Of Your Choice</h1>
         <hr>
         <p class="lead">
-          Choose influencers from our database of influencers across different categories. Profile influencers, viewing Data stats
-          such as Reach, Engagement Rate, Most Retweeted Tweets, Total Engagement as well as the Demography and Interest of their
+          Choose influencers from our database of influencers across different categories. Profile influencers, viewing
+          Data stats
+          such as Reach, Engagement Rate, Most Retweeted Tweets, Total Engagement as well as the Demography and Interest
+          of their
           followers
         </p>
       </header>
@@ -293,8 +341,8 @@
             <div class="col-md-6 pb-8">
               <!-- <h2>Campaign Report</h2> -->
               <p>You can track your campaign and see how it’s performing,
-                 through a detailed report.
-                  Click <u><a href="{{ route('campaigns.view') }}">here</a></u> to get started.</p>
+                through a detailed report.
+                Click <u><a href="{{ route('campaigns.view') }}">here</a></u> to get started.</p>
             </div>
 
             <div class="col-md-6 align-self-center text-center">
@@ -408,11 +456,16 @@
     <div class="row">
       <div class="col-md-12">
         <div class="image-container">
-          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/lasg.png') }}" alt="LASG"></div>
-          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/gtb.png') }}" alt="GTB"></div>
-          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/pwc.png') }}" alt="PWC"></div>
-          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/shoprite.png') }}" alt="SHOP"></div>
-          <div class="p-2"><img class="dstv-logo" src="{{ asset('./static/assets/img/portfolio/dstvLogo.jpg') }}" alt="DSTV"></div>
+          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/lasg.png') }}"
+              alt="LASG"></div>
+          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/gtb.png') }}" alt="GTB">
+          </div>
+          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/pwc.png') }}" alt="PWC">
+          </div>
+          <div class="p-2"><img class="logo-image" src="{{ asset('./static/assets/img/portfolio/shoprite.png') }}"
+              alt="SHOP"></div>
+          <div class="p-2"><img class="dstv-logo" src="{{ asset('./static/assets/img/portfolio/dstvLogo.jpg') }}"
+              alt="DSTV"></div>
         </div>
       </div>
     </div>
