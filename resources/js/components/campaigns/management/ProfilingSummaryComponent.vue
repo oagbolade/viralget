@@ -36,7 +36,7 @@
     <div class="row" v-show="!loading && !displayError">
       <div class="report-data col-lg-8">
         <h6 id="block-2" class="block-number">
-          24 hours campaign summary report
+          {{ report_type_days }} Days Profiling Summary for your Campaign
         </h6>
 
         <div>
@@ -467,7 +467,7 @@ export default {
             this.report_type = res.data.report_type;
             console.log(this.report_type);
 
-            this.report_type_days = res.data.report_type_days;
+            this.report_type_days = data.report_type_days;
             this.keyword = res.data.keyword;
             this.handle = res.data.handle;
             this.loading = false;

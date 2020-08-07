@@ -174,7 +174,7 @@
                           campaign.influencers,
                           campaign.user_query,
                           campaign.influencer_management_plan.id,
-                          campaign.expired,
+                          campaign.id,
                           campaign.paid
                         )
                       "
@@ -546,7 +546,7 @@ export default {
       window.location = URL;
     },
 
-    viewCampaign(influencers = [], keyword, plan_id, expired, paid) {
+    viewCampaign(influencers = [], keyword, plan_id, user_details_id, paid) {
       if (paid === "false") {
         Swal.fire(
           "Oops!",
@@ -557,14 +557,14 @@ export default {
         return;
       }
 
-      this.getCampaignSummary(influencers, keyword, plan_id);
+      this.getCampaignSummary(influencers, keyword, plan_id, user_details_id);
     },
 
-    getCampaignSummary(influencers = [], keyword, plan_id) {
+    getCampaignSummary(influencers = [], keyword, plan_id, user_details_id) {
       this.loading = true;
       let $this = this;
       fetch(
-        `/api/v1/management/profile/summary?influencers=${influencers}&keyword=${keyword}&plan_id=${plan_id}`,
+        `/api/v1/management/profile/summary?influencers=${influencers}&keyword=${keyword}&plan_id=${plan_id}&user_details_id=${user_details_id}`,
         {
           headers: {
             Authorization:
