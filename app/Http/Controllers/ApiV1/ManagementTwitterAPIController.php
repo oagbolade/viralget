@@ -377,8 +377,12 @@ class ManagementTwitterAPIController extends Controller
         return $impressions;
     }
 
-    public function getCampaignSummary($user_id = '', $influencers = [], $keyword = '', $plan_id = '')
+    public function getCampaignSummary($user_id = '', $influencers = [], $keyword = '', $plan_id = '', $user_details_id = '')
     {
+        if(trim($user_details_id) == ''){
+            $user_details_id = request()->user_details_id;
+        }
+
         // If not scheduling
         if (trim($user_id) == '') {
             $user = $this->authenticate();
@@ -394,12 +398,21 @@ class ManagementTwitterAPIController extends Controller
             if ($report) {
                 $data['keyword'] = $report->keyword;
                 $data['report_type'] = $report->plan->name;
-                $data['report_type_days'] = $report->plan->days;
                 $data['data'] = json_decode(json_encode($report->report_data));
                 $data['influencers'] = $report->influencers;
 
                 return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
             }
+        }
+
+        $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
+        $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
+
+        if ($this->isPlanExpired($user_details_id, $plan_days->days)) {
+            return response([
+                'status' => 500,
+                'message' => 'plan expired, please purchase a new plan',
+            ], 500);
         }
 
         $influencers_array = json_decode($influencers);
@@ -414,7 +427,7 @@ class ManagementTwitterAPIController extends Controller
         $impressions = 0;
         $reach = 0;
 
-        if (count($userTweets) <= 0) {
+        if (count($userTweets) == 0) {
             return response([
                 'message' => 'Could not retrieve tweets',
                 'tweet_count' => count($userTweets),
@@ -422,6 +435,10 @@ class ManagementTwitterAPIController extends Controller
         }
 
         foreach ($userTweets as $tweets) {
+            if (count($tweets) == 0) {
+                continue;
+            }
+            
             foreach ($tweets as $tweet) {
                 array_push($all_influencer_tweets, $tweet);
             }
@@ -446,9 +463,13 @@ class ManagementTwitterAPIController extends Controller
             }
         }
 
-        $data['date_to'] = \Carbon\Carbon::now()->toDayDateTimeString();
+        $start_date = \Carbon\Carbon::parse($user_details->date);
+        $end_date = \Carbon\Carbon::now();
 
-        $data['date_from'] = \Carbon\Carbon::now()->subDays(30)->toDayDateTimeString();
+        $data['date_from'] = $start_date->toDayDateTimeString();
+        $data['date_to'] = $end_date->toDayDateTimeString();
+
+        $data['report_type_days'] = $start_date->diffInDays($end_date);
 
         $data['engagement_rate'] = $engagementRate;
 
@@ -466,12 +487,13 @@ class ManagementTwitterAPIController extends Controller
 
         $data['campaign_value'] = ($impressions / 1000) * 80;
 
-        $report = SummaryHistory::where(['user_id' => $user_id, 'influencers' => $influencers])->first();
+        $report = SummaryHistory::where(['user_id' => $user_id, 'user_details_id' => $user_details_id])->first();
 
         if (!$report) {
             try {
                 $report = SummaryHistory::create([
                     'user_id' => $user_id,
+                    'user_details_id' => $user_details_id,
                     'influencers' => $influencers,
                     'keyword' => $keyword,
                     'report_data' => json_encode($data),
@@ -516,7 +538,6 @@ class ManagementTwitterAPIController extends Controller
 
     function getAllProfileData()
     {
-
         $user = $this->authenticate();
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthenticated user']);
@@ -527,34 +548,32 @@ class ManagementTwitterAPIController extends Controller
         $plan_id = request()->plan_id;
 
         $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
-        // $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
+        $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
 
         if (!$handle) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
 
-        // $profile = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
+        $profile = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
 
-        // if ($profile && $this->isPlanExpired($user_details_id, $plan_days->days)) {
-        //     $data['keyword'] = $profile->keyword;
-        //     $data['report_type'] = $profile->plan->name;
-        //     $data['report_type_days'] = $profile->plan->days;
-        //     $data['data'] = json_decode(json_encode($profile->report_data));
-        //     $data['handle'] = $profile->handle;
-        //     $data['expired'] = 'true';
+        if ($profile && $this->isPlanExpired($user_details_id, $plan_days->days)) {
+            $data['keyword'] = $profile->keyword;
+            $data['report_type'] = $profile->plan->name;
+            $data['data'] = json_decode(json_encode($profile->report_data));
+            $data['handle'] = $profile->handle;
+            $data['expired'] = 'true';
 
-        //     return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
-        // }
+            return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
+        }
 
-        // if ($profile && !$this->refresh($user_details_id)) {
-        //     $data['keyword'] = $profile->keyword;
-        //     $data['report_type'] = $profile->plan->name;
-        //     $data['report_type_days'] = $profile->plan->days;
-        //     $data['data'] = json_decode(json_encode($profile->report_data));
-        //     $data['handle'] = $profile->handle;
+        if ($profile && !$this->refresh($user_details_id)) {
+            $data['keyword'] = $profile->keyword;
+            $data['report_type'] = $profile->plan->name;
+            $data['data'] = json_decode(json_encode($profile->report_data));
+            $data['handle'] = $profile->handle;
 
-        //     return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
-        // }
+            return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
+        }
 
 
         $data = [];
@@ -575,8 +594,13 @@ class ManagementTwitterAPIController extends Controller
             $data['recent_tweets'] = array_slice($userTweets, 0, 30);
         }
 
-        $data['date_from'] = \Carbon\Carbon::parse($user_details->date)->toDayDateTimeString();
-        $data['date_to'] = \Carbon\Carbon::now()->toDayDateTimeString();
+        $start_date = \Carbon\Carbon::parse($user_details->date);
+        $end_date = \Carbon\Carbon::now();
+
+        $data['date_from'] = $start_date->toDayDateTimeString();
+        $data['date_to'] = $end_date->toDayDateTimeString();
+
+        $data['report_type_days'] = $start_date->diffInDays($end_date);
 
         $data['profile_location'] = $profileData->location ?? 'Not specified';
 
@@ -599,13 +623,6 @@ class ManagementTwitterAPIController extends Controller
         $data['avr_retweets'] = $engagement['avrRetweets'] ?? 0;
 
         $data['media_meta_data'] = $this->getTweetsMedia($userTweets);
-
-        if (request()->reload == true) {
-            ProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->update([
-                'report_data' => json_encode($data),
-                // 'package' => $package->id,
-            ]);
-        }
 
         $report = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
 

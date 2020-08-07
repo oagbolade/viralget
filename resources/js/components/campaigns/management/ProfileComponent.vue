@@ -37,7 +37,7 @@
     <div class="row" v-show="!loading && !displayError">
       <div class="report-data col-lg-8">
         <h6 id="block-2" class="block-number">
-          Profiling report for:
+           {{ report_type_days }} Days Profiling Report for:
           <strong>{{ decodeURIComponent(handle) }} </strong> with the hashtag
           #{{ keyword }}
         </h6>
@@ -544,7 +544,7 @@ export default {
             this.date_to = data.date_to;
             this.keyword = res.data.keyword;
             this.report_type = res.data.report_type;
-            this.report_type_days = res.data.report_type_days;
+            this.report_type_days = data.report_type_days;
 
             this.displayError = false;
           } else {
