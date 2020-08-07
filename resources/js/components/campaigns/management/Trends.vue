@@ -146,6 +146,7 @@
                         user_details_id: campaign.id,
                         time: campaign.time,
                         date: campaign.date,
+                        day_time: campaign.time,
                         keyword: campaign.user_query,
                         plan_id: campaign.plan_id,
                         expired: campaign.expired,
@@ -315,7 +316,14 @@ export default {
     },
 
     viewCampaign(data) {
-      let user_date = moment(data.date);
+      const day_time_hours = {
+        morning: '12',
+        afternoon: '16',
+        evening: '22',
+      }
+
+      let day_time = data.day_time;
+      let user_date = moment(data.date).add(day_time_hours[day_time] ,'hours');
       let now = moment();
       let viewDate = moment(data.date)
         .add(1, "d")
@@ -330,11 +338,11 @@ export default {
         );
         return;
       }
-      
-      if (now.diff(user_date, "days") < 1) {
+
+      if (now.diff(user_date, "days") < 0) {
         Swal.fire(
           "Sorry!",
-          `You can start viewing reports 24hrs after your selected trend date. Please check in again on ${viewDate}`,
+          `You can start viewing your trends on your selected trend date. Please check in again on ${user_date.format("dddd, MMMM Do YYYY, h:mm a")}`,
           "question"
         );
         return;
@@ -342,7 +350,7 @@ export default {
 
       const URL = `/management/hashtag?q=${encodeURIComponent(
         data.keyword
-      )}&fromDate=&toDate=&user_details_id=${data.user_details_id}&plan_id=${data.plan_id}`;
+      )}&user_details_id=${data.user_details_id}&plan_id=${data.plan_id}`;
       window.location.href = URL;
     },
 
