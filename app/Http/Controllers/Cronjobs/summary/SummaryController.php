@@ -55,13 +55,13 @@ class SummaryController extends Controller
             ]);
             // Send mail to oladayo
             // the message
-            $msg = "We hit the cron";
+            $msg = "We hit the cron for update";
 
             // use wordwrap() if lines are longer than 70 characters
             $msg = wordwrap($msg, 70);
 
             // send email
-            mail("oladayo.agbolade@viralget.com.ng", "Cron Ran", $msg);
+            mail("oladayo.agbolade@viralget.com.ng", "Update Cron Ran", $msg);
         } catch (Exception $e) {
             return response([
                 'status' => 500,
