@@ -65,7 +65,6 @@ class ManagementTwitterAPIController extends Controller
         $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
         $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
 
-
         if (!$query) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
@@ -137,8 +136,17 @@ class ManagementTwitterAPIController extends Controller
         $contribution = $this->getUniqueContributors($tweets);
         $reach = $this->getHashtagReach($tweets, $contribution);
 
-        $data['date_from'] = request()->fromDate !== null ? \Carbon\Carbon::parse($request->fromDate)->toDayDateTimeString() : \Carbon\Carbon::now()->subDays(1)->toDayDateTimeString();
-        $data['date_to'] = request()->toDate !== null ? \Carbon\Carbon::parse($request->toDate)->toDayDateTimeString() : \Carbon\Carbon::now()->toDayDateTimeString();
+        $day_time_hours = [
+            'morning' => 12,
+            'afternoon' => 16,
+            'evening' => 22,
+        ];
+
+        $user_date_conversion = \Carbon\Carbon::parse($user_details->date)
+            ->addHours($day_time_hours[$user_details->time])
+            ->toDayDateTimeString();
+        $data['date_from'] = \Carbon\Carbon::parse($user_date_conversion)->subHours(4)->toDayDateTimeString();
+        $data['date_to'] = $user_date_conversion;
 
         $data['retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
         $data['replies'] =  $this->getHashtagTweetsData($tweets, $user, 'replies');
@@ -204,8 +212,6 @@ class ManagementTwitterAPIController extends Controller
 
     function getManagementHashtagTweets($query)
     {
-        $tweet_cap = 2000;
-
         $now = date("YmdH00");
 
         $toDate = $now;
@@ -224,8 +230,6 @@ class ManagementTwitterAPIController extends Controller
                     "maxResults" => $count,
                     'toDate' => $toDate,
                 ];
-
-                $page + 1;
             } else {
                 $this->_temporary_parameters = [
                     "query" => $query,
@@ -235,23 +239,31 @@ class ManagementTwitterAPIController extends Controller
                 ];
             }
 
-            if (count($tweets_array) >= $tweet_cap) {
-                $searching = false;
-                return $tweets_array;
-            }
-
             try {
                 $this->connect();
                 $tweets_result = $this->connection->get("tweets/search/" . env('TWITTER_API_TYPE') . "/" . env('TWITTER__APP_DEVELOPMENT_NAME'), $this->_temporary_parameters);
+                $page++;
             } catch (\Exception $e) {
                 // return error response
                 return $e->getMessage();
+            }
+
+            if (isset($tweets_result->error)) {
+                return response([
+                    'status' => 500,
+                    'message' => $tweets_result,
+                ], 500);
             }
 
             if (isset($tweets_result->results)) {
                 foreach ($tweets_result->results as $status) {
                     $tweets_array[] = $status;
                 }
+            }
+
+            if ($page === 4) {
+                $searching = false;
+                return $tweets_array;
             }
 
             if (isset($tweets_result->next)) {
@@ -415,17 +427,17 @@ class ManagementTwitterAPIController extends Controller
             }
 
             $calculations = ['er', 'impressions', 'reach'];
-            foreach($calculations as $calculation){
+            foreach ($calculations as $calculation) {
                 try {
-                    if($calculation == 'er'){
+                    if ($calculation == 'er') {
                         $engagementRate += $this->getEngagementData($tweets[0]->user, $tweets)[$calculation];
                     }
-                    
-                    if($calculation == 'impressions'){
+
+                    if ($calculation == 'impressions') {
                         $impressions += $this->getEngagementData($tweets[0]->user, $tweets)[$calculation];
                     }
-                    
-                    if($calculation == 'reach'){
+
+                    if ($calculation == 'reach') {
                         $reach += $this->getEngagementData($tweets[0]->user, $tweets)[$calculation];
                     }
                 } catch (Exception $e) {
