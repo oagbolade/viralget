@@ -339,7 +339,7 @@ export default {
         return;
       }
 
-      if (now.diff(user_date, "days") < 0) {
+      if (now.diff(user_date, "hours") < 0) {
         Swal.fire(
           "Sorry!",
           `You can start viewing your trends on your selected trend date. Please check in again on ${user_date.format("dddd, MMMM Do YYYY, h:mm a")}`,
