@@ -143,8 +143,8 @@ class ManagementTwitterAPIController extends Controller
         ];
 
         $user_date_conversion = \Carbon\Carbon::parse($user_details->date)
-        ->addHours($day_time_hours[$user_details->time])
-        ->toDayDateTimeString();
+            ->addHours($day_time_hours[$user_details->time])
+            ->toDayDateTimeString();
         $data['date_from'] = \Carbon\Carbon::parse($user_date_conversion)->subHours(4)->toDayDateTimeString();
         $data['date_to'] = $user_date_conversion;
 
@@ -246,6 +246,13 @@ class ManagementTwitterAPIController extends Controller
             } catch (\Exception $e) {
                 // return error response
                 return $e->getMessage();
+            }
+
+            if (isset($tweets_result->error)) {
+                return response([
+                    'status' => 500,
+                    'message' => $tweets_result,
+                ], 500);
             }
 
             if (isset($tweets_result->results)) {
