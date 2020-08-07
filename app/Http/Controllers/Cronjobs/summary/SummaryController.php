@@ -39,6 +39,12 @@ class SummaryController extends Controller
                 $new_refresh_date = date("Y-m-d");
 
                 $this->updateScheduler($user_details_id, $new_refresh_date);
+
+                $msg = "Update cron ran here";
+
+                $msg = wordwrap($msg, 70);
+
+                mail("oladayo.agbolade@viralget.com.ng", "Update cron ran", $msg);
             }
         }
     }
