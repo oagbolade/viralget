@@ -379,7 +379,7 @@ class ManagementTwitterAPIController extends Controller
 
     public function getCampaignSummary($user_id = '', $influencers = [], $keyword = '', $plan_id = '', $user_details_id = '')
     {
-        if(trim($user_details_id) == ''){
+        if (trim($user_details_id) == '') {
             $user_details_id = request()->user_details_id;
         }
 
@@ -393,7 +393,7 @@ class ManagementTwitterAPIController extends Controller
 
             $influencers_array = json_decode($influencers);
 
-            $report = SummaryHistory::where(['user_id' => $user_id, 'influencers' => $influencers])->first();
+            $report = SummaryHistory::where(['user_details_id' => $user_details_id])->first();
 
             if ($report) {
                 $data['keyword'] = $report->keyword;
@@ -405,8 +405,17 @@ class ManagementTwitterAPIController extends Controller
             }
         }
 
-        $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
-        $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
+        try {
+            $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+
+        try {
+            $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
 
         if ($this->isPlanExpired($user_details_id, $plan_days->days)) {
             return response([
@@ -414,7 +423,6 @@ class ManagementTwitterAPIController extends Controller
                 'message' => 'plan expired, please purchase a new plan',
             ], 500);
         }
-
         $influencers_array = json_decode($influencers);
 
         $userTweets = [];
@@ -438,7 +446,7 @@ class ManagementTwitterAPIController extends Controller
             if (count($tweets) == 0) {
                 continue;
             }
-            
+
             foreach ($tweets as $tweet) {
                 array_push($all_influencer_tweets, $tweet);
             }
@@ -500,16 +508,19 @@ class ManagementTwitterAPIController extends Controller
                     'package' => $plan_id
                 ]);
             } catch (Exception $e) {
-                dd($e->getMessage());
                 return response([
                     "status" => 500,
                     "message" => "failed to get influencers profile " . $e->getMessage(),
                 ], 500);
             }
         } else {
-            $report = SummaryHistory::where(['user_id' => $user_id, 'influencers' => $influencers])->update([
-                'report_data' => json_encode($data),
-            ]);
+            try {
+                SummaryHistory::where(['user_details_id' => $user_details_id])->update([
+                    'report_data' => json_encode($data),
+                ]);
+            } catch (Exception $e) {
+                dd('catch error ' . $e->getMessage());
+            }
         }
 
         return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
