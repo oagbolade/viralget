@@ -30,26 +30,44 @@ class SummaryController extends Controller
                     $user_details_id = $user['user_details_id'];
 
                     $twitterAPI = new ManagementTwitterAPIController;
-                    $twitterAPI->getCampaignSummary($user_id, $influencers, $keyword, $plan_id);
+
+                    try{
+                        $twitterAPI->getCampaignSummary($user_id, $influencers, $keyword, $plan_id, $user_details_id);
+                    }catch(Exception $e){
+                        continue;
+                    }
 
                     $new_refresh_date = date("Y-m-d");
 
-                    try {
-                        Scheduler::where([
-                            'user_details_id' => $user_details_id,
-                        ])->update([
-                                    'last_refresh' => $new_refresh_date,
-                                ]);
-                    } catch (Exception $e) {
-                        return response([
-                            'status' => 500,
-                            'message' => 'An error occured '. $e->getMessage();
-                        ], 500);
-                    }
+                    $this->updateScheduler($user_details_id, $new_refresh_date);
                 }
             }
         }
         return 'done';
+    }
+
+    public function updateScheduler($user_details_id, $new_refresh_date){
+        try {
+            Scheduler::where([
+                'user_details_id' => $user_details_id,
+            ])->update([
+                'last_refresh' => $new_refresh_date,
+            ]);
+            // Send mail to oladayo
+            // the message
+            $msg = "We hit the cron";
+
+            // use wordwrap() if lines are longer than 70 characters
+            $msg = wordwrap($msg, 70);
+
+            // send email
+            mail("oladayo.agbolade@viralget.com.ng", "Cron Ran", $msg);
+        } catch (Exception $e) {
+            return response([
+                'status' => 500,
+                'message' => 'An error occured ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function refresh($refreshDate)
@@ -60,7 +78,7 @@ class SummaryController extends Controller
         $diff = date_diff($user_date, $current_time);
         $time_difference =  $diff->format("%a%");
 
-        if ($time_difference == 1) {
+        if ($time_difference > 0) {
             return true;
         }
 
