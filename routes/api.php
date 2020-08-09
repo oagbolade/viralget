@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::get('cronjob/{platform}/{category}', 'Cronjobs\TwitterCronHandler@index');
-Route::get('/cleandb', 'Cronjobs\DatabaseCleaner@index');
+Route::get('/cleandb', 'Cronjobs\DatabaseCleaner\DatabaseCleaner@index');
 Route::get('/summary/scheduler', 'Cronjobs\summary\SummaryController@checkSchedule');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
