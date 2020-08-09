@@ -515,9 +515,7 @@ class ManagementTwitterAPIController extends Controller
             }
         } else {
             try {
-                SummaryHistory::where(['user_details_id' => $user_details_id])->update([
-                    'report_data' => json_encode($data),
-                ]);
+                SummaryHistory::where(['user_details_id' => $user_details_id])->update(['report_data' => json_encode($data)]);
             } catch (Exception $e) {
                 dd('catch error ' . $e->getMessage());
             }
