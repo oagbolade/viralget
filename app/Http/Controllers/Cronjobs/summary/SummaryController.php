@@ -40,11 +40,11 @@ class SummaryController extends Controller
 
                 $this->updateScheduler($user_details_id, $new_refresh_date);
 
-                $msg = "Update cron ran here";
+                $msg = "Cron has ended";
 
                 $msg = wordwrap($msg, 70);
 
-                mail("oladayo.agbolade@viralget.com.ng", "Update cron ran", $msg);
+                mail("oladayo.agbolade@viralget.com.ng", "Campaign Summary Cron Ended", $msg);
             }
         }
     }
