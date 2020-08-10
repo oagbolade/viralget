@@ -83,7 +83,10 @@
                 <div>
                   <select v-model="form.location" class="form-control form-control-md">
                     <option value="">Select Location</option>
-                    <option value="true">Nigeria</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="South Africa">South Africa</option>
                   </select>
                 </div>
               </div>

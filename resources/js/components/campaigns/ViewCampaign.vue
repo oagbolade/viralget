@@ -99,6 +99,7 @@
             <tr>
               <th>#</th>
               <th>Name</th>
+              <th>Location</th>
               <th>Created</th>
               <th>Description</th>
               <th>Actions</th>
@@ -128,6 +129,7 @@
                   </small>
                 </div>
               </td>
+              <td>{{ (campaign.location_set) ? campaign.location_set : 'Global' }}</td>
               <td>{{ dateFormatter(campaign.created_at) }}</td>
               <td>
                 {{
