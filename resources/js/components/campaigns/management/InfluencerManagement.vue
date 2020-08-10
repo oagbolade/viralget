@@ -596,7 +596,7 @@ export default {
 
     async confirmedDelete(campaignId) {
       this.loading = true;
-      const URL = `/api/v1/management/campaign/delete/${campaignId}`;
+      const URL = `/api/v1/management/campaign/influencers/delete/${campaignId}`;
 
       try {
         let response = await axios.delete(URL, {

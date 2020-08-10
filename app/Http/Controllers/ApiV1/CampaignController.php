@@ -10,6 +10,10 @@ use App\User;
 use App\ProfilingHistory;
 use App\ReportingHistory;
 use App\UserDetailsManagement;
+use App\ManagementReportingHistory;
+use App\ManagementProfilingHistory;
+use App\SummaryHistory;
+use App\Scheduler;
 
 use App\Subscription;
 
@@ -86,7 +90,7 @@ class CampaignController extends Controller
         try {
             $campaigns = $hashtag_campaigns::where('user_id', $user->id)->with('profilingHistory')->with('subscriptionUsage', 'plan')->orderBy('id', 'desc')->get();
 
-            if(count($campaigns) == 0){
+            if (count($campaigns) == 0) {
                 $profiling_campaigns = $profiling_campaigns::where('user_id', $user->id)->with('subscriptionUsage', 'plan')->orderBy('id', 'desc')->get();
                 return response([
                     "status" => 200,
@@ -147,7 +151,7 @@ class CampaignController extends Controller
         $campaign->package = $subscription->plan_id;
 
         if ($location != null) {
-            $campaign->location_set = 'true';
+            $campaign->location_set = $location;
         }
 
         try {
@@ -269,7 +273,7 @@ class CampaignController extends Controller
         }
     }
 
-    function deleteManagement()
+    function deleteInfluencerManagement()
     {
         $campaign = new UserDetailsManagement;
 
@@ -277,6 +281,10 @@ class CampaignController extends Controller
 
         try {
             $campaign = $campaign->where('id', $campaign_id)->delete();
+
+            $this->deleteSummaryScheduler($campaign_id);
+            $this->deleteSummaryHistories($campaign_id);
+            $this->deleteManagementProfilingHistories($campaign_id);
 
             return response([
                 "status" => 200,
@@ -287,6 +295,91 @@ class CampaignController extends Controller
             return response([
                 "status" => 500,
                 "message" => "failed to delete campaign " . $e,
+            ], 500);
+        }  
+    }
+    
+    function deleteTrendsManagement()
+    {
+        $campaign = new UserDetailsManagement;
+
+        $campaign_id = request()->campaignId;
+
+        try {
+            $campaign = $campaign->where('id', $campaign_id)->delete();
+            $this->deleteManagementTrendsHistories($campaign_id);
+
+            return response([
+                "status" => 200,
+                "message" => "successfull",
+                "data" => $campaign_id
+            ],
+                200
+            );
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to delete trends campaign " . $e,
+            ], 500);
+        }
+    }
+
+    function deleteSummaryScheduler($user_details_id)
+    {
+        $campaign = new Scheduler;
+
+        try {
+            $campaign = $campaign->where('user_details_id', $user_details_id)->delete();
+
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to delete summary scheduler " . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    function deleteSummaryHistories($user_details_id)
+    {
+        $campaign = new SummaryHistory;
+
+        try {
+            $campaign = $campaign->where('user_details_id', $user_details_id)->delete();
+
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to delete summary histories " . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    function deleteManagementTrendsHistories($user_details_id)
+    {   
+        $campaign = new ManagementReportingHistory;
+
+        try {
+            $campaign = $campaign->where('user_details_id', $user_details_id)->delete();
+
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to delete trend histories " . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    function deleteManagementProfilingHistories($user_details_id)
+    {
+        $campaign = new ManagementProfilingHistory;
+
+        try {
+            $campaign = $campaign->where('user_details_id', $user_details_id)->delete();
+
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to delete influencer management histories " . $e->getMessage(),
             ], 500);
         }
     }

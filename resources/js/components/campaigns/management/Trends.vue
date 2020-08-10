@@ -360,7 +360,7 @@ export default {
 
     async confirmedDelete(campaignId) {
       this.loading = true;
-      const URL = `/api/v1/management/campaign/delete/${campaignId}`;
+      const URL = `/api/v1/management/campaign/trends/delete/${campaignId}`;
 
       try {
         let response = await axios.delete(URL, {
@@ -370,6 +370,7 @@ export default {
           }
         });
         const campaignId = response.data.data;
+        console.log('id', response)
         this.campaigns = this.campaigns.filter(campaignData => {
           this.loading = false;
           this.displayError = false;
