@@ -44,14 +44,13 @@
     }
   </style>
 
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139876714-1"></script>
+  <!-- Global site tag (gtag.js) - Google Ads: 668034109 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-668034109"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-139876714-1');
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-668034109');
   </script>
 
 <!-- Start of Async Drift Code -->
