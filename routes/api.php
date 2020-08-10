@@ -54,7 +54,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
     Route::post('/campaign/create', 'CampaignController@create');
     Route::get('/campaign/view', 'CampaignController@view');
     Route::delete('/campaign/delete/{campaignId}', 'CampaignController@delete');
-    Route::delete('/management/campaign/delete/{campaignId}', 'CampaignController@deleteManagement');
+    Route::delete('/management/campaign/trends/delete/{campaignId}', 'CampaignController@deleteTrendsManagement');
+    Route::delete('/management/campaign/influencers/delete/{campaignId}', 'CampaignController@deleteInfluencerManagement');
     Route::get('/management/campaign/update/{campaignId}', 'CampaignController@updateInfluencerManagement');
 
     Route::get('/campaign/management/view', 'CampaignController@managementView');

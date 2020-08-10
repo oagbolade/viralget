@@ -103,26 +103,34 @@
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
     window.location = '/subscribe/management/confirm/'+ response.reference;
-  function payWithPaystack(){
-    var handler = PaystackPop.setup({
-      key: '{{ env("PAYSTACK_PK") }}',
-      email: '{{ $email }}',
-      amount: {{ $plan->price * 100 }},
-      currency: "NGN",
-      metadata: {
-         custom_fields: [
-            {
-                display_name: "Plan",
-                variable_name: "plan",
-                value: "{{ $plan->name }}"
-            }
-         ]
-      },
-      callback: function(response) {
-          window.location = '/subscribe/management/confirm/{{ $email }}/{{ request()->user_plan_id }}/'+ response.reference;
-      },
-    });
-    handler.openIframe();
-  }
+    function payWithPaystack(){
+        var handler = PaystackPop.setup({
+            key: '{{ env("PAYSTACK_PK") }}',
+            email: '{{ $email }}',
+            amount: {{ $plan->price * 100 }},
+            currency: "NGN",
+            metadata: {
+                custom_fields: [
+                    {
+                        display_name: "Plan",
+                        variable_name: "plan",
+                        value: "{{ $plan->name }}"
+                    }
+                ]
+            },
+            callback: function(response) {
+                // Event snippet for Website lead conversion page
+                gtag('event', 'conversion', {
+                'send_to': 'AW-668034109/hrE0CJfVjtABEL3Ixb4C',
+                'value': {{ $plan->price }},
+                'currency': 'NG',
+                'transaction_id': response.reference
+                });
+
+                window.location = '/subscribe/management/confirm/{{ $email }}/{{ request()->user_plan_id }}/'+ response.reference;
+            },
+        });
+        handler.openIframe();
+    }
 </script>
 @endsection

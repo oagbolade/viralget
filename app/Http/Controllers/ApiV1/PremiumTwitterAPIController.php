@@ -201,11 +201,34 @@ class PremiumTwitterAPIController extends Controller
                 break;
         }
 
+        $location_mapper = [
+            'Nigeria' =>[
+                'name' => 'Nigeria',
+                'code' => 'NG',
+            ],
+            'Ghana' =>[
+                'name' => 'Ghana',
+                'code' => 'GH',
+            ],
+            'Kenya' =>[
+                'name' => 'Kenya',
+                'code' => 'KE',
+            ],
+            'South Africa' =>[
+                'name' => 'South Africa',
+                'code' => 'ZA',
+            ],
+        ];
+
         while ($searching) {
             if ($location == true) {
                 if ($page === 0) {
                     $this->_temporary_parameters = [
-                        "query" => "place: Nigeria place_country: NG lang: en " . $query,
+                        "query" => "lang: en place: " 
+                        . $location_mapper[$location]['name'] 
+                        . " place_country: " 
+                        . $location_mapper[$location]['code'] 
+                        . " " . $query,
                         "maxResults" => $count,
                         'fromDate' => $fromDate,
                         'toDate' => $toDate,

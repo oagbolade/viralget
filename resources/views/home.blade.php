@@ -49,11 +49,21 @@
   <section class="section">
     <div class="container">
       <div class="row gap-y align-items-center">
+        <div class="col-md-6 text-center text-md-left mobile-show">
+          <h2>Do you need some help managing influencers?</h2>
+          <p class="lead mb-6">
+            Cut out the stress of manually managing influencers,
+            with our software, it's now easier to manage your
+            influencers and see their performance
+          </p>
+          <p><a class="btn btn-lg btn-round btn-info" href="{{ route('pricing.management') }}">Find out More</a></p>
+        </div>
+
         <div class="col-md-6 text-center">
           <img src="https://res.cloudinary.com/viralget/image/upload/v1596728900/profiling_x1kzlo.png" alt="...">
         </div>
 
-        <div class="col-md-6 text-center text-md-left">
+        <div class="col-md-6 text-center text-md-left full-screen-show">
           <h2>Do you need some help managing influencers?</h2>
           <p class="lead mb-6">
             Cut out the stress of manually managing influencers,
@@ -71,9 +81,12 @@
       <div class="row gap-y align-items-center">
 
         <div class="col-md-6 text-center text-md-left">
-          <h2>Find out what people are saying about your brand</h2>
-          <p class="lead mb-6">Trending on twitter isn't going to give you the desired result,
-            it's what people are saying about your brand that will
+          <h2>
+            Find out what people are saying about your brand's campaign
+          </h2>
+          <p class="lead mb-6">
+            Trending on twitter isn't the best judge of how your campaign performed,
+            it's how people react and engage with it. See how your campaign is performing
           </p>
           <p><a class="btn btn-lg btn-round btn-info" href="{{ route('pricing.trends') }}">Find out More</a></p>
         </div>
@@ -493,9 +506,23 @@
     justify-items: center;
   }
 
+  .mobile-show {
+    display: none;
+  }
+
   @media only screen and (max-width: 1200px) {
     .image-container {
       grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
+  @media only screen and (max-width: 768px) {
+    .mobile-show {
+      display: block;
+    }
+
+    .full-screen-show {
+      display: none;
     }
   }
 </style>
