@@ -190,6 +190,7 @@ class ManagementTwitterAPIController extends Controller
             try {
                 $report = ManagementReportingHistory::create([
                     'user_id' => $user->id,
+                    'user_details_id' => $user_details_id,
                     'query' => $removeSymbol,
                     'report_data' => json_encode($data),
                     'original_contributors' => json_encode($original_contributors),
@@ -202,7 +203,7 @@ class ManagementTwitterAPIController extends Controller
             } catch (Exception $e) {
                 return response([
                     "status" => 500,
-                    "message" => "failed to get report " . $e->getMessage(),
+                    "message" => "failed to create trends report " . $e->getMessage(),
                 ], 500);
             }
         }
@@ -639,6 +640,7 @@ class ManagementTwitterAPIController extends Controller
             try {
                 $report = ManagementProfilingHistory::create([
                     'user_id' => $user->id,
+                    'user_details_id' => $user_details_id,
                     'handle' => $handle,
                     'keyword' => $keyword,
                     'report_data' => json_encode($data),
@@ -647,7 +649,7 @@ class ManagementTwitterAPIController extends Controller
             } catch (Exception $e) {
                 return response([
                     "status" => 500,
-                    "message" => "failed to get influencer profile " . $e->getMessage(),
+                    "message" => "failed to create influencer profile " . $e->getMessage(),
                 ], 500);
             }
         }
