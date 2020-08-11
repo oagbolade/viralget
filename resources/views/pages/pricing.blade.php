@@ -69,10 +69,10 @@
         <tr>
           <td>Monthly price</td>
           <td class="default"><span class="txt-top"></span><span class="txt-l">Free</span></td>
-          <td><span class="txt-top">&#8358;</span><span class="txt-l">9,999</span></td>
-          <td><span class="txt-top">&#8358;</span><span class="txt-l">45,999</span></td>
-          <td><span class="txt-top">&#8358;</span><span class="txt-l">85,999</span></td>
-          <td><span class="txt-top">&#8358;</span><span class="txt-l">199,999</span></td>
+          <td><span class="txt-top price-unit">&#8358;</span><span class="txt-l price-value">9,999</span></td>
+          <td><span class="txt-top price-unit">&#8358;</span><span class="txt-l price-value">45,999</span></td>
+          <td><span class="txt-top price-unit">&#8358;</span><span class="txt-l price-value">85,999</span></td>
+          <td><span class="txt-top price-unit">&#8358;</span><span class="txt-l price-value">199,999</span></td>
         </tr>
         <tr>
           <td>Unlimited Access to Influencer Database</td>
@@ -268,10 +268,89 @@
 </script>
 @endpush
 
-
 <style>
   .card {
     min-height: 800px;
   }
 </style>
+@endsection
+@section('scripts')
+<script>
+  let exchangeRate = 0;
+
+    if(checkCookie() && getCookie('location') !== 'NG'){
+        getEchangeRates();
+    }
+    
+    if(!checkCookie() && !isNigeria()){
+        getEchangeRates();
+    }
+    
+    function getEchangeRates(){
+        $.get("http://data.fixer.io/api/latest?access_key={{ env('EXCHANGE_RATE_ACCESS') }}&format=1", function (response) {
+            exchangeRate = response.rates.NGN.toFixed(2) / response.rates.USD.toFixed(2);
+            setDollarValue();
+        }, "jsonp");
+    }
+
+    function isNigeria(){
+        $.get("http://ipinfo.io?token={{ env('IP_TOKEN') }}", function (response) {
+            setCookie('location', response.country, 1);
+            console.log(response.country);
+            if(response.country === 'NG'){
+                return true
+            }
+
+            return false;
+        }, "jsonp");
+    }
+
+    function setDollarValue(){
+      var items = document.getElementsByClassName('price-value');
+      var priceunit = document.getElementsByClassName('price-unit');
+      for (var i = 0; i < items.length; i++){
+        let convertPrice = parseInt(items[i].innerHTML.replace(",", "" ), 10) / exchangeRate;
+        items[i].innerHTML = '$' + convertPrice.toFixed();
+      }
+        
+      for (var i = 0; i < priceunit.length; i++){
+        priceunit[i].innerHTML = ''; 
+      }
+    }
+
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    
+    function getCookie(cname = 'location') {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+            var c=ca[i]; while (c.charAt(0)==' ' ) {
+                c=c.substring(1); 
+            } 
+
+            if(c.indexOf(name)==0) { 
+                return c.substring(name.length, c.length); 
+            } 
+        } 
+        
+        return "" ; 
+    }
+
+    function checkCookie() {
+        var user=getCookie("location");
+        if (user !="" ) {
+            return true;
+        } 
+        return false;
+    }
+
+    function deleteCookie(cookieName = 'location'){
+        document.cookie = "location=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+</script>
 @endsection
