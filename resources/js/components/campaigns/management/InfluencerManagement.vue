@@ -489,6 +489,7 @@ export default {
         if (response.data.status === 200) {
           this.campaigns = response.data.data;
           this.loading = false;
+
           Swal.fire({
             position: "center",
             icon: "success",
@@ -496,8 +497,11 @@ export default {
             showConfirmButton: false,
             timer: 1500,
           });
-          // REload
-          location.reload();
+
+          setTimeout(function () {
+            // REload
+            location.reload();
+          }, 1500);
         }
       } catch (err) {
         this.displayError = true;

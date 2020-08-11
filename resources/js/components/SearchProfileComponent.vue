@@ -17,17 +17,17 @@
         </h5>
       </div>
       <div class="badges py-3 text-center">
-        <a
+        <!-- <a
           :class="`badge badge-${profile.category.color}`"
           :href="`/search/profiles/${profile.category.name}`"
           >{{ profile.category.name }}</a
-        >
+        > -->
         <!-- <a class="badge badge-primary" target="_blank" :href="`http://twitter.com/${profile.name}`" title="Platform">Twitter</a> -->
       </div>
-      <div id="category-name" class="badges py-3 text-center">
+      <!-- <div id="category-name" class="badges py-3 text-center">
         <button class="btn btn-secondary">Engagement Rate</button>
         <span :class="`badge badge-number badge-${setEngagementRateColor(profile.engagement_rate)}`">{{ profile.engagement_rate }}</span>
-      </div>
+      </div> -->
       <!-- <div class="p-1 text-center">
                                     <div class="container text-center">
 
