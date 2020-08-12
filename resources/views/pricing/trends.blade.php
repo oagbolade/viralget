@@ -152,11 +152,11 @@
         getEchangeRates();
     }
     
-    if(!checkCookie() && !isNigeria()){
+    if(!checkCookie()){
+      if(!isNigeria()){
         getEchangeRates();
+      }
     }
-
-    // deleteCookie()
     
     function getEchangeRates(){
       const proxy = `https://cors-anywhere.herokuapp.com/`;
@@ -182,7 +182,7 @@
     }
 
     function isNigeria(){
-        $.get("http://ipinfo.io?token={{ env('IP_TOKEN') }}", function (response) {
+        $.get("https://ipinfo.io?token={{ env('IP_TOKEN') }}", function (response) {
             setCookie('location', response.country, 1);
             console.log(response.country);
             if(response.country === 'NG'){
