@@ -107,7 +107,7 @@
           <td><span class="tick">&#10004;</span>25</td>
         </tr>
         <tr>
-          <td>Reports</td>
+          <td>Hashtag/Keyword Analysis</td>
           <td class="default"><span class="tick">&#10004;</span>2</td>
           <td><span class="tick">&#10004;</span>5</td>
           <td><span class="tick">&#10004;</span>10</td>
@@ -287,10 +287,26 @@
     }
     
     function getEchangeRates(){
-        $.get("http://data.fixer.io/api/latest?access_key={{ env('EXCHANGE_RATE_ACCESS') }}&format=1", function (response) {
-            exchangeRate = response.rates.NGN.toFixed(2) / response.rates.USD.toFixed(2);
-            setDollarValue();
-        }, "jsonp");
+      const proxy = `https://cors-anywhere.herokuapp.com/`;
+      const options = {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      };
+
+      const URL = `${proxy}http://data.fixer.io/api/latest?access_key={{ env('EXCHANGE_RATE_ACCESS') }}&format=1`
+      fetch(URL, options)
+      .then(res => res.json())
+      .then(response => {
+        exchangeRate = response.rates.NGN.toFixed(2) / response.rates.USD.toFixed(2);
+        setDollarValue();
+      });
     }
 
     function isNigeria(){

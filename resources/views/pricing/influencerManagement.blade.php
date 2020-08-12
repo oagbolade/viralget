@@ -150,7 +150,7 @@
 </script>
 @section('scripts')
 <script>
-    let exchangeRate = 0;
+  let exchangeRate = 0;
 
     if(checkCookie() && getCookie('location') !== 'NG'){
         getEchangeRates();
@@ -161,10 +161,25 @@
     }
     
     function getEchangeRates(){
-        $.get("http://data.fixer.io/api/latest?access_key={{ env('EXCHANGE_RATE_ACCESS') }}&format=1", function (response) {
-            exchangeRate = response.rates.NGN.toFixed(2) / response.rates.USD.toFixed(2);
-            setDollarValue();
-        }, "jsonp");
+      const proxy = `https://cors-anywhere.herokuapp.com/`;
+      const options = {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+      };
+      const URL = `${proxy}http://data.fixer.io/api/latest?access_key={{ env('EXCHANGE_RATE_ACCESS') }}&format=1`
+      fetch(URL, options)
+      .then(res => res.json())
+      .then(response => {
+        exchangeRate = response.rates.NGN.toFixed(2) / response.rates.USD.toFixed(2);
+        setDollarValue();
+      });
     }
 
     function isNigeria(){
