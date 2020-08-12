@@ -4,92 +4,94 @@
 
 <header class="header bg-gray">
     <div class="container">
-    <div class="row h-10">
+        <div class="row h-10">
 
-        <h4>Checkout</h4>
+            <h4>Checkout</h4>
 
-    </div>
+        </div>
     </div>
 </header>
 
-   <!-- Main Content -->
-   <main class="main-content">
+<!-- Main Content -->
+<main class="main-content">
 
     <section class="section">
-    <div class="container">
+        <div class="container">
 
-        <div class="row gap-y">
-        <div class="col-lg-8">
+            <div class="row gap-y">
+                <div class="col-lg-8">
 
-            <table class="table table-cart">
-            <tbody valign="middle">
+                    <table class="table table-cart">
+                        <tbody valign="middle">
 
-                <tr>
-                <td>
-                    <div class="{{ $plan->color }} text-white text-center lead p-3">{{ $plan->name }}</div>
-                </td>
+                            <tr>
+                                <td>
+                                    <div class="{{ $plan->color }} text-white text-center lead p-3">{{ $plan->name }}
+                                    </div>
+                                </td>
 
-                <td>
-                    <h5>ViralGet Subscription</h5>
-                    <p>{{ $plan->name }} plan</p>
-                </td>
+                                <td>
+                                    <h5>ViralGet Subscription</h5>
+                                    <p>{{ $plan->name }} plan</p>
+                                </td>
 
-                <td>
-                    <h4 class="price price-value">{!! $plan->currencyAmount !!}</h4>
-                </td>
-                </tr>
+                                <td>
+                                    <h4 class="price price-value">{!! $plan->currencyAmount !!}</h4>
+                                </td>
+                            </tr>
 
 
 
-            </tbody>
-            </table>
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+
+
+                <div class="col-lg-4">
+                    <div class="cart-price">
+                        <div class="flexbox">
+                            <div>
+                                <p><strong>Subtotal:</strong></p>
+                            </div>
+
+                            <div>
+                                <p class="price-value">{!! $plan->currencyAmount !!}</p>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="flexbox">
+                            <div>
+                                <p><strong>Total:</strong></p>
+                            </div>
+
+                            <div>
+                                <p class="fw-600 price-value">{!! $plan->currencyAmount !!}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12">
+                            <button class="btn btn-block btn-primary" onclick="payWithPaystack()" type="button">Checkout
+                                <i class="ti-angle-right fs-9"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
 
 
         </div>
-
-
-        <div class="col-lg-4">
-            <div class="cart-price">
-            <div class="flexbox">
-                <div>
-                <p><strong>Subtotal:</strong></p>
-                </div>
-
-                <div>
-                <p class="price-value">{!! $plan->currencyAmount !!}</p>
-                </div>
-            </div>
-
-            <hr>
-
-            <div class="flexbox">
-                <div>
-                <p><strong>Total:</strong></p>
-                </div>
-
-                <div>
-                <p class="fw-600 price-value">{!! $plan->currencyAmount !!}</p>
-                </div>
-            </div>
-            </div>
-
-            <div class="row">
-
-            <div class="col-12">
-                <button class="btn btn-block btn-primary" onclick="payWithPaystack()" type="button">Checkout <i class="ti-angle-right fs-9"></i></button>
-            </div>
-            </div>
-
-        </div>
-        </div>
-
-
-
-    </div>
     </section>
 
-    </main>
+</main>
 @endsection
 {{-- @section('scripts')
 <script src="https://js.paystack.co/v1/inline.js"></script>
@@ -97,25 +99,25 @@
   function payWithPaystack(){
     var handler = PaystackPop.setup({
       key: '{{ env("PAYSTACK_PK") }}',
-      email: '{{ Auth()->user()->email }}',
-      amount: {{ $plan->amount * 100 }},
-      currency: "NGN",
-      metadata: {
-         custom_fields: [
-            {
-                display_name: "Plan",
-                variable_name: "plan",
-                value: "{{ $plan->name }}"
-            }
-         ]
-      },
-      callback: function(response) {
-          window.location = '/subscribe/confirm/'+ response.reference;
-        //   alert('success. transaction ref is ' );
-      },
-    });
-    handler.openIframe();
-  }
+email: '{{ Auth()->user()->email }}',
+amount: {{ $plan->amount * 100 }},
+currency: "NGN",
+metadata: {
+custom_fields: [
+{
+display_name: "Plan",
+variable_name: "plan",
+value: "{{ $plan->name }}"
+}
+]
+},
+callback: function(response) {
+window.location = '/subscribe/confirm/'+ response.reference;
+// alert('success. transaction ref is ' );
+},
+});
+handler.openIframe();
+}
 </script>
 @endsection --}}
 
@@ -133,10 +135,12 @@
         formatPaystack = false;
         getEchangeRates();
     }
-    
-    if(!checkCookie() && !isNigeria()){
-        formatPaystack = false;
-        getEchangeRates();
+
+    if(!checkCookie()){
+        if(!isNigeria()){
+            formatPaystack = false;
+            getEchangeRates();
+        }
     }
 
     if(formatPaystack === true){
@@ -173,16 +177,29 @@
     }
 
     function getEchangeRates(){
-        $.get("http://data.fixer.io/api/latest?access_key={{ env('EXCHANGE_RATE_ACCESS') }}&format=1", function (response) {
-            amount = (amount / response.rates.NGN.toFixed(2)) * response.rates.USD.toFixed(2);
-            amount = Math.ceil(amount);
-            currency = 'USD';
+        const proxy = `https://cors-anywhere.herokuapp.com/`;
+        const options = {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        };
+        const URL = `${proxy}http://data.fixer.io/api/latest?access_key={{ env('EXCHANGE_RATE_ACCESS') }}&format=1`
+        fetch(URL, options)
+        .then(res => res.json())
+        .then(response => {
+            exchangeRate = response.rates.NGN.toFixed(2) / response.rates.USD.toFixed(2);
             setDollarValue();
-        }, "jsonp");
+        });
     }
 
     function isNigeria(){
-        $.get("http://ipinfo.io?token={{ env('IP_TOKEN') }}", function (response) {
+        $.get("https://ipinfo.io?token={{ env('IP_TOKEN') }}", function (response) {
             setCookie('location', response.country, 1);
             console.log(response.country);
             if(response.country === 'NG'){
@@ -194,9 +211,14 @@
     }
 
     function setDollarValue(){
-        var all = $(".price-value").map(function() {
-        return this.innerHTML = `$${amount}`;
-        }).get();
+        var items = document.getElementsByClassName('price-value');
+        currency = 'USD';
+        
+        for (var i = 0; i < items.length; i++){
+            let convertPrice=parseInt(items[i].innerHTML.replace(",", "" ).replace(".00", "").replace("₦", "" ), 10) / exchangeRate; 
+            items[i].innerHTML='$' + convertPrice.toFixed();
+            amount=convertPrice.toFixed(); 
+        } 
     }
 
     function setCookie(cname, cvalue, exdays) {
