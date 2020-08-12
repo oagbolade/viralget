@@ -111,9 +111,11 @@
         getEchangeRates();
     }
     
-    if(!checkCookie() && !isNigeria()){
-        formatPaystack = false;
-        getEchangeRates();
+    if(!checkCookie()){
+        if(!isNigeria()){
+            formatPaystack = false;
+            getEchangeRates();
+        }
     }
 
     if(formatPaystack === true){
@@ -152,16 +154,29 @@
     }
 
     function getEchangeRates(){
-        $.get("http://data.fixer.io/api/latest?access_key={{ env('EXCHANGE_RATE_ACCESS') }}&format=1", function (response) {
-            amount = (amount / response.rates.NGN.toFixed(2)) * response.rates.USD.toFixed(2);
-            amount = Math.ceil(amount);
-            currency = 'USD';
+        const proxy = `https://cors-anywhere.herokuapp.com/`;
+        const options = {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        };
+        const URL = `${proxy}http://data.fixer.io/api/latest?access_key={{ env('EXCHANGE_RATE_ACCESS') }}&format=1`
+        fetch(URL, options)
+        .then(res => res.json())
+        .then(response => {
+            exchangeRate = response.rates.NGN.toFixed(2) / response.rates.USD.toFixed(2);
             setDollarValue();
-        }, "jsonp");
+        });
     }
 
     function isNigeria(){
-        $.get("http://ipinfo.io?token={{ env('IP_TOKEN') }}", function (response) {
+        $.get("https://ipinfo.io?token={{ env('IP_TOKEN') }}", function (response) {
             setCookie('location', response.country, 1);
             console.log(response.country);
             if(response.country === 'NG'){
@@ -173,9 +188,14 @@
     }
 
     function setDollarValue(){
-        var all = $(".price-value").map(function() {
-        return this.innerHTML = `$${amount}`;
-        }).get();
+        var items = document.getElementsByClassName('price-value');
+        currency = 'USD';
+
+        for (var i = 0; i < items.length; i++){
+            let convertPrice=parseInt(items[i].innerHTML.replace(",", "" ).replace(".00", "").replace("₦", ""), 10) / exchangeRate; 
+            items[i].innerHTML='$' + convertPrice.toFixed(); 
+            amount = convertPrice.toFixed();
+        } 
     }
 
     function setCookie(cname, cvalue, exdays) {

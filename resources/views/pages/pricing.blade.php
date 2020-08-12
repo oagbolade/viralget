@@ -282,8 +282,11 @@
         getEchangeRates();
     }
     
-    if(!checkCookie() && !isNigeria()){
+    if(!checkCookie()){
+      if(!isNigeria()){
+        formatPaystack = false;
         getEchangeRates();
+      }
     }
     
     function getEchangeRates(){
@@ -310,7 +313,7 @@
     }
 
     function isNigeria(){
-        $.get("http://ipinfo.io?token={{ env('IP_TOKEN') }}", function (response) {
+        $.get("https://ipinfo.io?token={{ env('IP_TOKEN') }}", function (response) {
             setCookie('location', response.country, 1);
             console.log(response.country);
             if(response.country === 'NG'){
