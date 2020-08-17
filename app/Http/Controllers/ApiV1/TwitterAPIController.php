@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Illuminate\Support\Arr;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;

@@ -181,7 +181,8 @@ class PremiumTwitterAPIController extends Controller
         $searching = true;
         $tweets_array = [];
 
-        $count = 500;
+        // $count = 500;
+        $count = 100;
 
         switch ($package->name) {
             case 'enterprise':
@@ -200,6 +201,8 @@ class PremiumTwitterAPIController extends Controller
                 $max_page = 0;
                 break;
         }
+
+        $max_page = 3;
 
         $location_mapper = [
             'Nigeria' =>[
