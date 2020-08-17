@@ -107,23 +107,24 @@
     let currency = 'NGN';
 
     if(checkCookie() && getCookie('location') !== 'NG'){
-        formatPaystack = false;
+        // formatPaystack = false;
         getEchangeRates();
     }
     
     if(!checkCookie()){
         if(!isNigeria()){
-            formatPaystack = false;
+            // formatPaystack = false;
             getEchangeRates();
         }
     }
 
-    if(formatPaystack === true){
-        amount = {{ $plan->price * 100 }}
-    }
-
+    
     function payWithPaystack(){
-        console.log(currency, amount);
+        if(formatPaystack === true){
+            amount = {{ $plan->price * 100 }}
+            currency = 'NGN'; // Remove after domiciliary is setup
+        }
+
         var handler = PaystackPop.setup({
             key: '{{ env("PAYSTACK_PK") }}',
             email: '{{ $email }}',
