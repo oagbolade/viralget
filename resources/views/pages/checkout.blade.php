@@ -93,37 +93,6 @@
 
 </main>
 @endsection
-{{-- @section('scripts')
-<script src="https://js.paystack.co/v1/inline.js"></script>
-<script>
-  function payWithPaystack(){
-    var handler = PaystackPop.setup({
-      key: '{{ env("PAYSTACK_PK") }}',
-email: '{{ Auth()->user()->email }}',
-amount: {{ $plan->amount * 100 }},
-currency: "NGN",
-metadata: {
-custom_fields: [
-{
-display_name: "Plan",
-variable_name: "plan",
-value: "{{ $plan->name }}"
-}
-]
-},
-callback: function(response) {
-window.location = '/subscribe/confirm/'+ response.reference;
-// alert('success. transaction ref is ' );
-},
-});
-handler.openIframe();
-}
-</script>
-@endsection --}}
-
-
-
-
 @section('scripts')
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
@@ -132,22 +101,26 @@ handler.openIframe();
     let currency = 'NGN';
 
     if(checkCookie() && getCookie('location') !== 'NG'){
-        formatPaystack = false;
+        // formatPaystack = false;
         getEchangeRates();
     }
 
     if(!checkCookie()){
         if(!isNigeria()){
-            formatPaystack = false;
+            // formatPaystack = false;
             getEchangeRates();
         }
     }
 
-    if(formatPaystack === true){
-        amount = {{ $plan->price * 100 }}
-    }
-
     function payWithPaystack(){
+        if(formatPaystack === true){
+            console.log('we are true')
+            amount = {{ $plan->amount * 100 }}
+            currency = 'NGN'; //Remove after domicilliary is setup
+        }
+
+        console.log(formatPaystack)
+        console.log(amount)
         var handler = PaystackPop.setup({
             key: '{{ env("PAYSTACK_PK") }}',
             email: '{{ Auth()->user()->email }}',
