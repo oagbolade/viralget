@@ -224,7 +224,7 @@ class PremiumTwitterAPIController extends Controller
         ];
 
         while ($searching) {
-            if ($location == true) {
+            if ($location != 'null') {
                 if ($page === 0) {
                     $this->_temporary_parameters = [
                         "query" => "lang: en place: " 
@@ -247,7 +247,7 @@ class PremiumTwitterAPIController extends Controller
                 }
             }
 
-            if ($location == false) {
+            if ($location == 'null') {
                 if ($page === 0) {
                     $this->_temporary_parameters = [
                         "query" => $query,
