@@ -37,7 +37,7 @@
     <div class="row" v-show="!loading && !displayError">
       <div class="report-data col-lg-8">
         <h6 id="block-2" class="block-number">
-           {{ report_type_days }} Days Profiling Report for:
+          {{ report_type_days }} Days Profiling Report for:
           <strong>{{ decodeURIComponent(handle) }} </strong> with the hashtag
           #{{ keyword }}
         </h6>
@@ -469,43 +469,12 @@ export default {
       return 1;
     },
     async downloadReport() {
-      const URL = `/api/v1/report/profiling/download`;
-
-      const config = {
-        headers: {
-          Authorization:
-            "Bearer " + $('meta[name="api-token"]').attr("content"),
-        },
-      };
-
-      const data = {
-        report_type_days: this.report_type_days,
-        date_from: this.date_from,
-        date_to: this.date_to,
-        handle: this.handle,
-
-        impressions: this.numberFormat(this.impressions),
-        reach: this.numberFormat(this.reach),
-        followers: this.numberFormat(this.followers),
-        following: this.numberFormat(this.following),
-        averageRetweets: this.numberFormat(this.averageRetweets),
-        averageLikes: this.numberFormat(this.averageLikes),
-        totalTweets: this.numberFormat(this.totalTweets),
-        total_engagements: this.numberFormat(this.total_engagements),
-        engagement_rate: this.engagementRate,
-        location: this.location,
-        retweets: this.retweets,
-        tweets: this.recent_tweets,
-        about: this.about,
-        name: this.name,
-      };
-
-      // Add all necessary formaters
-      try {
-        let response = await axios.post(URL, data, config);
-      } catch (err) {
-        console.log(err);
-      }
+      const sniffURL = window.location.href;
+      const splitURL = sniffURL.split("/");
+      const getIDIndex = splitURL.length - 1;
+      const id = splitURL[getIDIndex];
+      const type = "management_profiling";
+      window.location = `/download-pdf?id=${id}&type=${type}`;
     },
     getProfile: function () {
       this.loading = true;

@@ -451,6 +451,13 @@ export default {
       return 1;
     },
     async downloadReport() {
+      const sniffURL = window.location.href;
+      const splitURL = sniffURL.split('/');
+      const getIDIndex = splitURL.length - 1
+      const id = splitURL[getIDIndex];
+      const type = 'profiling'
+      window.location = `/download-pdf?id=${id}&type=${type}`;
+
       const URL = `/api/v1/report/profiling/download`;
 
       const config = {
