@@ -391,52 +391,12 @@ export default {
       window.location.href = URL;
     },
     async downloadReport() {
-      console.log("average ", this.most_active);
-
-      const URL = `/api/v1/report/keyword/download`;
-
-      const config = {
-        headers: {
-          Authorization:
-            "Bearer " + $('meta[name="api-token"]').attr("content"),
-        },
-      };
-
-      const data = {
-        report_type_days: this.report_type_days,
-
-        date_from: this.date_from,
-        date_to: this.date_to,
-
-        handle: this.handle,
-
-        potential_impact: this.number(this.potential_impact),
-        potential_reach: this.number(this.potential_reach),
-        campaign_value: this.number(
-          parseInt((this.potential_impact * 80) / 1000)
-        ),
-        totalTweets: this.totalTweets,
-        text_count: this.text_count,
-        media_count: this.media_count,
-        contributors: this.contributors,
-        avr_contribution: this.number(this.avr_contribution),
-        likes: this.likes,
-        engagement_rate: this.engagement_rate,
-
-        // High tweet related data
-        high_impacts: this.high_impacts,
-        top_contributors: this.most_active,
-        high_retweeters: this.high_retweets,
-        highest_retweeted_tweets: this.high_retweet_tweets,
-      };
-
-      // Add all necessary formaters
-      try {
-        let response = await axios.post(URL, data, config);
-        console.log(response);
-      } catch (err) {
-        console.log(err);
-      }
+      const sniffURL = window.location.href;
+      const splitURL = sniffURL.split("/");
+      const getIDIndex = splitURL.length - 1;
+      const id = splitURL[getIDIndex];
+      const type = "summary";
+      window.location = `/download-pdf?id=${id}&type=${type}`;
     },
     moment,
     getData: function () {
