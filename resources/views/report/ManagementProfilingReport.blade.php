@@ -31205,7 +31205,7 @@
                   </h2>
                 </div>
 
-                <div width="50%" class="col-4">
+                <div width="50%" class="col-8">
                   <p>Following</p>
                   <h2 data-provide="countup" data-from="0" :data-to="parseInt(numberFormat(following))" class="counted">
                     {{ number_format($data->profile->friends_count) }}
@@ -31245,7 +31245,7 @@
                         <strong>{{ '@'.$retweetData->user->screen_name }}</strong><br /><small>{{ $retweetData->user->name }}</small>
                       </div>
                     </div>
-                    <p>{{ $retweetData->text }}</p>
+                    <p>{{ $retweetData->full_text }}</p>
                     <p>
                       <small>
                         <strong>Posted on
@@ -31283,7 +31283,7 @@
                         <strong>{{ '@'.$tweetData->user->screen_name }}</strong><br /><small>{{ $tweetData->user->name }}</small>
                       </div>
                     </div>
-                    <p>{{ $tweetData->text }}</p>
+                    <p>{{ $tweetData->full_text }}</p>
                     <p>
                       <small>
                         <strong>Posted on

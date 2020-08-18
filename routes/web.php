@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
         return new App\Mail\PlanMailables($data);
     });
 
+    Route::get('/download-pdf', 'ReportPDFController@download')->name('download-pdf');
+
     Route::get('/search-page', 'SearchController@index')->name('search-page');
     Route::get('complete-signup', 'AuthController@signup')->name('login.signup');
     Route::post('complete-signup', 'AuthController@postSignup')->name('login.signup.post');
