@@ -11,6 +11,7 @@ use PDF;
 use App\ReportingHistory;
 use App\ManagementReportingHistory;
 use App\ManagementProfilingHistory;
+use App\SummaryHistory;
 use App\ProfilingHistory;
 use Exception;
 
@@ -83,21 +84,6 @@ class ReportPDFController extends Controller
         $high_tweets['most_recent_replies'] = json_decode(json_encode($report->most_recent_replies));
         $high_tweets['highest_retweeted_tweets'] = json_decode(json_encode($report->highest_retweeted_tweets));
         $data['handle'] = $report->query;
-
-        // Testing points
-        // return response([
-        //     'message' => $decode_data,
-        //     'data' => $data,
-        //     'contributors' => $contributors,
-        //     'high_tweets' => $high_tweets,
-        // ], 500);
-
-        // return view('report.ReportingPDF')->with([
-        //     'extra_data' => $data,
-        //     'data' => $decode_data,
-        //     'contributors' => $contributors,
-        //     'high_tweets' => $high_tweets
-        // ]);
 
         $pdf = PDF::loadView('report.ManagementReportingPDF', [
             'extra_data' => $data,
@@ -175,9 +161,42 @@ class ReportPDFController extends Controller
         }  
     }
     
-    function campaignSummaryReport()
+    function campaignSummaryReport($id)
     {
-        
+        $report = SummaryHistory::find($id);
+
+        if (!$report) return response(['status' => 'error', 'message' => 'Data not found']);
+        $data['report_type'] = $report->plan->name;
+        $data['report_type_days'] = $report->plan->days;
+        $data['data'] = json_decode(json_encode($report->report_data));
+        $decode_data = json_decode($data['data']);
+        $data['handle'] = $report->keyword;
+
+        // Testing points
+        // return response([
+        //     'message' => $decode_data,
+        //     'data' => $data,
+        // ], 500);
+
+        // return view('report.SummaryReport')->with([
+        //     'extra_data' => $data,
+        //     'data' => $decode_data,
+        // ]);
+
+        $pdf = PDF::loadView('report.SummaryReport', [
+            'extra_data' => $data,
+            'data' => $decode_data,
+        ]);
+        $pdf->setOption('enable-javascript', false);
+
+        try {
+            return $pdf->download($data['handle'] . ' ' . $this->getTimeNow() . '.pdf');
+        } catch (Exception $e) {
+            return response([
+                'error' => 500,
+                'message' => 'An error occured' . $e->getMessage(),
+            ], 500);
+        }  
     }
 
     function getTimeNow()
