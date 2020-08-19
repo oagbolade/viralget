@@ -17,8 +17,6 @@ Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin);
 
-
-
 // If you don't need the styles, do not connect
 import "sweetalert2/dist/sweetalert2.min.css";
 import VueSidebarMenu from "vue-sidebar-menu";
@@ -39,7 +37,13 @@ Vue.use(VueToastr);
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+Vue.component(
+    "admin-dashboard",
+    require("./components/admin/Dashboard.vue").default
+);
+
 Vue.component("hashtag", require("./components/HashtagComponent.vue").default);
+
 Vue.component(
     "hashtag-loading",
     require("./components/HashtagLoadingComponent.vue").default
@@ -69,11 +73,13 @@ Vue.component(
 );
 Vue.component(
     "influencer-management-campaign",
-    require("./components/campaigns/management/InfluencerManagement.vue").default
+    require("./components/campaigns/management/InfluencerManagement.vue")
+        .default
 );
 Vue.component(
     "management-hashtag-loading",
-    require("./components/campaigns/management/HashtagLoadingComponent.vue").default
+    require("./components/campaigns/management/HashtagLoadingComponent.vue")
+        .default
 );
 Vue.component(
     "management-profile-loading",
@@ -82,13 +88,11 @@ Vue.component(
 );
 Vue.component(
     "management-hashtag",
-    require("./components/campaigns/management/HashtagComponent.vue")
-        .default
+    require("./components/campaigns/management/HashtagComponent.vue").default
 );
 Vue.component(
     "management-profile",
-    require("./components/campaigns/management/ProfileComponent.vue")
-        .default
+    require("./components/campaigns/management/ProfileComponent.vue").default
 );
 Vue.component(
     "profiling-summary",
@@ -103,7 +107,6 @@ Vue.component(
     "create-campaign",
     require("./components/campaigns/CreateCampaign.vue").default
 );
-
 
 Vue.component(
     "profiling-history",
