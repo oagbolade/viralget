@@ -21,12 +21,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'v1', 'namespace' => 'Admin'], function() {
+Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1\Admin'], function() {
     // Login
     Route::get('/admin/login', 'AuthController@login');
-    Route::get('/admin/create', 'AuthController@createAdmin');
     // Register
+    Route::get('/admin/create', 'AuthController@createAdmin');
     // Logout
+    Route::get('/admin/create', 'AuthController@logout');
 });
 
 Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
