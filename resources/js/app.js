@@ -38,6 +38,11 @@ Vue.use(VueToastr);
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 Vue.component(
+    "admin-login",
+    require("./components/admin/auth/Login.vue").default
+);
+
+Vue.component(
     "admin-dashboard",
     require("./components/admin/Dashboard.vue").default
 );
