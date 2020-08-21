@@ -11,6 +11,8 @@ window.Vue = require("vue");
 import VueToastr from "vue-toastr";
 import VueSweetalert2 from "vue-sweetalert2";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
+import store from "./store";
+import subscriber from './store/subscriber';
 
 // Install BootstrapVue
 Vue.use(BootstrapVue);
@@ -26,6 +28,8 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 Vue.use(VueSidebarMenu);
 Vue.use(VueSweetalert2);
 Vue.use(VueToastr);
+
+store.dispatch('attempt', localStorage.getItem("token"));
 
 /**
  * The following block of code may be used to automatically register your
@@ -132,5 +136,6 @@ Vue.config.productionTip = false;
 Vue.use(Antd);
 
 const app = new Vue({
+    store,
     el: "#app"
 });

@@ -39,6 +39,7 @@
         "vue-sidebar-menu": "^4.6.1",
         "vue-toastr": "^2.1.2",
         "vuejs-datatables-sui": "0.0.3",
-        "vuetify-daterange-picker": "^3.1.6"
+        "vuetify-daterange-picker": "^3.1.6",
+        "vuex": "^3.5.1"
     }
 }
