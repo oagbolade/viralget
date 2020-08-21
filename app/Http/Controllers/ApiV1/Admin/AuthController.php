@@ -39,6 +39,11 @@ class AuthController extends Controller
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
+    public function getAdminCredentials()
+    {
+        return response()->json(auth()->user());
+    }
+
     protected function respondWithToken($token)
     {
         return response()->json([
