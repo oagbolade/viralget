@@ -223,8 +223,6 @@ class ManagementTwitterAPIController extends Controller
         $tweets_array = [];
 
         $count = 500;
-        // Remove after upgrade
-        $count = 100;
 
         while ($searching) {
             if ($page === 0) {
@@ -264,8 +262,7 @@ class ManagementTwitterAPIController extends Controller
                 }
             }
 
-            if ($page === 3) { // Remove after upgrade
-            // if ($page === 4) {
+            if ($page === 4) {
                 $searching = false;
                 return $tweets_array;
             }
