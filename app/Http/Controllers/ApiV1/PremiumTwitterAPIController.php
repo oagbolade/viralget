@@ -181,8 +181,7 @@ class PremiumTwitterAPIController extends Controller
         $searching = true;
         $tweets_array = [];
 
-        // $count = 500;
-        $count = 100;
+        $count = 500;
 
         switch ($package->name) {
             case 'enterprise':
@@ -201,8 +200,6 @@ class PremiumTwitterAPIController extends Controller
                 $max_page = 0;
                 break;
         }
-
-        $max_page = 3;
 
         $location_mapper = [
             'Nigeria' =>[
@@ -224,7 +221,7 @@ class PremiumTwitterAPIController extends Controller
         ];
 
         while ($searching) {
-            if ($location != 'null') {
+            if ($location != 'null' && $location != null) {
                 if ($page === 0) {
                     $this->_temporary_parameters = [
                         "query" => "lang: en place: " 
@@ -247,7 +244,7 @@ class PremiumTwitterAPIController extends Controller
                 }
             }
 
-            if ($location == 'null') {
+            if ($location == 'null'|| $location == null) {
                 if ($page === 0) {
                     $this->_temporary_parameters = [
                         "query" => $query,
