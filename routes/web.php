@@ -35,12 +35,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    // Email Testing
-    Route::get('mailable', function () {
-        $data = [];
-
-        return new App\Mail\PlanMailables($data);
-    });
+    Route::get('/bbn', 'BBN\BBNController@showReport')->name('bbn');
 
     Route::get('/download-pdf', 'ReportPDFController@download')->name('download-pdf');
 
