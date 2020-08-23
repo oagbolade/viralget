@@ -12,7 +12,7 @@ import VueToastr from "vue-toastr";
 import VueSweetalert2 from "vue-sweetalert2";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 import store from "./store";
-import subscriber from './store/subscriber';
+import subscriber from "./store/subscriber";
 
 // Install BootstrapVue
 Vue.use(BootstrapVue);
@@ -29,7 +29,7 @@ Vue.use(VueSidebarMenu);
 Vue.use(VueSweetalert2);
 Vue.use(VueToastr);
 
-store.dispatch('attempt', localStorage.getItem("token"));
+store.dispatch("attempt", localStorage.getItem("token"));
 
 /**
  * The following block of code may be used to automatically register your
@@ -73,6 +73,12 @@ Vue.component(
 Vue.component(
     "pagination",
     require("./components/PaginationComponent.vue").default
+);
+
+// For BBN Data
+Vue.component(
+    "bbn-data",
+    require("./components/bbn/BBNData.vue").default
 );
 
 // For campaign pages
