@@ -35,7 +35,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/bbn', 'BBN\BBNController@showReport')->name('bbn');
+    // Route::get('/bbn', 'BBN\BBNController@showReport')->name('bbn');
 
     Route::get('/download-pdf', 'ReportPDFController@download')->name('download-pdf');
 
