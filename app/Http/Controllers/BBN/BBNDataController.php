@@ -84,6 +84,46 @@ class BBNDataController extends Controller
         return $sorted_housemates;
     }
 
+    function saveTweets($user_id, $tweets)
+    {
+        try {
+            $report = BBN::create([
+                'user_id' => $user_id,
+                'query' => 'tweets',
+                'report_data' => json_encode($tweets),
+            ]);
+
+            return response(
+                [
+                    "status" => 500,
+                    "message" => "saved!",
+                ],
+                500
+            );
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to create trends report " . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    function mergeTweets($user_id)
+    {
+        // Fetch and merge
+        $tweets = BBN::where(['user_id' => $user_id, 'query' => 'tweets'])->get();
+
+        $allTweets = [];
+
+        foreach ($tweets as $tweet) {
+            foreach (json_decode($tweet['report_data']) as $tweetData) {
+                $allTweets[] = $tweetData;
+            }
+        }
+
+        return $allTweets;
+    }
+
     function getHashtagTweets(Request $request)
     {
         $user = $this->authenticate();
@@ -114,9 +154,20 @@ class BBNDataController extends Controller
                 'high_tweets' => $high_tweets,
             ], 200);
         }
-        
-        $tweets = $this->getManagementHashtagTweets($query);
 
+        // $tweets = $this->getManagementHashtagTweets($query);
+
+        // $this->saveTweets($user->id, $tweets);
+
+        // return response([
+        //     'status' => 500,
+        //     'message' => 'saved!',
+        // ], 500);
+
+        // dd('done');
+
+        $tweets = $this->mergeTweets($user->id);
+        
         $data = [];
         $high_tweets = [];
 
@@ -157,15 +208,13 @@ class BBNDataController extends Controller
         $data['media_meta_data'] = $this->getTweetsMedia($tweets, 'hashtag');
         $data['engagement_rate'] = $this->getHashtagEngagementData($tweets, $reach['reach']);
 
-        $removeSymbol = str_replace('#', '', strip_tags($query));
-
-        $report = BBN::where(['user_id' => $user->id, 'query' => $removeSymbol])->first();
+        $report = BBN::where(['user_id' => $user->id, 'query' => 'BBNaija'])->first();
 
         if (!$report) {
             try {
                 $report = BBN::create([
                     'user_id' => $user->id,
-                    'query' => $removeSymbol,
+                    'query' => 'BBNaija',
                     'report_data' => json_encode($data),
                     'most_mentioned_housemates' => json_encode($most_mentioned_housemates),
                     'highest_retweeted_tweets' => json_encode($highest_retweeted_tweets),
@@ -195,23 +244,46 @@ class BBNDataController extends Controller
 
         $count = 500;
         // $count = 100;
-        $fromDate = '202007230000';
-        $toDate = '202008230000';
+
+        // Set days here
+        $batch1_from = '202008200000';
+        $batch1_to = '202008240000'; // Done
+
+        $batch2_from = '202008150000';
+        $batch2_to = '202008190000'; // Done
+
+        $batch3_from = '202008100000';
+        $batch3_to = '202008140000'; // Done
+
+        $batch4_from = '202008050000';
+        $batch4_to = '202008090000'; // Done
+
+        $batch5_from = '202007310000';
+        $batch5_to = '202008040000'; // Done
+
+        $batch6_from = '202007260000';
+        $batch6_to = '202007300000'; // Done
+
+        $batch7_from = '202007240000';
+        $batch7_to = '202007250000';
+
+        $fromDate = '202007240000';
+        $toDate = '202008240000';
 
         while ($searching) {
             if ($page === 0) {
                 $this->_temporary_parameters = [
                     "query" => $query,
                     "maxResults" => $count,
-                    "fromDate" => $fromDate,
-                    'toDate' => $toDate,
+                    "fromDate" => $batch7_from,
+                    'toDate' => $batch7_to,
                 ];
             } else {
                 $this->_temporary_parameters = [
                     "query" => $query,
                     "maxResults" => $count,
-                    "fromDate" => $fromDate,
-                    'toDate' => $toDate,
+                    "fromDate" => $batch7_from,
+                    'toDate' => $batch7_to,
                     "next" => $next
                 ];
             }
@@ -238,8 +310,7 @@ class BBNDataController extends Controller
                 }
             }
 
-            if ($page === 2) {
-                // if ($page === 4) {
+            if ($page === 1) {
                 $searching = false;
                 return $tweets_array;
             }
