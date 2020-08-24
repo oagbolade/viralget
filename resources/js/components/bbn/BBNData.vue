@@ -123,7 +123,7 @@
           </div>
         </section>
 
-        <section class="download-section">
+        <!-- <section class="download-section">
           <div class="row">
             <div class="offset-md-6 col-md-6">
               <button
@@ -134,7 +134,7 @@
               </button>
             </div>
           </div>
-        </section>
+        </section> -->
 
         <section class="section mt-2 pb-0">
           <div class="container">
@@ -702,12 +702,11 @@ export default {
       })
         .then((res) => res.json())
         .then((res) => {
+          console.log(res);
           if (res.status == "success" && res.data) {
             this.displayError = false;
             this.loading = false;
-            console.log("response", res);
             let data = JSON.parse(res.data.data);
-            console.log(data);
 
             const total_engagements = data.total_engagements;
             const potential_reach = data.potential_reach;
@@ -860,5 +859,13 @@ export default {
 
 .tweet-margin {
   margin: 30px 0;
+}
+
+.lead-8 {
+  font-size: 20px !important;
+}
+
+.lead-7 {
+  font-size: 20px !important;
 }
 </style>
