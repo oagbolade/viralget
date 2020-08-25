@@ -24,7 +24,7 @@ Route::get('/faqs', 'HomeController@faqs')->name('faqs');
 Route::get('/terms', 'HomeController@terms')->name('terms');
 Route::get('/privacy-policy', 'HomeController@privacy')->name('privacy');
 Route::get('/search', 'SearchController@search')->name('search');
-
+Route::get('/bbn', 'BBN\BBNController@showReport')->name('bbn');
 
 Route::middleware('guest')->group(function () {
     
@@ -35,8 +35,6 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/bbn', 'BBN\BBNController@showReport')->name('bbn');
-
     Route::get('/download-pdf', 'ReportPDFController@download')->name('download-pdf');
 
     Route::get('/search-page', 'SearchController@index')->name('search-page');
@@ -80,34 +78,35 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('login', 'Admin\LoginController@showLogin')->name('admin.login');
-    Route::get('home', 'Admin\DashboardController@dashboard')->name('admin.dashboard');
+    Route::get('dashboard', 'Admin\DashboardController@dashboard')->name('admin.dashboard');
 
-    Route::prefix('auth')->group(function () {
-        Route::get('login', 'Admin\AuthController@login')->name('admin.login');
-        Route::post('login', 'Admin\AuthController@postLogin')->name('admin.login.post');
+    // Route::prefix('auth')->group(function () {
+    //     Route::get('login', 'Admin\AuthController@login')->name('admin.login');
 
-        Route::get('logout', 'Admin\AuthController@logout')->name('admin.logout');
-    });
+    //     Route::post('login', 'Admin\AuthController@postLogin')->name('admin.login.post');
 
-    Route::middleware('auth:admin')->group(function () {
-        Route::get('dashboard',  'Admin\AuthController@dashboard')->name('admin.dashboard');
+    //     Route::get('logout', 'Admin\AuthController@logout')->name('admin.logout');
+    // });
 
-        Route::get('profiles',  'Admin\AccountController@list')->name('admin.profiles');
-        Route::get('profiles/add',  'Admin\AccountController@add')->name('admin.profile.add');
-        Route::post('profile/add',  'Admin\AccountController@store')->name('admin.profile.add.post');
-        Route::get('profile/delete/{id}',  'Admin\AccountController@delete')->name('admin.profile.delete');
-        Route::get('profile/edit/{id}',  'Admin\AccountController@edit')->name('admin.profile.edit');
-        Route::post('profile/edit/{id}',  'Admin\AccountController@update')->name('admin.profile.edit.post');
+    // Route::middleware('auth:admin')->group(function () {
+    //     Route::get('dashboard',  'Admin\AuthController@dashboard')->name('admin.dashboard');
 
-        Route::get('keywords',  'Admin\KeywordController@list')->name('admin.keywords');
-        Route::get('keywords/add',  'Admin\KeywordController@add')->name('admin.keywords.add');
-        Route::post('keywords/add',  'Admin\KeywordController@store')->name('admin.keywords.add.post');
+    //     Route::get('profiles',  'Admin\AccountController@list')->name('admin.profiles');
+    //     Route::get('profiles/add',  'Admin\AccountController@add')->name('admin.profile.add');
+    //     Route::post('profile/add',  'Admin\AccountController@store')->name('admin.profile.add.post');
+    //     Route::get('profile/delete/{id}',  'Admin\AccountController@delete')->name('admin.profile.delete');
+    //     Route::get('profile/edit/{id}',  'Admin\AccountController@edit')->name('admin.profile.edit');
+    //     Route::post('profile/edit/{id}',  'Admin\AccountController@update')->name('admin.profile.edit.post');
+
+    //     Route::get('keywords',  'Admin\KeywordController@list')->name('admin.keywords');
+    //     Route::get('keywords/add',  'Admin\KeywordController@add')->name('admin.keywords.add');
+    //     Route::post('keywords/add',  'Admin\KeywordController@store')->name('admin.keywords.add.post');
 
 
-        Route::get('categories',  'Admin\CategoryController@list')->name('admin.categories');
-        Route::get('categories/add',  'Admin\CategoryController@add')->name('admin.categories.add');
-        Route::post('categories/add',  'Admin\CategoryController@store')->name('admin.categories.add.post');
-        Route::get('categories/edit/{id}',  'Admin\CategoryController@edit')->name('admin.categories.edit');
-        Route::post('categories/edit/{id}',  'Admin\CategoryController@update')->name('admin.categories.edit.post');
-    });
+    //     Route::get('categories',  'Admin\CategoryController@list')->name('admin.categories');
+    //     Route::get('categories/add',  'Admin\CategoryController@add')->name('admin.categories.add');
+    //     Route::post('categories/add',  'Admin\CategoryController@store')->name('admin.categories.add.post');
+    //     Route::get('categories/edit/{id}',  'Admin\CategoryController@edit')->name('admin.categories.edit');
+    //     Route::post('categories/edit/{id}',  'Admin\CategoryController@update')->name('admin.categories.edit.post');
+    // });
 });

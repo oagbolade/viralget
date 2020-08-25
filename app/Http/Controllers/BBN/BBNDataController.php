@@ -108,10 +108,10 @@ class BBNDataController extends Controller
         }
     }
 
-    function mergeTweets($user_id)
+    function mergeTweets($query)
     {
         // Fetch and merge
-        $tweets = BBN::where(['user_id' => $user_id, 'query' => 'tweets'])->get();
+        $tweets = BBN::where(['query' => $query])->get();
 
         $allTweets = [];
 
@@ -163,7 +163,7 @@ class BBNDataController extends Controller
 
         // dd('done');
 
-        $tweets = $this->mergeTweets($user->id);
+        $tweets = $this->mergeTweets($query);
 
         $data = [];
         $high_tweets = [];
