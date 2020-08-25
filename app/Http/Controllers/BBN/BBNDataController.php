@@ -167,7 +167,7 @@ class BBNDataController extends Controller
         // dd('done');
 
         $tweets = $this->mergeTweets($user->id);
-        
+
         $data = [];
         $high_tweets = [];
 
@@ -185,10 +185,10 @@ class BBNDataController extends Controller
         $data['date_from'] = \Carbon\Carbon::parse('2020-07-23')->toDayDateTimeString();
         $data['date_to'] = \Carbon\Carbon::parse('2020-08-23')->toDayDateTimeString();
 
-        $data['retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true);
-        $data['replies'] =  $this->getHashtagTweetsData($tweets, $user, 'replies');
-        $data['high_likes'] =  $this->getHashtagTweetsData($tweets, $user, 'likes', true);
-        $data['most_active'] = $this->getHashtagTweetsData($tweets, $user, 'original', true);
+        $data['retweets'] =  $this->getHashtagTweetsData($tweets, $user, 'retweets', true)['count'];
+        $data['replies'] =  $this->getHashtagTweetsData($tweets, $user, 'replies')['count'];
+        $data['high_likes'] =  $this->getHashtagTweetsData($tweets, $user, 'likes', true)['count'];
+        $data['most_active'] = $this->getHashtagTweetsData($tweets, $user, 'original', true)['count'];
 
         $highest_retweeted_tweets = $this->getProfileHighestRetweets($tweets, true);
 
@@ -211,20 +211,20 @@ class BBNDataController extends Controller
         $report = BBN::where(['user_id' => $user->id, 'query' => 'BBNaija'])->first();
 
         if (!$report) {
-            try {
-                $report = BBN::create([
-                    'user_id' => $user->id,
-                    'query' => 'BBNaija',
-                    'report_data' => json_encode($data),
-                    'most_mentioned_housemates' => json_encode($most_mentioned_housemates),
-                    'highest_retweeted_tweets' => json_encode($highest_retweeted_tweets),
-                ]);
-            } catch (Exception $e) {
-                return response([
-                    "status" => 500,
-                    "message" => "failed to create trends report " . $e->getMessage(),
-                ], 500);
-            }
+        try {
+            $report = BBN::create([
+                'user_id' => $user->id,
+                'query' => 'BBNaija',
+                'report_data' => json_encode($data),
+                'most_mentioned_housemates' => json_encode($most_mentioned_housemates),
+                'highest_retweeted_tweets' => json_encode($highest_retweeted_tweets),
+            ]);
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to create trends report " . $e->getMessage(),
+            ], 500);
+        }
         }
 
         return response([
@@ -806,7 +806,7 @@ class BBNDataController extends Controller
         });
         $unique_array = array_unique($temp_store_tweets, SORT_REGULAR);
 
-        $topRetweets = array_slice($unique_array, 0, 30);
+        $topRetweets = array_slice($unique_array, 0, 20);
         return $topRetweets;
     }
 
