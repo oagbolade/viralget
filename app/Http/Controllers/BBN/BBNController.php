@@ -8,7 +8,6 @@ class BBNController
 {
     public function showReport()
     {
-        $user = Auth()->user();
         return view('bbn.BBNReport');
     }
 }
