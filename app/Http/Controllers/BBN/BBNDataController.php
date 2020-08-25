@@ -126,16 +126,13 @@ class BBNDataController extends Controller
 
     function getHashtagTweets(Request $request)
     {
-        $user = $this->authenticate();
-        if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
-
         $query = 'BBNaija';
 
         if (!$query) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
 
-        $report = BBN::where(['user_id' => $user->id, 'query' => $query])->first();
+        $report = BBN::where(['query' => $query])->first();
 
         if ($report) {
             $data['data'] = json_decode(json_encode($report->report_data));
@@ -208,12 +205,11 @@ class BBNDataController extends Controller
         $data['media_meta_data'] = $this->getTweetsMedia($tweets, 'hashtag');
         $data['engagement_rate'] = $this->getHashtagEngagementData($tweets, $reach['reach']);
 
-        $report = BBN::where(['user_id' => $user->id, 'query' => 'BBNaija'])->first();
+        $report = BBN::where(['query' => 'BBNaija'])->first();
 
         if (!$report) {
         try {
             $report = BBN::create([
-                'user_id' => $user->id,
                 'query' => 'BBNaija',
                 'report_data' => json_encode($data),
                 'most_mentioned_housemates' => json_encode($most_mentioned_housemates),
