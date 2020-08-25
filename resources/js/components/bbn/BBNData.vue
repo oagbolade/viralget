@@ -283,7 +283,7 @@
                       data-provide="countup"
                       data-from="0"
                     >
-                      {{ number(likes.count) }}
+                      {{ number(likes) }}
                     </h4>
                   </div>
 
@@ -793,14 +793,14 @@ export default {
       return numeral(value).format("0,0");
     },
     fillData() {
-      console.log([this.totalTweets, this.retweets.count, this.replies.count]);
+      console.log([this.totalTweets, this.retweets, this.replies]);
       this.datacollection = {
         datasets: [
           {
             data: [
-              this.totalTweets - this.retweets.count,
-              this.retweets.count,
-              this.replies.count,
+              this.totalTweets - this.retweets,
+              this.retweets,
+              this.replies,
             ],
             backgroundColor: ["#ff4954", "#3cd458", "#926dde"],
           },
