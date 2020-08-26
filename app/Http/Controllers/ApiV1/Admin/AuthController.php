@@ -13,13 +13,11 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('auth:admin', ['except' => ['login']]);
-        // $this->middleware('guest')->except('logout');
-        // $this->middleware('guest:admin')->except('logout');
     }
 
-    protected function createAdmin(Request $request)
+    public function createAdmin(Request $request)
     {
-        $admin = Admin::create([
+        Admin::create([
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
@@ -30,9 +28,13 @@ class AuthController extends Controller
 
     function login(Request $request)
     {
+        $email = request()->email;
         $credentials = $request->only('email', 'password');
-
+       
         if ($token = $this->guard()->attempt($credentials)) {
+            $cookie_name = "admin_token";
+            $this->setAdminCookie($cookie_name, $token);
+            $this->updateToken($email, $token);
             return $this->respondWithToken($token);
         }
 
@@ -68,5 +70,30 @@ class AuthController extends Controller
         $this->guard()->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    public function updateToken($email, $token)
+    {
+        Admin::where('email', $email)->update(array('remember_token' => $token));
+    }
+    
+    public function setAdminCookie($cookie_name, $cookie_value)
+    {
+        setcookie(
+            $cookie_name,
+            $cookie_value,
+            time() + (86400 * 30),
+            "/"
+        );
+    }
+
+    public function deleteAdminCookie($cookie_name)
+    {
+        setcookie(
+            $cookie_name,
+            '',
+            time() - (86400 * 30),
+            "/"
+        );
     }
 }

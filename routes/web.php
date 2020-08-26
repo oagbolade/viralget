@@ -78,7 +78,10 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('login', 'Admin\LoginController@showLogin')->name('admin.login');
-    Route::get('dashboard', 'Admin\DashboardController@dashboard')->name('admin.dashboard');
+    
+    Route::middleware(['jwt.verify'])->group(function () {
+        Route::get('dashboard', 'Admin\DashboardController@dashboard')->name('admin.dashboard');
+    });
 
     // Route::prefix('auth')->group(function () {
     //     Route::get('login', 'Admin\AuthController@login')->name('admin.login');
