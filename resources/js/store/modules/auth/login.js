@@ -6,7 +6,13 @@ const state = {
 };
 
 const getters = {
-    isAuthenticated: () => state.user && state.token,
+    isAuthenticated: (state) => {
+        if (state.token) {
+            return true
+        }
+
+        return false
+    },
     getUser: state => state.user,
     getToken: state => state.token
 };
@@ -31,7 +37,7 @@ const actions = {
             }
         } catch (err) {
             return {
-                status: 500,
+                status: err.response.status,
                 message: "error",
                 error: err
             };

@@ -695,13 +695,21 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+import store from "../../store";
+
 export default {
   data() {
     return {};
   },
+  computed: mapGetters(["getUser", "isAuthenticated"]),
   mounted() {
-    console.log("Component mounted.");
+    if (!store.getters.isAuthenticated) {
+      const RedirectURL = `/admin/login`;
+      // window.location = RedirectURL;
+      return;
+    }
   },
-  created: function () {},
+  created() {},
 };
 </script>
