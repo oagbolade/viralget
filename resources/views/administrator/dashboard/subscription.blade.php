@@ -5,7 +5,7 @@
 @section('content')
 <div class="content-wrapper">
     <div id="app">
-        <admin-dashboard></admin-dashboard>
+        <user-subscription></user-subscription>
     </div>
 </div>
 @endsection
