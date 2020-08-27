@@ -9,7 +9,7 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="{{ asset('administrator/bootstrap/css/bootstrap.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('administrator/bootstrap/css/bootstrap.min.css') }}"> --}}
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
@@ -79,7 +79,7 @@
 <!-- FastClick -->
 <script src="{{ asset('administrator/plugins/fastclick/fastclick.js') }}"></script>
 <!-- AdminLTE App -->
-<script src="{{ asset('administrator/dist/js/app.min.js') }}"></script>
+<script src="{{ asset('administrator/dist/js/app.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('administrator/dist/js/pages/dashboard.js') }}"></script>
 <!-- AdminLTE for demo purposes -->

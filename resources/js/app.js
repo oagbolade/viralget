@@ -23,6 +23,7 @@ Vue.use(IconsPlugin);
 import "sweetalert2/dist/sweetalert2.min.css";
 import VueSidebarMenu from "vue-sidebar-menu";
 import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
+import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
 Vue.use(VueSidebarMenu);
@@ -41,6 +42,11 @@ store.dispatch("attempt", localStorage.getItem("token"));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+Vue.component(
+    "user-subscription",
+    require("./components/admin/Subscription.vue").default
+);
+
 Vue.component(
     "admin-login",
     require("./components/admin/auth/Login.vue").default
