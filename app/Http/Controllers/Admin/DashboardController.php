@@ -10,4 +10,9 @@ class DashboardController extends Controller
     {
         return view('administrator.dashboard.home');
     }
+    
+    public function userSubscription()
+    {
+        return view('administrator.dashboard.subscription');
+    }
 }
