@@ -81,6 +81,11 @@ Route::prefix('admin')->group(function () {
     
     Route::middleware(['jwt.verify'])->group(function () {
         Route::get('dashboard', 'Admin\DashboardController@dashboard')->name('admin.dashboard');
+        Route::get('users/subscription', 'Admin\DashboardController@userSubscription')->name('admin.subscription');
+        Route::get('users/influencermanagment', 'Admin\DashboardController@dashboard')->name('admin.influencermanagment');
+        Route::get('users/trends', 'Admin\DashboardController@dashboard')->name('admin.trends');
+        Route::get('manage', 'Admin\DashboardController@dashboard')->name('admin.manage');
+        Route::get('password', 'Admin\DashboardController@dashboard')->name('admin.password');
     });
 
     // Route::prefix('auth')->group(function () {

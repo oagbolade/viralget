@@ -25,15 +25,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'adminv1', 'namespace' => 'ApiV1\Admin'], function() {
     // Login
     Route::post('/admin/login', 'AuthController@login');
-
-    // Register
     Route::post('/admin/create', 'AuthController@createAdmin');
-
-    // Logout
     Route::get('/admin/logout', 'AuthController@logout');
-
-    // Get user
     Route::get('/admin/user', 'AuthController@getAdminCredentials');
+
+    Route::get('/user/subscription', 'UsersController@getSubscriptions');
 
 });
 
