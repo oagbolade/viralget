@@ -11,6 +11,11 @@ class Subscription extends Model
     protected $guarded = [];
     public $timestamps = false;
 
+    public function users()
+    {
+        return $this->belongsTo(UserDetails::class, 'user_id', 'user_id');
+    }
+    
     public function plan() {
         return $this->hasOne(Plans::class, 'id', 'plan_id');
     }
