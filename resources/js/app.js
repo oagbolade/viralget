@@ -23,7 +23,6 @@ Vue.use(IconsPlugin);
 import "sweetalert2/dist/sweetalert2.min.css";
 import VueSidebarMenu from "vue-sidebar-menu";
 import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
-import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
 Vue.use(VueSidebarMenu);

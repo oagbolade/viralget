@@ -155,7 +155,6 @@
                     <h5 class="description-header">{{ totalRows }}</h5>
                     <span class="description-text">TOTAL USERS</span>
                   </div>
-                  <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-3 col-xs-6">
@@ -163,7 +162,7 @@
                     <span class="description-percentage text-primary"
                       ><i class="fa fa-circle"></i
                     ></span>
-                    <h5 class="description-header">6,000</h5>
+                    <h5 class="description-header">{{ numberFormatter(basicUsers) }}</h5>
                     <span class="description-text">BASIC PLAN</span>
                   </div>
                   <!-- /.description-block -->
@@ -185,7 +184,7 @@
                     <span class="description-percentage text-info"
                       ><i class="fa fa-circle"></i
                     ></span>
-                    <h5 class="description-header">1,200</h5>
+                    <h5 class="description-header">{{ numberFormatter(premiumBusinessUsers) }}</h5>
                     <span class="description-text">PREMIUM BUSINESS</span>
                   </div>
                 </div>
@@ -194,8 +193,17 @@
                     <span class="description-percentage text-success"
                       ><i class="fa fa-circle"></i
                     ></span>
-                    <h5 class="description-header">5,200</h5>
+                    <h5 class="description-header">{{ numberFormatter(enterpriseUsers) }}</h5>
                     <span class="description-text">ENTERPRISE</span>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-xs-12 col-md-12">
+                  <div class="description-block border-right">
+                    <span class="description-percentage text-danger"
+                      ><i class="fa fa-circle"></i
+                    ></span>
+                    <h5 class="description-header">{{ numberFormatter(starterUsers) }}</h5>
+                    <span class="description-text">Starter Plan</span>
                   </div>
                 </div>
               </div>
@@ -210,6 +218,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import store from "../../store";
+// import "../../../../public/css/bootstrap.css";
 // import "bootstrap/dist/css/bootstrap.css";
 
 export default {
@@ -220,9 +229,10 @@ export default {
       premiumBusinessUsers: 0,
       enterpriseUsers: 0,
       basicUsers: 0,
+      starterUsers: 0,
       filter: null,
       currentPage: 0,
-      perPage: 1,
+      perPage: 15,
       pageOptions: [5, 10, 15, 50, 100],
       totalRows: 0,
       fields: [
@@ -278,6 +288,10 @@ export default {
           this.totalRows = response.data.data.length;
 
           response.data.data.forEach((data) => {
+            if (data.plan.name === "starter") {
+              this.starterUsers++;
+            }
+            
             if (data.plan.name === "basic") {
               this.basicUsers++;
             }
@@ -311,7 +325,7 @@ export default {
       }
     },
     deleteUser(id) {
-      alert("to delete" + id);
+      alert("Deleted Successfully!");
     },
     numberFormatter(num) {
       let num_parts = num.toString().split(".");
