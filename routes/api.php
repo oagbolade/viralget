@@ -64,7 +64,9 @@ Route::group(['prefix' => 'v1', 'namespace' => 'ApiV1'], function() {
     Route::get('/report/profile/{id}', 'ShowDataController@showProfilingHistory');
 
     Route::post('/campaign/create', 'CampaignController@create');
-    Route::get('/campaign/view', 'CampaignController@view');
+    Route::get('/campaign/profiling', 'CampaignController@profiling');
+    Route::get('/campaign/reporting', 'CampaignController@reporting');
+    Route::get('/campaign/subscription', 'CampaignController@subscription');
     Route::delete('/campaign/delete/{campaignId}', 'CampaignController@delete');
     Route::delete('/management/campaign/trends/delete/{campaignId}', 'CampaignController@deleteTrendsManagement');
     Route::delete('/management/campaign/influencers/delete/{campaignId}', 'CampaignController@deleteInfluencerManagement');

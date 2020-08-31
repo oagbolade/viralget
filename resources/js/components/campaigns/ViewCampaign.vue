@@ -35,10 +35,7 @@
         </h3>
         <h5>Please try again in few minutes</h5>
 
-        <button
-          class="btn btn-sm btn-warning btn-round"
-          @click="getUserCampaigns"
-        >
+        <button class="btn btn-sm btn-warning btn-round" @click="getReporting">
           <span class="icon-refresh"></span> Try again
         </button>
       </div>
@@ -107,14 +104,14 @@
           </thead>
 
           <paginate
-            v-if="campaigns.length !== 0"
-            name="campaigns"
-            :list="campaigns"
+            v-if="reportingCampaigns.length !== 0"
+            name="reportingCampaigns"
+            :list="reportingCampaigns"
             :per="10"
             tag="tbody"
           >
             <tr
-              v-for="(campaign, index) in paginated('campaigns')"
+              v-for="(campaign, index) in paginated('reportingCampaigns')"
               :key="index"
             >
               <th scope="row">{{ index + 1 }}</th>
@@ -129,7 +126,9 @@
                   </small>
                 </div>
               </td>
-              <td>{{ (campaign.location_set) ? campaign.location_set : 'Global' }}</td>
+              <td>
+                {{ campaign.location_set ? campaign.location_set : "Global" }}
+              </td>
               <td>{{ dateFormatter(campaign.created_at) }}</td>
               <td>
                 {{
@@ -172,7 +171,7 @@
             next: 'NEXT',
             prev: 'PREV',
           }"
-          for="campaigns"
+          for="reportingCampaigns"
           :classes="{
             ul: 'pagination',
             'ul.paginate-links > li.number': 'page-item',
@@ -222,7 +221,7 @@ export default {
           icon: "fa fa-line-chart",
         },
       ],
-      paginate: ["campaigns"],
+      paginate: ["reportingCampaigns"],
       planSchema: {
         starter: "Starter",
         basic: "Basic",
@@ -230,7 +229,7 @@ export default {
         premiumBusiness: "Premium Business",
         enterprise: "Enterprise",
       },
-      campaigns: [],
+      reportingCampaigns: [],
       planName: "",
       planColor: "",
       profilingCampaigns: [],
@@ -250,7 +249,9 @@ export default {
     }
   },
   created: function () {
-    this.getUserCampaigns();
+    this.getSubscription();
+    this.getProfiling();
+    this.getReporting();
   },
   methods: {
     formatCampaignDates(dates) {
@@ -274,8 +275,8 @@ export default {
     goToSubscription() {
       window.location.href = "/pricing";
     },
-    async getUserCampaigns() {
-      const URL = `/api/v1/campaign/view`;
+    async getProfiling() {
+      const URL = `/api/v1/campaign/profiling`;
 
       try {
         let response = await axios.get(URL, {
@@ -287,21 +288,91 @@ export default {
 
         if (response.data.status === 200) {
           const data = response.data;
-          if (data.type === "all") {
-            this.campaigns = data.data;
-            this.profilingCampaigns = data.data[0].profiling_history;
+
+          if (data.length == 0) {
+            this.profilingCampaigns = [];
+            this.loading = false;
+            this.displayError = false;
+            return;
           }
 
-          if (data.type === "profiling") {
-            this.campaigns = [];
-            this.profilingCampaigns = data.data;
-          }
-
-          this.subscription = data.data[0].subscription_usage[0];
-          this.planName = data.data[0].plan.name;
-          this.planColor = data.data[0].plan.color;
-          this.plan = data.data[0].plan;
+          this.campaigns = [];
+          this.profilingCampaigns = data.data;
           this.loading = false;
+        }
+
+        if (response.data.status === 204) {
+          this.loading = false;
+        }
+      } catch (err) {
+        this.displayError = true;
+        this.loading = false;
+        console.log(err);
+      }
+    },
+
+    async getReporting() {
+      const URL = `/api/v1/campaign/reporting`;
+
+      try {
+        let response = await axios.get(URL, {
+          headers: {
+            Authorization:
+              "Bearer " + $('meta[name="api-token"]').attr("content"),
+          },
+        });
+
+        if (response.data.status === 200) {
+          const data = response.data;
+
+          if (data.length == 0) {
+            this.reportingCampaigns = [];
+            this.loading = false;
+            this.displayError = false;
+            return;
+          }
+
+          this.reportingCampaigns = data.data;
+          this.loading = false;
+        }
+
+        if (response.data.status === 204) {
+          this.loading = false;
+        }
+      } catch (err) {
+        this.displayError = true;
+        this.loading = false;
+        console.log(err);
+      }
+    },
+
+    async getSubscription() {
+      const URL = `/api/v1/campaign/subscription`;
+
+      try {
+        let response = await axios.get(URL, {
+          headers: {
+            Authorization:
+              "Bearer " + $('meta[name="api-token"]').attr("content"),
+          },
+        });
+        
+        if (response.data.status === 200) {
+          const data = response.data;
+
+          if (data.length == 0) {
+            this.profilingCampaigns = [];
+            this.loading = false;
+            this.displayError = false;
+            return;
+          }
+
+          this.profilingCampaigns = data.data;
+
+          this.subscription = data.data;
+          this.planName = data.data.plan.name;
+          this.planColor = data.data.plan.color;
+          this.plan = data.data.plan;
         }
 
         if (response.data.status === 204) {
