@@ -78,31 +78,67 @@ class CampaignController extends Controller
         }
     }
 
-    function view()
+    function subscription()
+    {
+        $user = $this->authenticate();
+
+        $subscription = new Subscription;
+
+
+        if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
+
+        try {
+            $subscription = $subscription::where('user_id', $user->id)->with('plan')->first();
+
+            return response([
+                "status" => 200,
+                "message" => "successfull",
+                "data" => $subscription,
+            ], 200);
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to get campaigns " . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+    function reporting()
     {
         $user = $this->authenticate();
         $hashtag_campaigns = new ReportingHistory;
+
+        if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
+
+        try {
+            $campaigns = $hashtag_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
+
+            return response([
+                "status" => 200,
+                "message" => "successfull",
+                "data" => $campaigns,
+            ], 200);
+        } catch (Exception $e) {
+            return response([
+                "status" => 500,
+                "message" => "failed to get campaigns " . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+    function profiling()
+    {
+        $user = $this->authenticate();
 
         $profiling_campaigns = new ProfilingHistory;
 
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         try {
-            $campaigns = $hashtag_campaigns::where('user_id', $user->id)->with('profilingHistory')->with('subscriptionUsage', 'plan')->orderBy('id', 'desc')->get();
-
-            if (count($campaigns) == 0) {
-                $profiling_campaigns = $profiling_campaigns::where('user_id', $user->id)->with('subscriptionUsage', 'plan')->orderBy('id', 'desc')->get();
-                return response([
-                    "status" => 200,
-                    "type" => "profiling",
-                    "message" => "successfull",
-                    "data" => $profiling_campaigns,
-                ], 200);
-            }
+            $campaigns = $profiling_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
 
             return response([
                 "status" => 200,
-                "type" => "all",
                 "message" => "successfull",
                 "data" => $campaigns,
             ], 200);
