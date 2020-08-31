@@ -162,7 +162,13 @@
           </paginate>
 
           <tbody v-else>
-            <td colspan="4"><h5>You have not created any reports</h5></td>
+            <tr v-if="this.reportLoading">
+              <td colspan="8"><Loader /></td>
+            </tr>
+
+            <tr v-else>
+              <td colspan="8"><h5>You have not created any reports</h5></td>
+            </tr>
           </tbody>
         </table>
         <paginate-links
@@ -190,12 +196,12 @@ import "vue-loading-overlay/dist/vue-loading.css";
 import VuePaginate from "vue-paginate";
 import ProfilingHistory from "./../profiling/ProfiingHistory";
 import Swal from "sweetalert2";
-
 import moment from "moment";
+import Loader from "./Loader/LoadingSpinner";
 
 export default {
   props: ["id"],
-  components: { Loading, ProfilingHistory },
+  components: { Loading, ProfilingHistory, Loader },
   data() {
     return {
       collapsed: true,
@@ -234,7 +240,8 @@ export default {
       planColor: "",
       profilingCampaigns: [],
       subscription: {},
-      loading: true,
+      loading: false,
+      reportLoading: true,
       displayError: false,
       plan: {},
     };
@@ -333,7 +340,6 @@ export default {
           }
 
           this.reportingCampaigns = data.data;
-          this.loading = false;
         }
 
         if (response.data.status === 204) {
@@ -356,7 +362,7 @@ export default {
               "Bearer " + $('meta[name="api-token"]').attr("content"),
           },
         });
-        
+
         if (response.data.status === 200) {
           const data = response.data;
 
@@ -421,7 +427,7 @@ export default {
           },
         });
         const campaignId = response.data.data;
-        this.campaigns = this.campaigns.filter((campaignData) => {
+        this.reportingCampaigns = this.reportingCampaigns.filter((campaignData) => {
           this.loading = false;
           this.displayError = false;
           return campaignData.id != campaignId;
