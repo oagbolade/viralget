@@ -146,6 +146,7 @@
         </table>
         <paginate-links
           for="campaigns"
+          :async="true"
           :show-step-links="true"
           :limit="5"
           :step-links="{
