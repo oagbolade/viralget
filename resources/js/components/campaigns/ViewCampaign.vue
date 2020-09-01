@@ -107,7 +107,7 @@
             v-if="reportingCampaigns.length !== 0"
             name="reportingCampaigns"
             :list="reportingCampaigns"
-            :per="10"
+            :per="5"
             tag="tbody"
           >
             <tr
@@ -172,6 +172,7 @@
           </tbody>
         </table>
         <paginate-links
+          :async="true"
           :show-step-links="true"
           :step-links="{
             next: 'NEXT',
@@ -427,11 +428,13 @@ export default {
           },
         });
         const campaignId = response.data.data;
-        this.reportingCampaigns = this.reportingCampaigns.filter((campaignData) => {
-          this.loading = false;
-          this.displayError = false;
-          return campaignData.id != campaignId;
-        });
+        this.reportingCampaigns = this.reportingCampaigns.filter(
+          (campaignData) => {
+            this.loading = false;
+            this.displayError = false;
+            return campaignData.id != campaignId;
+          }
+        );
       } catch (err) {
         this.displayError = true;
         this.loading = false;
