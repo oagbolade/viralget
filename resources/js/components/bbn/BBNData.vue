@@ -403,7 +403,9 @@
                         </div>
                         <div class="media-body">
                           <strong>@{{ active.user.screen_name }}</strong
-                          ><br /><small>{{ active.user.name }}</small>
+                          ><br />
+                          <small>{{ active.user.name }}</small><br>
+                          <small>{{ active.tweets_count }} Tweet(s)</small>
                         </div>
                       </div>
                     </td>
