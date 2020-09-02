@@ -17,6 +17,7 @@ Route::get('cronjob/{platform}/{category}', 'Cronjobs\TwitterCronHandler@index')
 Route::get('/cleandb', 'Cronjobs\DatabaseCleaner\DatabaseCleaner@index');
 Route::get('/summary/scheduler', 'Cronjobs\summary\SummaryController@checkSchedule');
 Route::get('/bbn/data', 'BBN\BBNDataController@getHashtagTweets'); // BBN Data
+Route::post('/trafficdata', 'ApiV1\TrafficDataController@saveTrafficData'); // BBN Data
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
