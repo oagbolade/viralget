@@ -201,58 +201,53 @@ drift.load('peppmpypneiu');
   <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
   <script src="{{ asset('static/assets/js/traffic_data.js') }}"></script>
-  <script>
-    getUserData();
-    
+  <script>    
     if (checkCookie() && getCookie("ip_address") !== "") {
-    
-    }
-    
-    if (!checkCookie()) {
-    }
-    
-    function getUserData() {
-      fetch(`https://ipinfo.io?token={{ env('IP_TOKEN') }}`)
-      .then(response => response.json())
-      .then(response => {
-        console.log(response);
-        setCookie("ip_address", response.country, 1);
-        const ip_address = response.ip;
-        const city = response.city;
-        const country = response.country;
-        const timezone = response.timezone;
-        const last_page_visited = window.location.href;
-        
-        const data = {
-          ip_address,
-          city,
-          country,
-          timezone,
-          last_page_visited
-        }
-        
-        saveUserData(data);
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
-    }
-
-    function saveUserData(data = {}){
-      const URL = `/api/trafficdata`;
-
-      $.post( URL, data).done(()=>{
-        console.log('saved successfully')
-      }).fail(()=>{
-        console.log('An error occured while saving')
-      });
-    }
-    
-    function setCookie(cname, cvalue, exdays) {
-      var d = new Date();
-      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-      var expires = "expires=" + d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      console.log(getCookie('ip_address'))
+    }else{
+      function getUserData() {
+        fetch(`https://ipinfo.io?token={{ env('IP_TOKEN') }}`)
+        .then(response => response.json())
+        .then(response => {
+          setCookie("ip_address", response.ip, 1);
+          const ip_address = response.ip;
+          const city = response.city;
+          const country = response.country;
+          const timezone = response.timezone;
+          const last_page_visited = window.location.href;
+          
+          const data = {
+            ip_address,
+            city,
+            country,
+            timezone,
+            last_page_visited
+          }
+          
+          saveUserData(data);
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
+      }
+  
+      function saveUserData(data = {}){
+        const URL = `/api/trafficdata`;
+  
+        $.post( URL, data).done(()=>{
+          console.log('traffic data saved')
+        }).fail(()=>{
+          console.log('An error occured while saving traffic data')
+        });
+      }
+      
+      function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
+      
     }
     
     function getCookie(cname = "ip_address") {
@@ -276,7 +271,7 @@ drift.load('peppmpypneiu');
     
     function checkCookie() {
         var user=getCookie("ip_address"); 
-       
+        
         if (user != "" ) {
           return true; 
         } 
@@ -284,7 +279,7 @@ drift.load('peppmpypneiu');
         return false; 
     } 
     
-    function deleteCookie(cookieName="location" ) { 
+    function deleteCookie(cookieName="ip_address" ) { 
       document.cookie="location=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;" ;
     }
   </script>
