@@ -137,7 +137,7 @@ class CampaignController extends Controller
 
         try {
             $include_columns = ['id', 'user_id', 'handle', 'created_at', 'description', 'package'];
-            $campaigns = $profiling_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
+            $campaigns = $profiling_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get($include_columns);
 
             return response([
                 "status" => 200,
