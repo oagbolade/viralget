@@ -111,7 +111,8 @@ class CampaignController extends Controller
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         try {
-            $campaigns = $hashtag_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
+            $include_columns = ['id', 'user_id', 'query', 'dates', 'created_at', 'description', 'location_set', 'package'];
+            $campaigns = $hashtag_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get($include_columns);
 
             return response([
                 "status" => 200,
@@ -135,6 +136,7 @@ class CampaignController extends Controller
         if (!$user) return response(['status' => 'error', 'message' => 'Unauthorized user']);
 
         try {
+            $include_columns = ['id', 'user_id', 'handle', 'created_at', 'description', 'package'];
             $campaigns = $profiling_campaigns::where('user_id', $user->id)->orderBy('id', 'desc')->get();
 
             return response([
