@@ -1,15 +1,14 @@
 @extends('administrator.layouts.app')
-{{-- @include('administrator.layouts.menu') --}}
-@include('administrator.layouts.sidebar')
 
 @section('content')
-<div class="content-wrapper">
-    <div id="app">
-        <user-subscription></user-subscription>
-    </div>
+<div id="app">
+    <user-subscription></user-subscription>
 </div>
 @endsection
 
 @section('scripts')
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('administrator/vendor/chart.js/Chart.min.js') }}"></script>
+<script src="{{ asset('administrator/js/demo/chart-area-demo.js') }}"></script>
+<script src="{{ asset('administrator/js/demo/chart-pie-demo.js') }}"></script>
 @endsection
