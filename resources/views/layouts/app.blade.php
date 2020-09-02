@@ -53,9 +53,9 @@
     gtag('config', 'AW-668034109');
   </script>
 
-<!-- Start of Async Drift Code -->
-<script>
-  "use strict";
+  <!-- Start of Async Drift Code -->
+  <script>
+    "use strict";
 
 !function() {
   var t = window.driftt = window.drift = window.driftt || [];
@@ -79,8 +79,8 @@
 }();
 drift.SNIPPET_VERSION = '0.3.1';
 drift.load('peppmpypneiu');
-</script>
-<!-- End of Async Drift Code -->
+  </script>
+  <!-- End of Async Drift Code -->
 </head>
 
 <body>
@@ -200,6 +200,94 @@ drift.load('peppmpypneiu');
   <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <script src="{{ asset('static/assets/js/traffic_data.js') }}"></script>
+  <script>
+    getUserData();
+    
+    if (checkCookie() && getCookie("ip_address") !== "") {
+    
+    }
+    
+    if (!checkCookie()) {
+    }
+    
+    function getUserData() {
+      fetch(`https://ipinfo.io?token={{ env('IP_TOKEN') }}`)
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+        setCookie("ip_address", response.country, 1);
+        const ip_address = response.ip;
+        const city = response.city;
+        const country = response.country;
+        const timezone = response.timezone;
+        const last_page_visited = window.location.href;
+        
+        const data = {
+          ip_address,
+          city,
+          country,
+          timezone,
+          last_page_visited
+        }
+        
+        saveUserData(data);
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
+    }
+
+    function saveUserData(data = {}){
+      const URL = `/api/trafficdata`;
+
+      $.post( URL, data).done(()=>{
+        console.log('saved successfully')
+      }).fail(()=>{
+        console.log('An error occured while saving')
+      });
+    }
+    
+    function setCookie(cname, cvalue, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+      var expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    
+    function getCookie(cname = "ip_address") {
+      var name = cname + "=";
+      var ca = document.cookie.split(";");
+
+      for (var i = 0; i < ca.length; i++) {
+          var c=ca[i]; 
+          
+          while (c.charAt(0)==" " ) {
+          c=c.substring(1); 
+          } 
+
+          if(c.indexOf(name)==0) { 
+            return c.substring(name.length, c.length); 
+          } 
+      } 
+  
+      return "" ; 
+    } 
+    
+    function checkCookie() {
+        var user=getCookie("ip_address"); 
+       
+        if (user != "" ) {
+          return true; 
+        } 
+        
+        return false; 
+    } 
+    
+    function deleteCookie(cookieName="location" ) { 
+      document.cookie="location=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;" ;
+    }
+  </script>
   @yield('scripts')
 </body>
 
