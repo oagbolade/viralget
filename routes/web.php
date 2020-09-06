@@ -87,34 +87,4 @@ Route::prefix('admin')->group(function () {
         Route::get('manage', 'Admin\DashboardController@dashboard')->name('admin.manage');
         Route::get('password', 'Admin\DashboardController@dashboard')->name('admin.password');
     });
-
-    // Route::prefix('auth')->group(function () {
-    //     Route::get('login', 'Admin\AuthController@login')->name('admin.login');
-
-    //     Route::post('login', 'Admin\AuthController@postLogin')->name('admin.login.post');
-
-    //     Route::get('logout', 'Admin\AuthController@logout')->name('admin.logout');
-    // });
-
-    // Route::middleware('auth:admin')->group(function () {
-    //     Route::get('dashboard',  'Admin\AuthController@dashboard')->name('admin.dashboard');
-
-    //     Route::get('profiles',  'Admin\AccountController@list')->name('admin.profiles');
-    //     Route::get('profiles/add',  'Admin\AccountController@add')->name('admin.profile.add');
-    //     Route::post('profile/add',  'Admin\AccountController@store')->name('admin.profile.add.post');
-    //     Route::get('profile/delete/{id}',  'Admin\AccountController@delete')->name('admin.profile.delete');
-    //     Route::get('profile/edit/{id}',  'Admin\AccountController@edit')->name('admin.profile.edit');
-    //     Route::post('profile/edit/{id}',  'Admin\AccountController@update')->name('admin.profile.edit.post');
-
-    //     Route::get('keywords',  'Admin\KeywordController@list')->name('admin.keywords');
-    //     Route::get('keywords/add',  'Admin\KeywordController@add')->name('admin.keywords.add');
-    //     Route::post('keywords/add',  'Admin\KeywordController@store')->name('admin.keywords.add.post');
-
-
-    //     Route::get('categories',  'Admin\CategoryController@list')->name('admin.categories');
-    //     Route::get('categories/add',  'Admin\CategoryController@add')->name('admin.categories.add');
-    //     Route::post('categories/add',  'Admin\CategoryController@store')->name('admin.categories.add.post');
-    //     Route::get('categories/edit/{id}',  'Admin\CategoryController@edit')->name('admin.categories.edit');
-    //     Route::post('categories/edit/{id}',  'Admin\CategoryController@update')->name('admin.categories.edit.post');
-    // });
 });
