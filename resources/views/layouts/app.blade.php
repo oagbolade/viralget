@@ -205,6 +205,7 @@ drift.load('peppmpypneiu');
     if (checkCookie() && getCookie("ip_address") !== "") {
       console.log(getCookie('ip_address'))
     }else{
+      getUserData();
       function getUserData() {
         fetch(`https://ipinfo.io?token={{ env('IP_TOKEN') }}`)
         .then(response => response.json())
