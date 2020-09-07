@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 
 use App\Subscription;
 use App\Plans;
+use App\TrafficData;
 use App\Transactions;
 
 class SubscriptionController extends Controller
@@ -73,6 +74,15 @@ class SubscriptionController extends Controller
                 'reference' => $data->reference,
                 'comment' => $data->message,
             ]);
+
+            if (isset($_COOKIE['ip_address'])) {
+                $get_traffic_data = TrafficData::where('ip_address', $_COOKIE['ip_address'])->first();
+                if($get_traffic_data){
+                    $get_traffic_data = TrafficData::where('ip_address', $_COOKIE['ip_address'])->update([
+                        'paid' => 'Yes'
+                    ]);
+                }
+            }
             
             $plan = Plans::where('name', $data->metadata->custom_fields[0]->value)->first();
             //Create subscription record for user
