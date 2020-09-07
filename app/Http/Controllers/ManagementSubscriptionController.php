@@ -15,6 +15,7 @@ use App\Mail\PlanMailables;
 use App\Mail\ManagementInvoiceMailables;
 use App\Scheduler;
 use App\SchedulerManagement;
+use App\TrafficData;
 use Exception;
 
 class ManagementSubscriptionController extends Controller
@@ -84,6 +85,8 @@ class ManagementSubscriptionController extends Controller
             $get_user_details = $user_details->first();
 
             // Verify that plan from URL is legit by comparing with database
+            // Update traffic data
+            // 
 
             $update = $user_details->update(['paid' => 'true']);
 
@@ -99,6 +102,15 @@ class ManagementSubscriptionController extends Controller
                         'status' => 500,
                         'message' => 'An error occured '. $e->getMessage()
                     ], 500);
+                }
+            }
+
+            if (isset($_COOKIE['ip_address'])) {
+                $get_traffic_data = TrafficData::where('ip_address', $_COOKIE['ip_address'])->first();
+                if ($get_traffic_data) {
+                    $get_traffic_data = TrafficData::where('ip_address', $_COOKIE['ip_address'])->update([
+                        'paid' => 'Yes'
+                    ]);
                 }
             }
             
