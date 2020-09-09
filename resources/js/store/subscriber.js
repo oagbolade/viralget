@@ -7,7 +7,8 @@ store.subscribe(mutation => {
             if (mutation.payload) {
                 Axios.defaults.headers.common["Authorization"] = `Bearer ${
                     mutation.payload
-                }`;
+                    }`;
+                console.log('ran subscriber');
                 localStorage.setItem("token", mutation.payload);
             } else {
                 Axios.defaults.headers.common["Authorization"] = null;
