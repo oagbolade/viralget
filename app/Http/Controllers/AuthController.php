@@ -106,11 +106,12 @@ class AuthController extends Controller
 
         $validator = Validator::make(request()->all(), [
             'name' => 'required',
+            'email' => 'required',
             'city' => 'required',
             'role' => 'required',
             'phone' => 'required',
         ]);
-
+        
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -120,6 +121,7 @@ class AuthController extends Controller
         UserDetails::create([
             'user_id' => $user->id,
             'name' => request()->name,
+            'email' => request()->email,
             'company_name' => request()->company_name,
             'city' => request()->city,
             'phone' => request()->phone,

@@ -18,6 +18,10 @@
               <div class="form-group">
                 <input type="text" name="name" class="form-control form-control-lg" placeholder="Name">
               </div>
+              
+              <div class="form-group">
+                <input type="text" name="email" class="form-control form-control-lg" placeholder="Email">
+              </div>
 
               <div class="form-group">
                 <input type="text" name="role" class="form-control form-control-lg" placeholder="Role">
