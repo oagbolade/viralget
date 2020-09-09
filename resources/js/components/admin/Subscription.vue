@@ -65,6 +65,10 @@
             <template v-slot:cell(index)="data">
               {{ data.index + 1 }}
             </template>
+            
+            <template v-slot:cell(email)="data">
+              {{ data.item.email }}
+            </template>
 
             <template v-slot:cell(current_plan)="data">
               <button
@@ -286,6 +290,10 @@ export default {
           sortable: false,
         },
         {
+          key: "email",
+          sortable: true,
+        },
+        {
           key: "phone",
           sortable: true,
         },
@@ -353,6 +361,7 @@ export default {
               id: data.users.id,
               name: data.users.name,
               company_name: data.users.company_name,
+              email: data.users.email,
               phone: data.users.phone,
               plan_limit: data.plan.profiling_limit,
               profiling_balance: data.profiling_balance,
