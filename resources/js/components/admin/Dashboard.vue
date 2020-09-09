@@ -304,6 +304,19 @@
             <template v-slot:cell(index)="data">
               {{ data.index + 1 }}
             </template>
+
+            <template v-slot:cell(paid)="data">
+              <button
+                type="button"
+                :class="{
+                  'btn-success': data.item.paid === 'Yes',
+                  'btn-danger': data.item.paid === 'No',
+                }"
+                class="btn btn-sm plan-button"
+              >
+                {{ data.item.paid }}
+              </button>
+            </template>
           </b-table>
 
           <b-col sm="7" md="6" class="my-1 mx-auto">
@@ -368,7 +381,6 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
       },
-
       styles: {
         width: "620px",
         height: "330px",
@@ -398,6 +410,10 @@ export default {
         },
         {
           key: "page_visited",
+          sortable: true,
+        },
+        {
+          key: "paid",
           sortable: true,
         },
         {
@@ -440,13 +456,14 @@ export default {
           this.totalUsers = data.user_count;
 
           data.all_time_visits.forEach((traffic_data) => {
-              console.log(traffic_data)
+            console.log(traffic_data);
             this.items.push({
               id: traffic_data.id,
               ip_address: traffic_data.ip_address,
               country: traffic_data.country,
               city: traffic_data.city,
               page_visited: traffic_data.last_page_visited,
+              paid: traffic_data.paid,
               visited_on: traffic_data.updated_at,
             });
           });
