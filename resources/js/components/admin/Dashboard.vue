@@ -430,6 +430,11 @@ export default {
     this.loadChartData();
   },
   created() {
+    if(localStorage.getItem("token") === null){
+      const RedirectURL = `/admin/login`;
+      window.location = RedirectURL;
+    }
+    
     this.token = localStorage.getItem("token");
   },
   methods: {
