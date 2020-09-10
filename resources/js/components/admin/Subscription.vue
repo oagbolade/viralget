@@ -337,7 +337,7 @@ export default {
           this.totalRows = response.data.data.length;
 
           response.data.data.forEach((data) => {
-            if (data.plan.name === "starter") {
+            if (data.plan.name === "starter" || data.users === null) {
               this.starterUsers++;
             }
 
@@ -357,18 +357,20 @@ export default {
               this.enterpriseUsers++;
             }
 
-            this.items.push({
-              id: data.users.id,
-              name: data.users.name,
-              company_name: data.users.company_name,
-              email: data.users.email,
-              phone: data.users.phone,
-              plan_limit: data.plan.profiling_limit,
-              profiling_balance: data.profiling_balance,
-              reporting_balance: data.reporting_balance,
-              current_plan: data.plan.name,
-              created_at: data.users.created_at,
-            });
+            if (data.users !== null) {
+              this.items.push({
+                id: data.users.id,
+                name: data.users.name,
+                company_name: data.users.company_name,
+                email: data.users.email,
+                phone: data.users.phone,
+                plan_limit: data.plan.profiling_limit,
+                profiling_balance: data.profiling_balance,
+                reporting_balance: data.reporting_balance,
+                current_plan: data.plan.name,
+                created_at: data.users.created_at,
+              });
+            }
           });
         }
       } catch (err) {
