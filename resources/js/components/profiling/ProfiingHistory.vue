@@ -84,66 +84,70 @@
         class="table-section bg-white col-md-12"
         style="box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);"
       >
-        <table class="table table-hover responsive">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Created</th>
-              <th>Description</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <paginate
-            v-if="campaigns.length !== 0"
-            name="campaigns"
-            :list="campaigns"
-            :per="10"
-            tag="tbody"
-          >
-            <tr
-              v-for="(campaign, index) in paginated('campaigns')"
-              :key="index"
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Created</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <paginate
+              v-if="campaigns.length !== 0"
+              name="campaigns"
+              :list="campaigns"
+              :per="10"
+              tag="tbody"
             >
-              <th scope="row">{{ index + 1 }}</th>
-              <td>
-                <strong>{{ campaign.handle }}</strong>
-              </td>
-              <td>{{ dateFormatter(campaign.created_at) }}</td>
-              <td>
-                {{
-                  campaign.description !== null ? campaign.description : "N/A"
-                }}
-              </td>
-              <td>
-                <button
-                  @click="viewCampaign(campaign.handle)"
-                  type="button"
-                  class="btn btn-label btn-success"
-                >
-                  <label><i class="fa fa-book"></i></label> View
-                </button>
-                <button
-                  @click="deleteCampaign(campaign.id)"
-                  type="button"
-                  class="btn btn-label btn-danger"
-                >
-                  <label><i class="fa fa-trash"></i></label> Delete
-                </button>
-              </td>
-            </tr>
-          </paginate>
+              <tr
+                v-for="(campaign, index) in paginated('campaigns')"
+                :key="index"
+              >
+                <th scope="row">{{ index + 1 }}</th>
+                <td>
+                  <strong>{{ campaign.handle }}</strong>
+                </td>
+                <td>{{ dateFormatter(campaign.created_at) }}</td>
+                <td>
+                  {{
+                    campaign.description !== null ? campaign.description : "N/A"
+                  }}
+                </td>
+                <td>
+                  <button
+                    @click="viewCampaign(campaign.handle)"
+                    type="button"
+                    class="btn btn-label btn-success"
+                  >
+                    <label><i class="fa fa-book"></i></label> View
+                  </button>
+                  <button
+                    @click="deleteCampaign(campaign.id)"
+                    type="button"
+                    class="btn btn-label btn-danger"
+                  >
+                    <label><i class="fa fa-trash"></i></label> Delete
+                  </button>
+                </td>
+              </tr>
+            </paginate>
 
-          <tbody v-else>
-            <tr v-if="this.profilingLoading">
-              <td colspan="8"><Loader /></td>
-            </tr>
+            <tbody v-else>
+              <tr v-if="this.profilingLoading">
+                <td colspan="8"><Loader /></td>
+              </tr>
 
-            <tr v-else>
-              <td colspan="8"><h5>You have not created any influencer profiling reports</h5></td>
-            </tr>
-          </tbody>
-        </table>
+              <tr v-else>
+                <td colspan="8">
+                  <h5>You have not created any influencer profiling reports</h5>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <paginate-links
           for="campaigns"
           :async="true"
@@ -171,7 +175,7 @@ import VuePaginate from "vue-paginate";
 import "vue-loading-overlay/dist/vue-loading.css";
 import Swal from "sweetalert2";
 import moment from "moment";
-import Loader from './../campaigns/Loader/LoadingSpinner'
+import Loader from "./../campaigns/Loader/LoadingSpinner";
 
 export default {
   components: { Loading, Loader },

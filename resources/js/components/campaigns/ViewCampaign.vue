@@ -91,86 +91,90 @@
         class="table-section bg-white col-md-12"
         style="box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);"
       >
-        <table class="table table-hover responsive">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Location</th>
-              <th>Created</th>
-              <th>Description</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Created</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
 
-          <paginate
-            v-if="reportingCampaigns.length !== 0"
-            name="reportingCampaigns"
-            :list="reportingCampaigns"
-            :per="5"
-            tag="tbody"
-          >
-            <tr
-              v-for="(campaign, index) in paginated('reportingCampaigns')"
-              :key="index"
+            <paginate
+              v-if="reportingCampaigns.length !== 0"
+              name="reportingCampaigns"
+              :list="reportingCampaigns"
+              :per="5"
+              tag="tbody"
             >
-              <th scope="row">{{ index + 1 }}</th>
-              <td>
-                <strong>{{ makeCamelCase(campaign.query) }}</strong>
-                <div>
-                  <small
-                    v-if="formatCampaignDates(campaign.dates).from !== null"
+              <tr
+                v-for="(campaign, index) in paginated('reportingCampaigns')"
+                :key="index"
+              >
+                <th scope="row">{{ index + 1 }}</th>
+                <td>
+                  <strong>{{ makeCamelCase(campaign.query) }}</strong>
+                  <div>
+                    <small
+                      v-if="formatCampaignDates(campaign.dates).from !== null"
+                    >
+                      From: {{ formatCampaignDates(campaign.dates).from }}<br />
+                      To: {{ formatCampaignDates(campaign.dates).to }}
+                    </small>
+                  </div>
+                </td>
+                <td>
+                  {{ campaign.location_set ? campaign.location_set : "Global" }}
+                </td>
+                <td>{{ dateFormatter(campaign.created_at) }}</td>
+                <td>
+                  {{
+                    campaign.description !== null ? campaign.description : "N/A"
+                  }}
+                </td>
+                <td>
+                  <button
+                    @click="
+                      viewCampaign(
+                        campaign.query,
+                        campaign.location_set,
+                        formatCampaignDates(campaign.dates).from,
+                        formatCampaignDates(campaign.dates).to
+                      )
+                    "
+                    type="button"
+                    class="btn btn-label btn-success"
                   >
-                    From: {{ formatCampaignDates(campaign.dates).from }}<br />
-                    To: {{ formatCampaignDates(campaign.dates).to }}
-                  </small>
-                </div>
-              </td>
-              <td>
-                {{ campaign.location_set ? campaign.location_set : "Global" }}
-              </td>
-              <td>{{ dateFormatter(campaign.created_at) }}</td>
-              <td>
-                {{
-                  campaign.description !== null ? campaign.description : "N/A"
-                }}
-              </td>
-              <td>
-                <button
-                  @click="
-                    viewCampaign(
-                      campaign.query,
-                      campaign.location_set,
-                      formatCampaignDates(campaign.dates).from,
-                      formatCampaignDates(campaign.dates).to
-                    )
-                  "
-                  type="button"
-                  class="btn btn-label btn-success"
-                >
-                  <label><i class="fa fa-book"></i></label> View
-                </button>
-                <button
-                  @click="deleteCampaign(campaign.id)"
-                  type="button"
-                  class="btn btn-label btn-danger"
-                >
-                  <label><i class="fa fa-trash"></i></label> Delete
-                </button>
-              </td>
-            </tr>
-          </paginate>
+                    <label><i class="fa fa-book"></i></label> View
+                  </button>
+                  <button
+                    @click="deleteCampaign(campaign.id)"
+                    type="button"
+                    class="btn btn-label btn-danger"
+                  >
+                    <label><i class="fa fa-trash"></i></label> Delete
+                  </button>
+                </td>
+              </tr>
+            </paginate>
 
-          <tbody v-else>
-            <tr v-if="this.reportLoading">
-              <td colspan="8"><Loader /></td>
-            </tr>
+            <tbody v-else>
+              <tr v-if="this.reportLoading">
+                <td colspan="8"><Loader /></td>
+              </tr>
 
-            <tr v-else>
-              <td colspan="8"><h5>You have not created any hashtag reports</h5></td>
-            </tr>
-          </tbody>
-        </table>
+              <tr v-else>
+                <td colspan="8">
+                  <h5>You have not created any hashtag reports</h5>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <paginate-links
           :async="true"
           :show-step-links="true"
