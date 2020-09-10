@@ -336,10 +336,12 @@ export default {
           if (data.length == 0) {
             this.reportingCampaigns = [];
             this.loading = false;
+            this.reportLoading = false;
             this.displayError = false;
             return;
           }
 
+          this.reportLoading = false;
           this.reportingCampaigns = data.data;
         }
 
