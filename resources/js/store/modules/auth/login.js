@@ -6,12 +6,12 @@ const state = {
 };
 
 const getters = {
-    isAuthenticated: (state) => {
+    isAuthenticated: state => {
         if (state.token) {
-            return true
+            return true;
         }
 
-        return false
+        return false;
     },
     getUser: state => state.user,
     getToken: state => state.token
@@ -46,6 +46,7 @@ const actions = {
 
     async attempt({ commit }, token) {
         if (token) {
+            localStorage.setItem("token", token);
             commit("SET_TOKEN", token);
         }
 
