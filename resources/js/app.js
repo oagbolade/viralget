@@ -12,7 +12,6 @@ import VueToastr from "vue-toastr";
 import VueSweetalert2 from "vue-sweetalert2";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 import store from "./store";
-import subscriber from "./store/subscriber";
 
 // Install BootstrapVue
 Vue.use(BootstrapVue);

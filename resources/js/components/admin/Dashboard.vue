@@ -426,11 +426,6 @@ export default {
   },
   computed: mapGetters(["getUser", "isAuthenticated"]),
   mounted() {
-    if (!store.getters.isAuthenticated) {
-      const RedirectURL = `/admin/login`;
-      window.location = RedirectURL;
-    }
-
     this.getAllTrafficData();
     this.loadChartData();
   },
@@ -439,6 +434,7 @@ export default {
   },
   methods: {
     async getAllTrafficData() {
+      console.log(this.token);
       const URL = `/api/adminv1/traffic/all`;
 
       try {
