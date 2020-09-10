@@ -65,7 +65,7 @@
             <template v-slot:cell(index)="data">
               {{ data.index + 1 }}
             </template>
-            
+
             <template v-slot:cell(email)="data">
               {{ data.item.email }}
             </template>
@@ -311,13 +311,13 @@ export default {
     };
   },
   computed: mapGetters(["getUser", "isAuthenticated"]),
-  mounted() {
-    if (!store.getters.isAuthenticated) {
+  mounted() {},
+  created() {
+    if (localStorage.getItem("token") === null) {
       const RedirectURL = `/admin/login`;
       window.location = RedirectURL;
     }
-  },
-  created() {
+
     this.token = localStorage.getItem("token");
     this.getUsers();
   },
@@ -384,7 +384,6 @@ export default {
       this.currentUserPlanLimit = planLimit;
       this.currentUserProfilingBalance = profilingBalance;
       this.currentUserReportingBalance = reportingBalance;
-      console.log(planLimit, profilingBalance, reportingBalance);
     },
     numberFormatter(num) {
       let num_parts = num.toString().split(".");
