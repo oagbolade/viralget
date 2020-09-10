@@ -140,7 +140,7 @@
             </tr>
 
             <tr v-else>
-              <td colspan="8"><h5>You have not created any profiling reports</h5></td>
+              <td colspan="8"><h5>You have not created any influencer profiling reports</h5></td>
             </tr>
           </tbody>
         </table>
