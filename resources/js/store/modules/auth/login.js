@@ -57,13 +57,18 @@ const actions = {
         const URL = `/api/adminv1/admin/user`;
 
         try {
-            const response = await axios.get(URL);
+            const response = await axios.get(URL, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
 
             if (response.status === 200) {
                 const user = response.data;
                 commit("SET_USER", user);
             }
         } catch (err) {
+            console.log(err);
             commit("SET_TOKEN", null);
             commit("SET_USER", null);
         }
