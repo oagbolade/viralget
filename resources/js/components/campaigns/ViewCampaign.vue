@@ -167,7 +167,7 @@
             </tr>
 
             <tr v-else>
-              <td colspan="8"><h5>You have not created any reports</h5></td>
+              <td colspan="8"><h5>You have not created any hashtag reports</h5></td>
             </tr>
           </tbody>
         </table>
