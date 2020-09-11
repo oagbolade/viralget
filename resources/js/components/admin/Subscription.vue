@@ -334,13 +334,10 @@ export default {
 
         if (response.status === 200) {
           const starters = response.data.starter_users;
+          this.starterUsers = starters.length;
           this.totalRows = response.data.data.length + starters.length;
 
           response.data.data.forEach((data) => {
-            if (data.plan.name === "starter" || data.users === null) {
-              this.starterUsers++;
-            }
-
             if (data.plan.name === "basic") {
               this.basicUsers++;
             }
