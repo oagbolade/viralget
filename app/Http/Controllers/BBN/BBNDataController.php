@@ -16,6 +16,7 @@ use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 use App\User;
 use App\BBN;
+use App\BBNProfiling;
 use DateTime;
 
 use Exception;
@@ -592,43 +593,30 @@ class BBNDataController extends Controller
 
     function getAllProfileData()
     {
-        $user = $this->authenticate();
+        // $user = $this->authenticate();
 
-        if (!$user) return response(['status' => 'error', 'message' => 'Unauthenticated user']);
+        // if (!$user) return response(['status' => 'error', 'message' => 'Unauthenticated user']);
+
+        $handle = request()->handle;
 
         $user_details_id = request()->user_details_id;
-        $handle = request()->q;
-        $keyword = request()->keyword;
-        $plan_id = request()->plan_id;
-
-        $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
-        $plan_days = InfluencerManagementPlan::where(['id' => $user_details->plan_id])->first();
-
+        $keyword = '#BBNaija';
+        
         if (!$handle) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
-
-        $profile = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
-
-        if ($profile && $this->isPlanExpired($user_details_id, $plan_days->days)) {
-            $data['keyword'] = $profile->keyword;
-            $data['report_type'] = $profile->plan->name;
-            $data['data'] = json_decode(json_encode($profile->report_data));
-            $data['handle'] = $profile->handle;
+        
+        $profiling_report = BBNProfiling::where(['handle' => $handle])->first();
+        
+        if ($profiling_report) {
+            $data['keyword'] = $profiling_report->keyword;
+            $data['report_type'] = $profiling_report->plan->name;
+            $data['data'] = json_decode(json_encode($profiling_report->report_data));
+            $data['handle'] = $profiling_report->handle;
             $data['expired'] = 'true';
 
-            return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
+            return response(['status' => 'success', 'data' => $data, 'id' => $profiling_report->id], 200);
         }
-
-        if ($profile && !$this->refresh($user_details_id)) {
-            $data['keyword'] = $profile->keyword;
-            $data['report_type'] = $profile->plan->name;
-            $data['data'] = json_decode(json_encode($profile->report_data));
-            $data['handle'] = $profile->handle;
-
-            return response(['status' => 'success', 'data' => $data, 'id' => $profile->id], 200);
-        }
-
 
         $data = [];
 
@@ -643,7 +631,9 @@ class BBNDataController extends Controller
         }
 
         $userTweets = $this->getUserTweets($handle, $keyword);
-
+        return response([
+            'data' => $userTweets,
+        ]);
         if ($userTweets) {
             $data['recent_tweets'] = array_slice($userTweets, 0, 30);
         }
@@ -930,6 +920,14 @@ class BBNDataController extends Controller
             'exclude_replies' => true,
         ];
 
+        $house_mates = [
+            'Ozo', 'Vee', 'Prince', 'Lilo',
+            'Trickytee', 'Lucy', 'Kiddwaya', 'Dorathy',
+            'Praise', 'Wathoni', 'Tochi', 'Kazna', 'Eric ',
+            'Erica', 'Bright', 'Kaisha', 'Neo', 'Tolanibaj',
+            'Laycon', 'Nengi', 'Ozo'
+        ];
+
         $max_id = 0;
         $page = 0;
 
@@ -958,7 +956,7 @@ class BBNDataController extends Controller
             }
 
             // 200 tweets perpage
-            if ($page === 10) {
+            if ($page === 15) {
                 $is_searching = false;
             }
 

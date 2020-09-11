@@ -10,4 +10,9 @@ class BBNController
     {
         return view('bbn.BBNReport');
     }
+
+    public function showProfiling()
+    {
+        return view('bbn.InfluencerProfiling.BBNInfluencerProfiling');
+    }
 }

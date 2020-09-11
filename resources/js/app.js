@@ -85,6 +85,11 @@ Vue.component(
     require("./components/bbn/BBNData.vue").default
 );
 
+Vue.component(
+    "bbn-profiling-data",
+    require("./components/bbn/BBNProfilingData.vue").default
+);
+
 // For campaign pages
 Vue.component(
     "trends-campaign",
