@@ -333,8 +333,8 @@ export default {
         });
 
         if (response.status === 200) {
-          console.log(response.data.data);
-          this.totalRows = response.data.data.length;
+          const starters = response.data.starter_users;
+          this.totalRows = response.data.data.length + starters.length;
 
           response.data.data.forEach((data) => {
             if (data.plan.name === "starter" || data.users === null) {
@@ -371,6 +371,21 @@ export default {
                 created_at: data.users.created_at,
               });
             }
+          });
+
+          starters.forEach((data) => {
+            this.items.push({
+              id: data.initial_users.id,
+              name: data.initial_users.name,
+              company_name: data.initial_users.company_name,
+              email: data.initial_users.email,
+              phone: data.initial_users.phone,
+              plan_limit: data.plan.profiling_limit,
+              profiling_balance: data.profiling_balance,
+              reporting_balance: data.reporting_balance,
+              current_plan: data.plan.name,
+              created_at: data.initial_users.created_at,
+            });
           });
         }
       } catch (err) {
