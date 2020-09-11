@@ -25,6 +25,7 @@ Route::get('/terms', 'HomeController@terms')->name('terms');
 Route::get('/privacy-policy', 'HomeController@privacy')->name('privacy');
 Route::get('/search', 'SearchController@search')->name('search');
 Route::get('/bbn', 'BBN\BBNController@showReport')->name('bbn');
+Route::get('/bbn/profiling/{handle}', 'BBN\BBNController@showProfiling')->name('bbn.influencer.profiling');
 
 Route::middleware('guest')->group(function () {
     
