@@ -16,6 +16,11 @@ class Subscription extends Model
         return $this->belongsTo(UserDetails::class, 'user_id', 'user_id');
     }
     
+    public function initialUsers()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    
     public function plan() {
         return $this->hasOne(Plans::class, 'id', 'plan_id');
     }

@@ -10,6 +10,7 @@ use App\TrafficData;
 use Exception;
 // use Carbon;
 use Carbon\Carbon as Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class UsersController extends Controller
 {
@@ -21,7 +22,8 @@ class UsersController extends Controller
     public function getSubscriptions()
     {
         try {
-            $subscription = Subscription::with('users', 'plan')->get();
+            $subscription = Subscription::with('users', 'plan')->has('users')->get();
+            $starter_users = Subscription::with('initialUsers', 'plan')->doesntHave('users')->get();
         } catch (Exception $e) {
             return response([
                 'status' => 500,
@@ -32,6 +34,7 @@ class UsersController extends Controller
         return response([
             'status' => 200,
             'data' => $subscription,
+            'starter_users' => $starter_users,
         ], 200);
     }
 
