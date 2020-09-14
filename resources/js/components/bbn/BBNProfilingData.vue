@@ -35,8 +35,9 @@
     <div class="row" v-show="!loading && !displayError">
       <div class="report-data col-lg-8">
         <h6 id="block-2" class="block-number">
-          {{ report_type_days }} Days profiling report for:
+          Profiling report for:
           <strong>{{ decodeURIComponent(handle) }}</strong>
+          with the hashtag #BBNaija
         </h6>
 
         <div>
@@ -46,26 +47,8 @@
           >
         </div>
       </div>
-      
-      <div v-if="report_type !== 'enterprise'" class="report-data col-lg-4 col-sm-12">
-        <button
-          @click="goToSubscription"
-          type="button"
-          class="btn btn-round btn-primary float-right"
-        >
-          <label><i class="fa fa-thumbs-up"></i></label>
-          Upgrade Plan
-        </button>
-      </div>
 
       <div class="col-md-12">
-        <p>
-          <a
-            :href="`/search/profile/${handle}?reloadData=true`"
-            class="btn btn-primary btn-sm"
-            ><i class="icon-refresh"></i> Refresh Data</a
-          >
-        </p>
         <section
           class="section bg-white"
           style="box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);"
@@ -213,7 +196,7 @@
             <div class="row gap-y">
               <div class="col-md-6">
                 <h3>
-                  Most Retweeted Tweets
+                  Most Retweeted<br> Tweets
                 </h3>
                 <table class="table shadow bg-white table-hover table-striped">
                   <paginate
@@ -276,70 +259,53 @@
                 ></paginate-links>
               </div>
 
-              <div class="col-md-6">
-                <h3>
-                  Most Recent Tweets
-                </h3>
-                <table class="table shadow bg-white table-hover table-striped">
-                  <paginate
-                    name="recent_tweets"
-                    :list="recent_tweets"
-                    :per="5"
-                    tag="tbody"
+              <div class="tweet-margin col-md-6">
+              <h3>Most Mentioned Housemates</h3>
+              <table class="table shadow bg-white table-hover table-striped">
+                <paginate
+                  name="most_mentioned_housemates"
+                  :list="most_mentioned_housemates"
+                  :per="5"
+                  tag="tbody"
+                >
+                  <tr v-if="most_mentioned_housemates.length == 0">
+                    <td><h6>No data available</h6></td>
+                  </tr>
+                  <tr
+                    v-for="(active, index) in paginated('most_mentioned_housemates')"
+                    :key="index"
                   >
-                    <tr
-                      v-for="(tweet, index) in paginated('recent_tweets')"
-                      :key="index"
-                    >
-                      <td width="70%">
-                        <div class="media mb-3">
-                          <div class="lead-6 line-height-1 text-danger w-50px">
-                            <img
-                              class="avatar avatar-sm"
-                              :src="tweet.user.profile_image_url"
-                              alt=""
-                            />
-                          </div>
-                          <div class="media-body">
-                            <strong>@{{ tweet.user.screen_name }}</strong
-                            ><br /><small>{{ tweet.user.name }}</small>
-                          </div>
+                    <td width="70%">
+                      <div class="media">
+                        <div class="media-body">
+                          <strong>@{{ active.name }}</strong
+                          ><br /><small>{{ active.name }}</small>
                         </div>
-                        <p>{{ tweet.text }}</p>
-                        <p>
-                          <small>
-                            <strong
-                              >Posted on
-                              {{ getHumanDate(tweet.created_at) }}
-                            </strong>
-                          </small>
-                        </p>
-                        <p>
-                          <i class="fa fa-retweet text-primary"></i>
-                          {{ tweet.retweet_count }} &nbsp;&nbsp;
-                          <i class="fa fa-heart text-danger"></i>
-                          {{ tweet.favorite_count }}
-                        </p>
-                      </td>
-                    </tr>
-                  </paginate>
-                </table>
-                <paginate-links
-                  v-if="!exceptPlans.includes(report_type)"
-                  for="recent_tweets"
-                  :show-step-links="true"
-                  :limit="5"
-                  :step-links="{
-                    next: 'NEXT',
-                    prev: 'PREV',
-                  }"
-                  :classes="{
-                    ul: 'pagination',
-                    'ul.paginate-links > li.number': 'page-item',
-                    'ul.paginate-links > li.number > a': 'page-link',
-                  }"
-                ></paginate-links>
-              </div>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <strong>{{ numberFormat(active.count) }}</strong
+                      ><br /><small>Mentions</small>
+                    </td>
+                  </tr>
+                </paginate>
+              </table>
+              <paginate-links
+                v-if="!exceptPlans.includes(report_type)"
+                for="most_mentioned_housemates"
+                :show-step-links="true"
+                :limit="5"
+                :step-links="{
+                  next: 'NEXT',
+                  prev: 'PREV',
+                }"
+                :classes="{
+                  ul: 'pagination',
+                  'ul.paginate-links > li.number': 'page-item',
+                  'ul.paginate-links > li.number > a': 'page-link',
+                }"
+              ></paginate-links>
+            </div>
             </div>
 
             <div class="row gap-y">
@@ -407,7 +373,7 @@ export default {
     return {
       exceptPlans: ["starter", "basic"],
       loading: true,
-      paginate: ["recent_tweets", "retweets"],
+      paginate: ["recent_tweets", "retweets", "most_mentioned_housemates"],
       avatar: "",
       recent_tweets: [],
       retweets: [],
@@ -433,6 +399,7 @@ export default {
       total_engagements: 0,
       impressions: 0,
       reach: 0,
+      most_mentioned_housemates: [],
     };
   },
   mounted: function () {},
@@ -457,58 +424,26 @@ export default {
       const id = splitURL[getIDIndex];
       const type = 'profiling'
       window.location = `/download-pdf?id=${id}&type=${type}`;
-
-      const URL = `/api/v1/report/profiling/download`;
-
-      const config = {
-        headers: {
-          Authorization:
-            "Bearer " + $('meta[name="api-token"]').attr("content"),
-        },
-      };
-
-      const data = {
-        report_type_days: this.report_type_days,
-        date_from: this.date_from,
-        date_to: this.date_to,
-        handle: this.handle,
-
-        impressions: this.numberFormat(this.impressions),
-        reach: this.numberFormat(this.reach),
-        followers: this.numberFormat(this.followers),
-        following: this.numberFormat(this.following),
-        averageRetweets: this.numberFormat(this.averageRetweets),
-        averageLikes: this.numberFormat(this.averageLikes),
-        totalTweets: this.numberFormat(this.totalTweets),
-        total_engagements: this.numberFormat(this.total_engagements),
-        engagement_rate: this.engagementRate,
-        location: this.location,
-        retweets: this.retweets,
-        tweets: this.recent_tweets,
-        about: this.about,
-        name: this.name,
-      };
-
-      // Add all necessary formaters
-      try {
-        let response = await axios.post(URL, data, config);
-      } catch (err) {
-        console.log(err);
-      }
     },
     getProfile: function () {
       this.loading = true;
       let $this = this;
-      fetch(`/api/v1/report/profile/${this.id}`, {
-        headers: {
-          Authorization:
-            "Bearer " + $('meta[name="api-token"]').attr("content"),
-        },
-      })
+
+      // Get handle from URL
+      const sniffURL = window.location.href;
+      const splitURL = sniffURL.split('/');
+      const getIDIndex = splitURL.length - 1
+      const handle = splitURL[getIDIndex];
+
+      const URL = `/api/bbn/influencerdata/${handle}`;
+
+      fetch(URL)
         .then((res) => res.json())
         .then((res) => {
           if (res.data) {
+            console.log('response', res);
             let data = JSON.parse(res.data.data);
+            this.most_mentioned_housemates = JSON.parse(res.most_mentioned_housemates);
             this.total_engagements = data.total_engagements;
             this.impressions = data.impressions;
             this.reach = data.reach;

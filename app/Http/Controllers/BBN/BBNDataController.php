@@ -61,7 +61,17 @@ class BBNDataController extends Controller
 
         foreach ($tweets as $tweet) {
             foreach ($house_mates as $house_mate) {
-                if (strpos($tweet->text, $house_mate) !== false) {
+                if (isset($tweet->full_text) && strpos($tweet->full_text, $house_mate) !== false) {
+                    if (array_key_exists($house_mate, $housemate_numbers)) {
+                        $housemate_numbers[$house_mate] = $housemate_numbers[$house_mate] + 1;
+                    }
+
+                    if (!array_key_exists($house_mate, $housemate_numbers)) {
+                        $housemate_numbers += array_merge($housemate_numbers, [$house_mate => 1]);
+                    }
+                }
+
+                if (isset($tweet->text) && strpos($tweet->text, $house_mate) !== false) {
                     if (array_key_exists($house_mate, $housemate_numbers)) {
                         $housemate_numbers[$house_mate] = $housemate_numbers[$house_mate] + 1;
                     }
@@ -209,19 +219,19 @@ class BBNDataController extends Controller
         $report = BBN::where(['query' => 'BBNaija'])->first();
 
         if (!$report) {
-        try {
-            $report = BBN::create([
-                'query' => 'BBNaija',
-                'report_data' => json_encode($data),
-                'most_mentioned_housemates' => json_encode($most_mentioned_housemates),
-                'highest_retweeted_tweets' => json_encode($highest_retweeted_tweets),
-            ]);
-        } catch (Exception $e) {
-            return response([
-                "status" => 500,
-                "message" => "failed to create trends report " . $e->getMessage(),
-            ], 500);
-        }
+            try {
+                $report = BBN::create([
+                    'query' => 'BBNaija',
+                    'report_data' => json_encode($data),
+                    'most_mentioned_housemates' => json_encode($most_mentioned_housemates),
+                    'highest_retweeted_tweets' => json_encode($highest_retweeted_tweets),
+                ]);
+            } catch (Exception $e) {
+                return response([
+                    "status" => 500,
+                    "message" => "failed to create trends report " . $e->getMessage(),
+                ], 500);
+            }
         }
 
         return response([
@@ -599,23 +609,25 @@ class BBNDataController extends Controller
 
         $handle = request()->handle;
 
-        $user_details_id = request()->user_details_id;
         $keyword = '#BBNaija';
-        
+
         if (!$handle) {
             return response(['status' => 'error', 'message' => 'Please specify a user handle to query'], 403);
         }
-        
+
         $profiling_report = BBNProfiling::where(['handle' => $handle])->first();
-        
+
         if ($profiling_report) {
             $data['keyword'] = $profiling_report->keyword;
-            $data['report_type'] = $profiling_report->plan->name;
             $data['data'] = json_decode(json_encode($profiling_report->report_data));
             $data['handle'] = $profiling_report->handle;
-            $data['expired'] = 'true';
 
-            return response(['status' => 'success', 'data' => $data, 'id' => $profiling_report->id], 200);
+            return response([
+                'status' => 'success',
+                'data' => $data,
+                'most_mentioned_housemates' => $profiling_report->most_mentioned_housemates,
+                'id' => $profiling_report->id
+            ], 200);
         }
 
         $data = [];
@@ -631,15 +643,25 @@ class BBNDataController extends Controller
         }
 
         $userTweets = $this->getUserTweets($handle, $keyword);
-        return response([
-            'data' => $userTweets,
-        ]);
+
+        $most_mentioned_housemates = $this->getMostMentionedHousemates($userTweets);
+
+        // return response([
+        //     'data' => $userTweets,
+        //     'most_mentioned_housemates' => $most_mentioned_housemates,
+        // ]);
+
         if ($userTweets) {
             $data['recent_tweets'] = array_slice($userTweets, 0, 30);
         }
 
-        $start_date = \Carbon\Carbon::parse($user_details->date);
-        $end_date = \Carbon\Carbon::now();
+        $start_date = \Carbon\Carbon::parse(
+            '2020-08-14'
+        );
+
+        $end_date = \Carbon\Carbon::parse(
+            '2020-09-14'
+        );
 
         $data['date_from'] = $start_date->toDayDateTimeString();
         $data['date_to'] = $end_date->toDayDateTimeString();
@@ -668,27 +690,29 @@ class BBNDataController extends Controller
 
         $data['media_meta_data'] = $this->getTweetsMedia($userTweets);
 
-        $report = ManagementProfilingHistory::where(['user_id' => $user->id, 'handle' => $handle])->first();
+        $report = BBNProfiling::where(['handle' => $handle])->first();
 
         if (!$report) {
             try {
-                $report = ManagementProfilingHistory::create([
-                    'user_id' => $user->id,
-                    'user_details_id' => $user_details_id,
+                $report = BBNProfiling::create([
                     'handle' => $handle,
-                    'keyword' => $keyword,
+                    'most_mentioned_housemates' => json_encode($most_mentioned_housemates),
                     'report_data' => json_encode($data),
-                    'package' => $plan_id
                 ]);
             } catch (Exception $e) {
                 return response([
                     "status" => 500,
-                    "message" => "failed to create influencer profile " . $e->getMessage(),
+                    "message" => "failed to create influencer bbn profile " . $e->getMessage(),
                 ], 500);
             }
         }
 
-        return response(['status' => 'success', 'data' => $data, 'id' => $report->id], 200);
+        return response([
+            'status' => 'success',
+            'most_mentioned_housemates' => $report->most_mentioned_housemates,
+            'data' => $data,
+            'id' => $report->id
+        ], 200);
     }
 
     public function isPlanExpired($user_details_id, $plan_days)
@@ -918,14 +942,6 @@ class BBNDataController extends Controller
             "tweet_mode" => "extended",
             'include_rts' => false,
             'exclude_replies' => true,
-        ];
-
-        $house_mates = [
-            'Ozo', 'Vee', 'Prince', 'Lilo',
-            'Trickytee', 'Lucy', 'Kiddwaya', 'Dorathy',
-            'Praise', 'Wathoni', 'Tochi', 'Kazna', 'Eric ',
-            'Erica', 'Bright', 'Kaisha', 'Neo', 'Tolanibaj',
-            'Laycon', 'Nengi', 'Ozo'
         ];
 
         $max_id = 0;
