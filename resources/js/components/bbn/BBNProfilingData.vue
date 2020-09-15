@@ -178,15 +178,85 @@
           </div>
         </section>
 
-        <section class="download-section">
-          <div class="row">
-            <div class="offset-md-6 col-md-6">
-              <button
-                class="btn btn-warning float-right"
-                @click="downloadReport"
-              >
-                Download Report
-              </button>
+        <section class="">
+          <div class="">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4 mt-3">
+                    <div class="shadow-3 bg-white text-center py-2">
+                      <div class="row">
+                        <div class="col-3">
+                          <h4
+                            class="lead-7 pl-2 text-right counted"
+                            data-provide="countup"
+                            data-from="0"
+                          >
+                            {{ numberFormat(replies) }}
+                          </h4>
+                        </div>
+
+                        <div class="col-8 text-right mr-1">
+                          <p class="small text-uppercase ls-2 mb-2">
+                            Total <br />Replies
+                          </p>
+                          <p>
+                            <i class="icon-newspaper lead-4 mb-0"></i>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 mt-3">
+                    <div class="shadow-3 bg-white text-center py-2">
+                      <div class="row">
+                        <div class="col-3">
+                          <h4
+                            class="lead-7 pl-2 text-right counted"
+                            data-provide="countup"
+                            data-from="0"
+                          >
+                            {{ numberFormat(impressions) }}
+                          </h4>
+                        </div>
+
+                        <div class="col-8 text-right mr-1">
+                          <p class="small text-uppercase ls-2 mb-2">
+                            Impressions
+                          </p>
+                          <p>
+                            <i class="icon-video lead-4 mb-0"></i>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 mt-3">
+                    <div class="shadow-3 bg-white text-center py-2">
+                      <div class="row">
+                        <div class="col-3">
+                          <h4
+                            class="lead-7 pl-2 text-right counted"
+                            data-provide="countup"
+                            data-from="0"
+                          >
+                            {{ numberFormat(campaign_value) }}
+                          </h4>
+                        </div>
+
+                        <div class="col-8 text-right mr-1">
+                          <p class="small text-uppercase ls-2 mb-2">
+                            Campaign Value
+                          </p>
+                          <p>
+                            <i class="icon-edit lead-4 mb-0"></i>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -196,7 +266,7 @@
             <div class="row gap-y">
               <div class="col-md-6">
                 <h3>
-                  Most Retweeted<br> Tweets
+                  Most Retweeted Tweets
                 </h3>
                 <table class="table shadow bg-white table-hover table-striped">
                   <paginate
@@ -260,52 +330,54 @@
               </div>
 
               <div class="tweet-margin col-md-6">
-              <h3>Most Mentioned Housemates</h3>
-              <table class="table shadow bg-white table-hover table-striped">
-                <paginate
-                  name="most_mentioned_housemates"
-                  :list="most_mentioned_housemates"
-                  :per="5"
-                  tag="tbody"
-                >
-                  <tr v-if="most_mentioned_housemates.length == 0">
-                    <td><h6>No data available</h6></td>
-                  </tr>
-                  <tr
-                    v-for="(active, index) in paginated('most_mentioned_housemates')"
-                    :key="index"
+                <h3>Most Mentioned Housemates</h3>
+                <table class="table shadow bg-white table-hover table-striped">
+                  <paginate
+                    name="most_mentioned_housemates"
+                    :list="most_mentioned_housemates"
+                    :per="5"
+                    tag="tbody"
                   >
-                    <td width="70%">
-                      <div class="media">
-                        <div class="media-body">
-                          <strong>@{{ active.name }}</strong
-                          ><br /><small>{{ active.name }}</small>
+                    <tr v-if="most_mentioned_housemates.length == 0">
+                      <td><h6>No data available</h6></td>
+                    </tr>
+                    <tr
+                      v-for="(active, index) in paginated(
+                        'most_mentioned_housemates'
+                      )"
+                      :key="index"
+                    >
+                      <td width="70%">
+                        <div class="media">
+                          <div class="media-body">
+                            <strong>@{{ active.name }}</strong
+                            ><br /><small>{{ active.name }}</small>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td class="text-center">
-                      <strong>{{ numberFormat(active.count) }}</strong
-                      ><br /><small>Mentions</small>
-                    </td>
-                  </tr>
-                </paginate>
-              </table>
-              <paginate-links
-                v-if="!exceptPlans.includes(report_type)"
-                for="most_mentioned_housemates"
-                :show-step-links="true"
-                :limit="5"
-                :step-links="{
-                  next: 'NEXT',
-                  prev: 'PREV',
-                }"
-                :classes="{
-                  ul: 'pagination',
-                  'ul.paginate-links > li.number': 'page-item',
-                  'ul.paginate-links > li.number > a': 'page-link',
-                }"
-              ></paginate-links>
-            </div>
+                      </td>
+                      <td class="text-center">
+                        <strong>{{ numberFormat(active.count) }}</strong
+                        ><br /><small>Mentions</small>
+                      </td>
+                    </tr>
+                  </paginate>
+                </table>
+                <paginate-links
+                  v-if="!exceptPlans.includes(report_type)"
+                  for="most_mentioned_housemates"
+                  :show-step-links="true"
+                  :limit="5"
+                  :step-links="{
+                    next: 'NEXT',
+                    prev: 'PREV',
+                  }"
+                  :classes="{
+                    ul: 'pagination',
+                    'ul.paginate-links > li.number': 'page-item',
+                    'ul.paginate-links > li.number > a': 'page-link',
+                  }"
+                ></paginate-links>
+              </div>
             </div>
 
             <div class="row gap-y">
@@ -382,6 +454,8 @@ export default {
       averageRetweets: 0,
       averageLikes: 0,
       totalTweets: 0,
+      replies: 0,
+      campaign_value: 0,
       er: 0,
       name: "",
       about: "",
@@ -419,10 +493,10 @@ export default {
     },
     async downloadReport() {
       const sniffURL = window.location.href;
-      const splitURL = sniffURL.split('/');
-      const getIDIndex = splitURL.length - 1
+      const splitURL = sniffURL.split("/");
+      const getIDIndex = splitURL.length - 1;
       const id = splitURL[getIDIndex];
-      const type = 'profiling'
+      const type = "profiling";
       window.location = `/download-pdf?id=${id}&type=${type}`;
     },
     getProfile: function () {
@@ -431,8 +505,8 @@ export default {
 
       // Get handle from URL
       const sniffURL = window.location.href;
-      const splitURL = sniffURL.split('/');
-      const getIDIndex = splitURL.length - 1
+      const splitURL = sniffURL.split("/");
+      const getIDIndex = splitURL.length - 1;
       const handle = splitURL[getIDIndex];
 
       const URL = `/api/bbn/influencerdata/${handle}`;
@@ -441,11 +515,16 @@ export default {
         .then((res) => res.json())
         .then((res) => {
           if (res.data) {
-            console.log('response', res);
-            let data = JSON.parse(res.data.data);
-            this.most_mentioned_housemates = JSON.parse(res.most_mentioned_housemates);
+            console.log("response", res.data);
+            let data = JSON.parse(res.data);
+            // let data = res.data;
+            this.most_mentioned_housemates = JSON.parse(
+              res.most_mentioned_housemates
+            );
             this.total_engagements = data.total_engagements;
             this.impressions = data.impressions;
+            this.replies = data.replies;
+            this.campaign_value = data.campaign_value;
             this.reach = data.reach;
             this.followers = data.profile.followers_count;
             this.following = data.profile.friends_count;
@@ -475,6 +554,7 @@ export default {
           }
         })
         .catch((err) => {
+          console.log(err);
           this.displayError = true;
           this.loading = false;
         });

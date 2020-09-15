@@ -18,6 +18,7 @@ use App\User;
 use App\BBN;
 use App\BBNProfiling;
 use DateTime;
+use Illuminate\Support\Carbon;
 
 use Exception;
 
@@ -646,9 +647,17 @@ class BBNDataController extends Controller
 
         $most_mentioned_housemates = $this->getMostMentionedHousemates($userTweets);
 
+        $replies = 0;
+
+        foreach($userTweets as $tweets){
+            if($tweets->in_reply_to_user_id != null){
+                $replies++;
+            }
+        }
+
         // return response([
         //     'data' => $userTweets,
-        //     'most_mentioned_housemates' => $most_mentioned_housemates,
+        //     'replies' => $replies,
         // ]);
 
         if ($userTweets) {
@@ -656,11 +665,11 @@ class BBNDataController extends Controller
         }
 
         $start_date = \Carbon\Carbon::parse(
-            '2020-08-14'
+            '2020-08-01'
         );
 
         $end_date = \Carbon\Carbon::parse(
-            '2020-09-14'
+            '2020-08-30'
         );
 
         $data['date_from'] = $start_date->toDayDateTimeString();
@@ -678,6 +687,8 @@ class BBNDataController extends Controller
 
         $data['impressions'] = $engagement['impressions'] ?? 0;
 
+        $data['campaign_value'] = ($engagement['impressions'] / 1000) * 80;
+
         $data['reach'] = $engagement['reach'] ?? 0;
 
         $data['total_engagements'] = $engagement['total_engagements'] ?? 0;
@@ -689,6 +700,8 @@ class BBNDataController extends Controller
         $data['avr_retweets'] = $engagement['avrRetweets'] ?? 0;
 
         $data['media_meta_data'] = $this->getTweetsMedia($userTweets);
+
+        $data['replies'] = $replies;
 
         $report = BBNProfiling::where(['handle' => $handle])->first();
 
@@ -710,87 +723,9 @@ class BBNDataController extends Controller
         return response([
             'status' => 'success',
             'most_mentioned_housemates' => $report->most_mentioned_housemates,
-            'data' => $data,
+            'data' => json_encode($data),
             'id' => $report->id
         ], 200);
-    }
-
-    public function isPlanExpired($user_details_id, $plan_days)
-    {
-        $user_details = UserDetailsManagement::where(['id' => $user_details_id])->first();
-
-        if ($user_details->booking_type == 'influencer_management') {
-            $user_details = UserDetailsManagement::where(['id' => $user_details_id])->with('influencerManagementPlan')->first();
-
-            $compensate_a_day = $plan_days + 1;
-            $days_after = \Carbon\Carbon::parse($user_details->date)->addDays($compensate_a_day);
-
-            $now = date("Y-m-d");
-            $current_time = date_create($now);
-            $interval = $days_after->diff($current_time);
-            $time_difference = $interval->format('%R%a');
-
-            if ($time_difference > 0) {
-                $this->setExpired($user_details_id);
-                $this->removeScheduler($user_details_id);
-                return true;
-            }
-
-            return false;
-        }
-
-        $trend_date = \Carbon\Carbon::parse($user_details->date)->addDays(1);
-
-        $now = date("Y-m-d");
-        $current_time = date_create($now);
-        $interval = $trend_date->diff($current_time);
-        $time_difference = $interval->format('%R%a');
-
-        if ($time_difference > 0) {
-            $this->setExpired($user_details_id);
-            return true;
-        }
-
-        return false;
-    }
-
-    public function setExpired($user_details_id)
-    {
-        UserDetailsManagement::where(['id' => $user_details_id])->update([
-            'expired' => 'true',
-        ]);
-    }
-
-    public function removeScheduler($user_details_id)
-    {
-        SchedulerManagement::where(['user_details_id' => $user_details_id])->delete();
-        Scheduler::where(['user_details_id' => $user_details_id])->delete();
-    }
-
-    public function refresh($user_details_id)
-    {
-        $scheduler = SchedulerManagement::where(['user_details_id' => $user_details_id])->first();
-
-        if (!$scheduler) {
-            return false;
-        }
-
-        $last_refresh = $scheduler->last_refresh;
-        $last_refresh = new DateTime($scheduler->last_refresh);
-        $now = date("Y-m-d");
-        $current_time = date_create($now);
-        $interval = $last_refresh->diff($current_time);
-        $time_difference = $interval->format('%R%a');
-
-        if ($time_difference > 0) {
-            $scheduler = SchedulerManagement::where(['user_details_id' => $user_details_id])->update([
-                'last_refresh' => $current_time
-            ]);
-
-            return true;
-        }
-
-        return false;
     }
 
     function getProfileHighestRetweets($tweets, $isHashtag = false)
@@ -930,6 +865,17 @@ class BBNDataController extends Controller
         return $profile;
     }
 
+    function isTimeInRange($time){
+        $getTimestamp = Carbon::parse($time)->timestamp;
+        $startOfAugust = Carbon::parse('2020-08-01')->timestamp;
+        $endOfAugust  = Carbon::parse('2020-08-30')->timestamp;
+
+        if($getTimestamp > $startOfAugust && $getTimestamp < $endOfAugust){
+            return true;
+        }
+
+        return false;
+    }
 
     function getUserTweets($handle, $keyword)
     {
@@ -941,7 +887,7 @@ class BBNDataController extends Controller
             'count' => 200,
             "tweet_mode" => "extended",
             'include_rts' => false,
-            'exclude_replies' => true,
+            // 'exclude_replies' => true,
         ];
 
         $max_id = 0;
@@ -966,7 +912,9 @@ class BBNDataController extends Controller
 
                 foreach ($influencerTweets as $tweets) {
                     if (strpos($tweets->full_text, $keyword) !== false) {
-                        $filtered_tweets[] = $tweets;
+                        if($this->isTimeInRange($tweets->created_at)){
+                            $filtered_tweets[] = $tweets;
+                        }
                     }
                 }
             }
