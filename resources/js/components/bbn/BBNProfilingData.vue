@@ -293,7 +293,7 @@
                             ><br /><small>{{ retweet.user.name }}</small>
                           </div>
                         </div>
-                        <p>{{ retweet.text }}</p>
+                        <p>{{ retweet.full_text }}</p>
                         <p>
                           <small>
                             <strong
@@ -514,10 +514,8 @@ export default {
       fetch(URL)
         .then((res) => res.json())
         .then((res) => {
-          if (res.data) {
-            console.log("response", res.data);
+          if (res.status === 200) {
             let data = JSON.parse(res.data);
-            // let data = res.data;
             this.most_mentioned_housemates = JSON.parse(
               res.most_mentioned_housemates
             );
