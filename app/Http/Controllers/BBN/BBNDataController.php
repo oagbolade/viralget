@@ -619,13 +619,10 @@ class BBNDataController extends Controller
         $profiling_report = BBNProfiling::where(['handle' => $handle])->first();
 
         if ($profiling_report) {
-            $data['keyword'] = $profiling_report->keyword;
-            $data['data'] = json_decode(json_encode($profiling_report->report_data));
-            $data['handle'] = $profiling_report->handle;
-
             return response([
-                'status' => 'success',
-                'data' => $data,
+                'status' => 200,
+                'handle' => $profiling_report->handle,
+                'data' => json_decode(json_encode($profiling_report->report_data)),
                 'most_mentioned_housemates' => $profiling_report->most_mentioned_housemates,
                 'id' => $profiling_report->id
             ], 200);
@@ -721,7 +718,7 @@ class BBNDataController extends Controller
         }
 
         return response([
-            'status' => 'success',
+            'status' => 200,
             'most_mentioned_housemates' => $report->most_mentioned_housemates,
             'data' => json_encode($data),
             'id' => $report->id
