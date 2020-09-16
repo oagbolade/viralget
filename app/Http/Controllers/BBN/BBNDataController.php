@@ -652,10 +652,10 @@ class BBNDataController extends Controller
             }
         }
 
-        // return response([
-        //     'data' => $userTweets,
-        //     'replies' => $replies,
-        // ]);
+        return response([
+            'data' => $userTweets,
+            'replies' => $replies,
+        ]);
 
         if ($userTweets) {
             $data['recent_tweets'] = array_slice($userTweets, 0, 30);
@@ -883,7 +883,7 @@ class BBNDataController extends Controller
             'screen_name' => $handle,
             'count' => 200,
             "tweet_mode" => "extended",
-            'include_rts' => false,
+            // 'include_rts' => false,
             // 'exclude_replies' => true,
         ];
 
@@ -908,7 +908,7 @@ class BBNDataController extends Controller
                 $max_id = $influencerTweets[$get_last_item]->id;
 
                 foreach ($influencerTweets as $tweets) {
-                    if (strpos($tweets->full_text, $keyword) !== false) {
+                    if (stripos($tweets->full_text, $keyword) !== false) {
                         if($this->isTimeInRange($tweets->created_at)){
                             $filtered_tweets[] = $tweets;
                         }
