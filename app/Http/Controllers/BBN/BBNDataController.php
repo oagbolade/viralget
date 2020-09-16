@@ -652,10 +652,10 @@ class BBNDataController extends Controller
             }
         }
 
-        return response([
-            'data' => $userTweets,
-            'replies' => $replies,
-        ]);
+        // return response([
+        //     'data' => $userTweets,
+        //     'replies' => $replies,
+        // ]);
 
         if ($userTweets) {
             $data['recent_tweets'] = array_slice($userTweets, 0, 30);
