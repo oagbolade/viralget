@@ -235,7 +235,11 @@ class PremiumTwitterAPIController extends Controller
                     ];
                 } else {
                     $this->_temporary_parameters = [
-                        "query" => "place: Nigeria place_country: NG lang: en " . $query,
+                        "query" => "lang: en place: "
+                        . $location_mapper[$location]['name']
+                            . " place_country: "
+                            . $location_mapper[$location]['code']
+                            . " " . $query,
                         "maxResults" => $count,
                         'fromDate' => $fromDate,
                         'toDate' => $toDate,
