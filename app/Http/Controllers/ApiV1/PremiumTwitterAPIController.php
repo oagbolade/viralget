@@ -221,7 +221,7 @@ class PremiumTwitterAPIController extends Controller
         ];
 
         while ($searching) {
-            if ($location != 'null' && $location != null) {
+            if ($location != 'null') {
                 if ($page === 0) {
                     $this->_temporary_parameters = [
                         "query" => "lang: en place: " 
@@ -248,7 +248,7 @@ class PremiumTwitterAPIController extends Controller
                 }
             }
 
-            if ($location == 'null'|| $location == null) {
+            if ($location == 'null') {
                 if ($page === 0) {
                     $this->_temporary_parameters = [
                         "query" => $query,
@@ -274,7 +274,7 @@ class PremiumTwitterAPIController extends Controller
                 // return error response
                 return $e->getMessage();
             }
-
+            
             if (isset($tweets_result->error)) {
                 dd($tweets_result);
             }
@@ -299,7 +299,6 @@ class PremiumTwitterAPIController extends Controller
         }
         return $tweets_array;
     }
-
 
     function getHashtagTweetsData($tweets, $user, $type = '', $top = false)
     {
