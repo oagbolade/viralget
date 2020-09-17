@@ -33,6 +33,8 @@ class PremiumTwitterAPIController extends Controller
             env('TWITTER_ACCESS_TOKEN'),
             env('TWITTER_TOKEN_SECRET')
         );
+
+        $this->_connection->setTimeouts(9999, 9999);
     }
 
     function getAllProfileData($handle, $user)
@@ -274,7 +276,7 @@ class PremiumTwitterAPIController extends Controller
                 // return error response
                 return $e->getMessage();
             }
-            
+
             if (isset($tweets_result->error)) {
                 dd($tweets_result);
             }
