@@ -184,6 +184,7 @@ class PremiumTwitterAPIController extends Controller
         $tweets_array = [];
 
         $count = 500;
+        $count = 100;
 
         switch ($package->name) {
             case 'enterprise':
