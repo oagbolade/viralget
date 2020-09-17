@@ -33,6 +33,8 @@ class PremiumTwitterAPIController extends Controller
             env('TWITTER_ACCESS_TOKEN'),
             env('TWITTER_TOKEN_SECRET')
         );
+
+        $this->_connection->setTimeouts(9999, 9999);
     }
 
     function getAllProfileData($handle, $user)
@@ -221,7 +223,7 @@ class PremiumTwitterAPIController extends Controller
         ];
 
         while ($searching) {
-            if ($location != 'null' && $location != null) {
+            if ($location != 'null') {
                 if ($page === 0) {
                     $this->_temporary_parameters = [
                         "query" => "lang: en place: " 
@@ -235,7 +237,11 @@ class PremiumTwitterAPIController extends Controller
                     ];
                 } else {
                     $this->_temporary_parameters = [
-                        "query" => "place: Nigeria place_country: NG lang: en " . $query,
+                        "query" => "lang: en place: "
+                        . $location_mapper[$location]['name']
+                            . " place_country: "
+                            . $location_mapper[$location]['code']
+                            . " " . $query,
                         "maxResults" => $count,
                         'fromDate' => $fromDate,
                         'toDate' => $toDate,
@@ -244,7 +250,7 @@ class PremiumTwitterAPIController extends Controller
                 }
             }
 
-            if ($location == 'null'|| $location == null) {
+            if ($location == 'null') {
                 if ($page === 0) {
                     $this->_temporary_parameters = [
                         "query" => $query,
@@ -295,7 +301,6 @@ class PremiumTwitterAPIController extends Controller
         }
         return $tweets_array;
     }
-
 
     function getHashtagTweetsData($tweets, $user, $type = '', $top = false)
     {
