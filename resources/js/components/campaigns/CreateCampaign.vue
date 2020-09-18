@@ -67,7 +67,7 @@
             </div>
 
             <div v-if="!isHandle" class="row text-center">
-              <div class="form-group col-lg-6 col-md-6 col-sm-12">
+              <div class="form-group col-lg-6 col-md-6 col-sm-6">
                 <h6>Filter campaign data by date</h6>
                 <a-range-picker
                   @change="onChange"
@@ -80,8 +80,11 @@
 
               <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <h6>Filter Location</h6>
-                <div>
-                  <select v-model="form.location" class="form-control form-control-md">
+                <div class="form-group">
+                  <select
+                    v-model="form.location"
+                    class="form-control form-control-md"
+                  >
                     <option value="">Select Location</option>
                     <option value="Nigeria">Nigeria</option>
                     <option value="Ghana">Ghana</option>
@@ -89,6 +92,9 @@
                     <option value="South Africa">South Africa</option>
                   </select>
                 </div>
+                <p class="alert alert-warning" role="alert">
+                  Note: This will only return tweets that are tagged with a location
+                </p>
               </div>
             </div>
 
@@ -129,6 +135,7 @@ export default {
   components: { Loading },
   data() {
     return {
+      dateError: false,
       errorMessage:
         "Unfortunately, we're unable to create your campaign at the moment.",
       loading: false,
@@ -202,7 +209,27 @@ export default {
         });
         return;
       }
-      
+
+      if (this.dateError === true) {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          onOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        });
+
+        Toast.fire({
+          icon: "error",
+          title: "You cannot pick the same start and end date",
+        });
+        return;
+      }
+
       const stripHastag = this.form.keywords.replace("#", "");
 
       this.loading = true;
@@ -291,6 +318,31 @@ export default {
     },
     moment,
     onChange(date, dateString) {
+      let fromDate = date[0].format("YYYY-MM-DD-HH:MM");
+      let toDate = date[1].format("YYYY-MM-DD-HH:MM");
+
+      if (fromDate === toDate) {
+        this.dateError = true;
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          onOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        });
+
+        Toast.fire({
+          icon: "error",
+          title: "You cannot pick the same start and end date",
+        });
+        return;
+      }
+
+      this.dateError = false;
       this.form.dates.from = `${date[0].format("YYYY-MM-DD-HH:MM")}`;
       this.form.dates.to = `${date[1]
         .subtract(1.5, "hours")
