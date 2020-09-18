@@ -34,6 +34,7 @@ Route::group(['prefix' => 'adminv1', 'namespace' => 'ApiV1\Admin'], function() {
     Route::get('/user/subscription', 'UsersController@getSubscriptions');
 
     Route::get('/traffic/chart', 'ChartController@lineChart');
+    Route::get('/traffic/filter/{hours}/{month}/{year}', 'ChartController@filterLineChart');
     Route::get('/traffic/all', 'UsersController@getAllTrafficData');
 
 });
