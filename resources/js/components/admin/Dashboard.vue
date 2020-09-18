@@ -111,11 +111,11 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Sort by Hour</label>
-          <select class="form-control form-control-sm">
+          <select @change="filterTrafficData" v-model="hours" class="form-control form-control-sm">
             <option value="">Hour(s)</option>
             <option value="1">Last one hour</option>
-            <option value="2">12 hrs</option>
-            <option value="3">24 hrs</option>
+            <option value="12">12 hrs</option>
+            <option value="24">24 hrs</option>
           </select>
         </div>
       </div>
@@ -123,7 +123,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Sort by Month</label>
-          <select class="form-control form-control-sm">
+          <select @change="filterTrafficData" v-model="month" class="form-control form-control-sm">
             <option value="">Month</option>
             <option value="1">January</option>
             <option value="2">February</option>
@@ -144,12 +144,12 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Sort by Year</label>
-          <select class="form-control form-control-sm">
+          <select @change="filterTrafficData" v-model="year" class="form-control form-control-sm">
             <option value="">Year</option>
-            <option value="">2019</option>
-            <option value="">2020</option>
-            <option value="">2021</option>
-            <option value="">2022</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
           </select>
         </div>
       </div>
@@ -348,6 +348,21 @@ export default {
   },
   data() {
     return {
+      hours: '',
+      year: '',
+      month: '',
+      januaryDataSet: 0,
+      februaryDataSet: 0,
+      marchDataSet: 0,
+      aprilDataSet: 0,
+      mayDataSet: 0,
+      juneDataSet: 0,
+      julyDataSet: 0,
+      augustDataSet: 0,
+      septemberDataSet: 0,
+      octoberDataSet: 0,
+      novemberDataSet: 0,
+      decemberDataSet: 0,
       token: null,
       allTimeVisits: 0,
       monthlyVisits: 0,
@@ -430,11 +445,11 @@ export default {
     this.loadChartData();
   },
   created() {
-    if(localStorage.getItem("token") === null){
+    if (localStorage.getItem("token") === null) {
       const RedirectURL = `/admin/login`;
       window.location = RedirectURL;
     }
-    
+
     this.token = localStorage.getItem("token");
   },
   methods: {
@@ -457,7 +472,6 @@ export default {
           this.totalUsers = data.user_count;
 
           data.all_time_visits.forEach((traffic_data) => {
-            console.log(traffic_data);
             this.items.push({
               id: traffic_data.id,
               ip_address: traffic_data.ip_address,
@@ -474,47 +488,7 @@ export default {
       }
     },
     async loadChartData() {
-      this.chartData = {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ],
-        datasets: [
-          {
-            label: "Visits",
-            backgroundColor: "#456AD8",
-            borderColor: "#456AD8",
-            borderWidth: 1,
-            // fill: false,
-            data: [
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-            ],
-          },
-        ],
-      };
-      return;
-      const URL = `/api/adminv1/chart`;
+      const URL = `/api/adminv1/traffic/chart`;
 
       try {
         let response = await axios.get(URL, {
@@ -523,11 +497,106 @@ export default {
           },
         });
 
-        console.log(response);
+        if (response.status === 200) {
+          const data = response.data.data;
+          data.forEach((dataSet) => {
+            if (dataSet.month == 1) {
+              this.januaryDataSet++;
+            }
+            if (dataSet.month == 2) {
+              this.februaryDataSet++;
+            }
+            if (dataSet.month == 3) {
+              this.marchDataSet++;
+            }
+            if (dataSet.month == 4) {
+              this.aprilDataSet++;
+            }
+            if (dataSet.month == 5) {
+              this.mayDataSet++;
+            }
+            if (dataSet.month == 6) {
+              this.juneDataSet++;
+            }
+            if (dataSet.month == 7) {
+              this.julyDataSet++;
+            }
+            if (dataSet.month == 8) {
+              this.augustDataSet++;
+            }
+            if (dataSet.month == 9) {
+              this.septemberDataSet++;
+            }
+            if (dataSet.month == 10) {
+              this.octoberDataSet++;
+            }
+            if (dataSet.month == 11) {
+              this.novemberDataSet++;
+            }
+            if (dataSet.month == 12) {
+              this.decemberDataSet++;
+            }
+          });
+
+          this.chartData = {
+            labels: [
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July",
+              "August",
+              "September",
+              "October",
+              "November",
+              "December",
+            ],
+            datasets: [
+              {
+                label: "Visits",
+                backgroundColor: "#456AD8",
+                borderColor: "#456AD8",
+                borderWidth: 1,
+                // fill: false,
+                data: [
+                  this.januaryDataSet,
+                  this.februaryDataSet,
+                  this.marchDataSet,
+                  this.aprilDataSet,
+                  this.mayDataSet,
+                  this.juneDataSet,
+                  this.julyDataSet,
+                  this.augustDataSet,
+                  this.septemberDataSet,
+                  this.octoberDataSet,
+                  this.novemberDataSet,
+                  this.decemberDataSet,
+                ],
+              },
+            ],
+          };
+        }
       } catch (err) {}
     },
-    getRandomInt() {
-      return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
+    async filterTrafficData() {
+      const URL = `/api/adminv1/traffic/filter/${this.hours}/${this.month}/${this.year}`;
+
+      try {
+        let response = await axios.get(URL, {
+          headers: {
+            Authorization: "Bearer " + this.token,
+          },
+        });
+
+        console.log(response)
+      }catch(err){
+        console.log(err);
+      }
+      console.log(this.hours)
+      console.log(this.month)
+      console.log(this.year)
     },
   },
 };
