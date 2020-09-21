@@ -36,6 +36,8 @@ class BBNDataController extends Controller
             env('TWITTER_ACCESS_TOKEN'),
             env('TWITTER_TOKEN_SECRET')
         );
+
+        $this->connection->setTimeouts(9999, 9999);
     }
 
     function authenticate()
@@ -862,12 +864,17 @@ class BBNDataController extends Controller
         return $profile;
     }
 
-    function isTimeInRange($time){
+    function isTimeInRange($time, $alternative_time = false){
         $getTimestamp = Carbon::parse($time)->timestamp;
-        $startOfAugust = Carbon::parse('2020-08-01')->timestamp;
-        $endOfAugust  = Carbon::parse('2020-08-30')->timestamp;
+        $startDate = Carbon::parse('2020-08-01')->timestamp;
+        $endDate  = Carbon::parse('2020-08-30')->timestamp;
 
-        if($getTimestamp > $startOfAugust && $getTimestamp < $endOfAugust){
+        if($alternative_time === true){
+            $startDate = Carbon::parse('2020-09-03')->timestamp;
+            $endDate  = Carbon::parse('2020-09-30')->timestamp;
+        }
+
+        if($getTimestamp > $startDate && $getTimestamp < $endDate){
             return true;
         }
 
@@ -909,8 +916,16 @@ class BBNDataController extends Controller
 
                 foreach ($influencerTweets as $tweets) {
                     if (stripos($tweets->full_text, $keyword) !== false) {
-                        if($this->isTimeInRange($tweets->created_at)){
-                            $filtered_tweets[] = $tweets;
+                        if(strtolower($handle) !== 'auntyadaa'){
+                            if($this->isTimeInRange($tweets->created_at)){
+                                $filtered_tweets[] = $tweets;
+                            }
+                        }
+                        
+                        if(strtolower($handle) === 'auntyadaa'){
+                            if($this->isTimeInRange($tweets->created_at, true)){
+                                $filtered_tweets[] = $tweets;
+                            }
                         }
                     }
                 }
@@ -1270,10 +1285,8 @@ class BBNDataController extends Controller
 
     function getTweetsMedia($tweets, $type = 'profile')
     {
-
         $media_tweets = [];
         $total_tweets = count($tweets);
-
 
         if ($total_tweets > 0) {
             foreach ($tweets as $tweet) {
