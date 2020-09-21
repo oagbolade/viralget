@@ -671,6 +671,18 @@ class BBNDataController extends Controller
             '2020-08-30'
         );
 
+       
+
+        if (strtolower($handle) === 'auntyadaa') {
+            $start_date = \Carbon\Carbon::parse(
+                '2020-09-01'
+            );
+
+            $end_date = \Carbon\Carbon::parse(
+                '2020-09-21'
+            );
+        }
+
         $data['date_from'] = $start_date->toDayDateTimeString();
         $data['date_to'] = $end_date->toDayDateTimeString();
 
