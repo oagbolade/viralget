@@ -21,6 +21,7 @@
         "h4cc/wkhtmltoimage-amd64": "0.12.x",
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "j7mbo/twitter-api-php": "^1.0",
+        "kim/activity": "^1.1",
         "laravel/framework": "5.7.*",
         "laravel/socialite": "^4.1",
         "laravel/tinker": "^1.0",
