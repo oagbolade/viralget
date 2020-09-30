@@ -93,7 +93,7 @@
                   Online
                 </div>
                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                  18
+                  {{ onlineUsers }}
                 </div>
               </div>
               <div class="col-auto">
@@ -367,6 +367,7 @@ export default {
       allTimeVisits: 0,
       monthlyVisits: 0,
       totalUsers: 0,
+      onlineUsers: 0,
       DoughnutChartData: null,
       chartData: null,
       loaded: true,
@@ -470,6 +471,7 @@ export default {
           this.allTimeVisits = data.all_time_visits.length;
           this.monthlyVisits = data.monthly_visits;
           this.totalUsers = data.user_count;
+          this.onlineUsers = data.online_users;
 
           data.all_time_visits.forEach((traffic_data) => {
             this.items.push({

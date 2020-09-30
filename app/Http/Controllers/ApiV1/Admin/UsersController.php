@@ -10,6 +10,7 @@ use App\TrafficData;
 use Exception;
 // use Carbon;
 use Carbon\Carbon as Carbon;
+use Activity;
 use Illuminate\Database\Eloquent\Builder;
 
 class UsersController extends Controller
@@ -40,7 +41,7 @@ class UsersController extends Controller
 
     public function getAllTrafficData()
     {
-        // Get online users
+        $activities = Activity::users();
         $now = Carbon::now();
         $current_month = $now->month;
         $current_year = $now->year;
@@ -62,6 +63,7 @@ class UsersController extends Controller
             'user_count' => count($users),
             'monthly_visits' => count($monthly_visits),
             'all_time_visits' => $all_time_visits,
+            'online_users' => $activities->count(),
         ], 200);
     }
 }

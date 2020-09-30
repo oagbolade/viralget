@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Thujohn\Twitter\TwitterServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        Kim\Activity\ActivityServiceProvider::class
     ],
 
     /*
@@ -192,7 +193,7 @@ return [
     */
 
     'aliases' => [
-
+        'Activity' => Kim\Activity\ActivityFacade::class,
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
