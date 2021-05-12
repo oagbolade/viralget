@@ -27,7 +27,7 @@
     "dependencies": {
         "@livelybone/vue-datepicker": "^3.1.0",
         "ant-design-vue": "^1.4.4",
-        "chart.js": "^2.9.3",
+        "chart.js": "^2.9.4",
         "laravel-vue-pagination": "^2.2.0",
         "moment": "^2.24.0",
         "numeral": "^2.0.6",
